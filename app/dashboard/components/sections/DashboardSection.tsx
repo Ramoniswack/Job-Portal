@@ -2,62 +2,46 @@
 
 import React, { useState, useEffect } from 'react';
 
-interface DashboardStats {
-    totalUsers: number;
-    totalJobs: number;
-    totalServices: number;
-    totalCategories: number;
-    usersByRole: {
-        admin: number;
-        worker: number;
-        client: number;
-    };
-    jobsByStatus: {
-        pending: number;
-        accepted: number;
-        confirmed: number;
-        completed: number;
-    };
-}
-
 interface DashboardSectionProps {
-    token: string;
+    currentUser: any;
+    myJobs: any[];
+    myApplications: any[];
+    setActiveSection: (section: string) => void;
+    onLoadJobs: () => void;
+    onLoadMyJobs: () => void;
 }
 
-export default function DashboardSection({ token }: DashboardSectionProps) {
-    const [stats, setStats] = useState<DashboardStats>({
-        totalUsers: 0,
+export default function DashboardSection({
+    currentUser,
+    myJobs,
+    myApplications,
+    setActiveSection,
+    onLoadJobs,
+    onLoadMyJobs
+}: DashboardSectionProps) {
+    const [loading, setLoading] = useState(true);
+    const [stats, setStats] = useState({
         totalJobs: 0,
         totalServices: 0,
-        totalCategories: 0,
-        usersByRole: { admin: 0, worker: 0, client: 0 },
-        jobsByStatus: { pending: 0, accepted: 0, confirmed: 0, completed: 0 }
+        myJobsCount: 0,
+        myApplicationsCount: 0
     });
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (token) {
-            loadStats();
-        }
-    }, [token]);
+        loadStats();
+    }, [myJobs, myApplications]);
 
     const loadStats = async () => {
         setLoading(true);
         try {
-            // Fetch all data in parallel
-            const [usersRes, jobsRes, servicesRes, categoriesRes] = await Promise.all([
-                fetch('http://localhost:5000/api/users', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                }),
+            // Fetch public data (no auth required)
+            const [jobsRes, servicesRes] = await Promise.all([
                 fetch('http://localhost:5000/api/jobs'),
-                fetch('http://localhost:5000/api/services'),
-                fetch('http://localhost:5000/api/categories/all')
+                fetch('http://localhost:5000/api/services')
             ]);
 
-            const users = usersRes.ok ? await usersRes.json() : [];
             const jobsData = jobsRes.ok ? await jobsRes.json() : { data: [] };
             const servicesData = servicesRes.ok ? await servicesRes.json() : { data: [] };
-            const categories = categoriesRes.ok ? await categoriesRes.json() : [];
 
             // Process jobs data
             const jobs = Array.isArray(jobsData) ? jobsData : (jobsData.data || []);
@@ -65,27 +49,11 @@ export default function DashboardSection({ token }: DashboardSectionProps) {
             // Process services data
             const services = Array.isArray(servicesData) ? servicesData : (servicesData.data || []);
 
-            // Calculate stats
-            const usersByRole = {
-                admin: users.filter((u: any) => u.role === 'admin').length,
-                worker: users.filter((u: any) => u.role === 'worker').length,
-                client: users.filter((u: any) => u.role === 'client').length
-            };
-
-            const jobsByStatus = {
-                pending: jobs.filter((j: any) => j.status === 'pending').length,
-                accepted: jobs.filter((j: any) => j.status === 'accepted').length,
-                confirmed: jobs.filter((j: any) => j.status === 'confirmed').length,
-                completed: jobs.filter((j: any) => j.status === 'completed').length
-            };
-
             setStats({
-                totalUsers: users.length,
-                totalJobs: jobs.length,
+                totalJobs: jobs.filter((j: any) => j.client).length,
                 totalServices: services.length,
-                totalCategories: categories.length,
-                usersByRole,
-                jobsByStatus
+                myJobsCount: myJobs.length,
+                myApplicationsCount: myApplications.length
             });
         } catch (error) {
             console.error('Error loading dashboard stats:', error);
@@ -109,41 +77,50 @@ export default function DashboardSection({ token }: DashboardSectionProps) {
         <div className="space-y-6">
             {/* Main Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {/* Total Users */}
-                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow">
-                    <div className="flex items-center justify-between mb-4">
-                        <span className="material-symbols-outlined text-[48px] opacity-80">group</span>
-                        <div className="text-right">
-                            <p className="text-sm opacity-90">Total Users</p>
-                            <p className="text-4xl font-bold">{stats.totalUsers}</p>
+                {/* My Jobs/Applications */}
+                {currentUser?.role === 'client' ? (
+                    <div
+                        onClick={() => setActiveSection('my-jobs')}
+                        className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all cursor-pointer"
+                    >
+                        <div className="flex items-center justify-between">
+                            <span className="material-symbols-outlined text-[48px] opacity-80">work</span>
+                            <div className="text-right">
+                                <p className="text-sm opacity-90">My Jobs</p>
+                                <p className="text-4xl font-bold">{stats.myJobsCount}</p>
+                            </div>
                         </div>
+                        <p className="mt-4 text-sm opacity-90">Jobs you've posted</p>
                     </div>
-                    <div className="flex gap-4 text-sm">
-                        <div>
-                            <p className="opacity-75">Admins</p>
-                            <p className="font-semibold">{stats.usersByRole.admin}</p>
+                ) : (
+                    <div
+                        onClick={() => setActiveSection('my-applications')}
+                        className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all cursor-pointer"
+                    >
+                        <div className="flex items-center justify-between">
+                            <span className="material-symbols-outlined text-[48px] opacity-80">description</span>
+                            <div className="text-right">
+                                <p className="text-sm opacity-90">My Applications</p>
+                                <p className="text-4xl font-bold">{stats.myApplicationsCount}</p>
+                            </div>
                         </div>
-                        <div>
-                            <p className="opacity-75">Workers</p>
-                            <p className="font-semibold">{stats.usersByRole.worker}</p>
-                        </div>
-                        <div>
-                            <p className="opacity-75">Clients</p>
-                            <p className="font-semibold">{stats.usersByRole.client}</p>
-                        </div>
+                        <p className="mt-4 text-sm opacity-90">Jobs you've applied to</p>
                     </div>
-                </div>
+                )}
 
-                {/* Total Jobs */}
-                <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow">
+                {/* Total Jobs Available */}
+                <div
+                    onClick={() => setActiveSection('browse-jobs')}
+                    className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all cursor-pointer"
+                >
                     <div className="flex items-center justify-between">
-                        <span className="material-symbols-outlined text-[48px] opacity-80">work</span>
+                        <span className="material-symbols-outlined text-[48px] opacity-80">work_outline</span>
                         <div className="text-right">
-                            <p className="text-sm opacity-90">Total Jobs</p>
+                            <p className="text-sm opacity-90">Available Jobs</p>
                             <p className="text-4xl font-bold">{stats.totalJobs}</p>
                         </div>
                     </div>
-                    <p className="mt-4 text-sm opacity-90">All job postings</p>
+                    <p className="mt-4 text-sm opacity-90">Browse all job postings</p>
                 </div>
 
                 {/* Total Services */}
@@ -155,44 +132,67 @@ export default function DashboardSection({ token }: DashboardSectionProps) {
                             <p className="text-4xl font-bold">{stats.totalServices}</p>
                         </div>
                     </div>
-                    <p className="mt-4 text-sm opacity-90">Active service listings</p>
+                    <p className="mt-4 text-sm opacity-90">Available on platform</p>
                 </div>
 
-                {/* Total Categories */}
-                <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow">
-                    <div className="flex items-center justify-between">
-                        <span className="material-symbols-outlined text-[48px] opacity-80">category</span>
-                        <div className="text-right">
-                            <p className="text-sm opacity-90">Total Categories</p>
-                            <p className="text-4xl font-bold">{stats.totalCategories}</p>
+                {/* Quick Action */}
+                <div
+                    onClick={currentUser?.role === 'client' ? () => setActiveSection('my-jobs') : onLoadJobs}
+                    className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all cursor-pointer"
+                >
+                    <div className="flex items-center justify-center h-full">
+                        <div className="text-center">
+                            <span className="material-symbols-outlined text-[48px] mb-2">
+                                {currentUser?.role === 'client' ? 'add_circle' : 'refresh'}
+                            </span>
+                            <p className="text-lg font-bold">
+                                {currentUser?.role === 'client' ? 'Post New Job' : 'Refresh Jobs'}
+                            </p>
                         </div>
                     </div>
-                    <p className="mt-4 text-sm opacity-90">Service categories</p>
                 </div>
             </div>
 
-            {/* Detailed Stats */}
-            <div className="grid grid-cols-1 gap-6">
-                {/* Users Breakdown */}
-                <div className="bg-white rounded-xl border border-gray-200 p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                        <span className="material-symbols-outlined text-blue-600">group</span>
-                        Users Breakdown
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
-                            <span className="text-gray-700 font-medium">Administrators</span>
-                            <span className="text-2xl font-bold text-purple-600">{stats.usersByRole.admin}</span>
+            {/* Quick Actions */}
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+                <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Actions</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <button
+                        onClick={() => setActiveSection('browse-jobs')}
+                        className="flex items-center gap-3 p-4 bg-green-50 hover:bg-green-100 rounded-lg transition-colors text-left"
+                    >
+                        <span className="material-symbols-outlined text-[#26cf71] text-[32px]">search</span>
+                        <div>
+                            <p className="font-semibold text-gray-900">Browse Jobs</p>
+                            <p className="text-sm text-gray-600">Find opportunities</p>
                         </div>
-                        <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                            <span className="text-gray-700 font-medium">Service Workers</span>
-                            <span className="text-2xl font-bold text-blue-600">{stats.usersByRole.worker}</span>
+                    </button>
+                    <button
+                        onClick={currentUser?.role === 'client' ? () => setActiveSection('my-jobs') : () => setActiveSection('my-applications')}
+                        className="flex items-center gap-3 p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-left"
+                    >
+                        <span className="material-symbols-outlined text-blue-600 text-[32px]">
+                            {currentUser?.role === 'client' ? 'work' : 'description'}
+                        </span>
+                        <div>
+                            <p className="font-semibold text-gray-900">
+                                {currentUser?.role === 'client' ? 'My Jobs' : 'My Applications'}
+                            </p>
+                            <p className="text-sm text-gray-600">
+                                {currentUser?.role === 'client' ? 'Manage your postings' : 'Track your applications'}
+                            </p>
                         </div>
-                        <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                            <span className="text-gray-700 font-medium">Clients</span>
-                            <span className="text-2xl font-bold text-green-600">{stats.usersByRole.client}</span>
+                    </button>
+                    <button
+                        onClick={onLoadMyJobs}
+                        className="flex items-center gap-3 p-4 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors text-left"
+                    >
+                        <span className="material-symbols-outlined text-purple-600 text-[32px]">refresh</span>
+                        <div>
+                            <p className="font-semibold text-gray-900">Refresh Data</p>
+                            <p className="text-sm text-gray-600">Update your information</p>
                         </div>
-                    </div>
+                    </button>
                 </div>
             </div>
         </div>

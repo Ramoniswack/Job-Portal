@@ -7,7 +7,7 @@ import Sidebar from './Sidebar';
 import Header from './Header';
 import DashboardSection from './sections/DashboardSection';
 import BrowseJobsSection from './sections/BrowseJobsSection';
-import MyJobsSection from './sections/MyJobsSection';
+import ImprovedMyJobsSection from './sections/ImprovedMyJobsSection';
 import MyApplicationsSection from './sections/MyApplicationsSection';
 import MessagesSection from './sections/MessagesSection';
 import ViewPostsSection from './sections/ViewPostsSection';
@@ -60,6 +60,7 @@ export default function DashboardLayout() {
     const [myJobs, setMyJobs] = useState<Job[]>([]);
     const [allJobs, setAllJobs] = useState<Job[]>([]);
     const [myApplications, setMyApplications] = useState<Application[]>([]);
+    const [jobApplications, setJobApplications] = useState<Application[]>([]);
     const [showCreateJobModal, setShowCreateJobModal] = useState(false);
     const [loadingJobs, setLoadingJobs] = useState(false);
     const [loadingAllJobs, setLoadingAllJobs] = useState(false);
@@ -102,11 +103,28 @@ export default function DashboardLayout() {
             const data = await response.json();
             if (data.success) {
                 setMyJobs(data.data);
+                // Load applications for all my jobs
+                await loadJobApplications(authToken);
             }
         } catch (error) {
             console.error('Error loading jobs:', error);
         } finally {
             setLoadingJobs(false);
+        }
+    };
+
+    const loadJobApplications = async (authToken: string) => {
+        try {
+            // Fetch all applications for the client's jobs
+            const response = await fetch('http://localhost:5000/api/applications/job-applications', {
+                headers: { 'Authorization': `Bearer ${authToken}` }
+            });
+            const data = await response.json();
+            if (data.success) {
+                setJobApplications(data.data);
+            }
+        } catch (error) {
+            console.error('Error loading job applications:', error);
         }
     };
 
@@ -209,12 +227,10 @@ export default function DashboardLayout() {
                     )}
 
                     {activeSection === 'my-jobs' && (
-                        <MyJobsSection
+                        <ImprovedMyJobsSection
                             myJobs={myJobs}
-                            currentUser={currentUser}
+                            jobApplications={jobApplications}
                             token={token}
-                            loadingJobs={loadingJobs}
-                            onLoadMyJobs={() => loadMyJobs(token)}
                             onRefresh={refreshData}
                         />
                     )}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 
 interface ApplyJobModalProps {
     jobId: string;
@@ -44,15 +45,21 @@ export default function ApplyJobModal({ jobId, jobTitle, token, currentUserEmail
 
             const data = await response.json();
             if (data.success) {
-                alert('Application submitted successfully!');
+                toast.success('Application submitted successfully!', {
+                    description: 'The client will review your application and contact you.'
+                });
                 onSuccess();
                 onClose();
             } else {
-                alert(data.message || 'Failed to submit application');
+                toast.error('Failed to submit application', {
+                    description: data.message || 'Please try again.'
+                });
             }
         } catch (error) {
             console.error('Error applying for job:', error);
-            alert('Error submitting application');
+            toast.error('Error submitting application', {
+                description: 'Please check your connection and try again.'
+            });
         } finally {
             setLoading(false);
         }

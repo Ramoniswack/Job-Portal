@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 interface CreateJobModalProps {
     token: string;
@@ -15,6 +16,7 @@ export default function CreateJobModal({ token, onClose, onSuccess }: CreateJobM
         category: 'Home Repairs',
         location: '',
         budget: '',
+        maxApplicants: '5',
     });
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -30,20 +32,27 @@ export default function CreateJobModal({ token, onClose, onSuccess }: CreateJobM
                 body: JSON.stringify({
                     ...formData,
                     budget: Number(formData.budget),
+                    maxApplicants: Number(formData.maxApplicants),
                 }),
             });
 
             const data = await response.json();
             if (data.success) {
-                alert('Job created successfully!');
+                toast.success('Job created successfully!', {
+                    description: 'Your job posting is now live and workers can apply.'
+                });
                 onSuccess();
                 onClose();
             } else {
-                alert(data.message || 'Failed to create job');
+                toast.error('Failed to create job', {
+                    description: data.message || 'Please try again.'
+                });
             }
         } catch (error) {
             console.error('Error creating job:', error);
-            alert('Error creating job');
+            toast.error('Error creating job', {
+                description: 'Please check your connection and try again.'
+            });
         }
     };
 
@@ -122,16 +131,36 @@ export default function CreateJobModal({ token, onClose, onSuccess }: CreateJobM
                         </div>
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Budget ($)</label>
-                        <input
-                            type="number"
-                            value={formData.budget}
-                            onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                            required
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600"
-                            placeholder="150"
-                        />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Budget ($)</label>
+                            <input
+                                type="number"
+                                value={formData.budget}
+                                onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
+                                required
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600"
+                                placeholder="150"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Max Applicants
+                                <span className="text-xs text-gray-500 ml-2">(1-50)</span>
+                            </label>
+                            <input
+                                type="number"
+                                value={formData.maxApplicants}
+                                onChange={(e) => setFormData({ ...formData, maxApplicants: e.target.value })}
+                                required
+                                min="1"
+                                max="50"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600"
+                                placeholder="5"
+                            />
+                            <p className="text-xs text-gray-500 mt-1">Job will close after this many applications</p>
+                        </div>
                     </div>
 
                     <div className="flex gap-3 pt-4">

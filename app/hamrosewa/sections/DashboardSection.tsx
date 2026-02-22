@@ -54,6 +54,13 @@ export default function DashboardSection({ token }: DashboardSectionProps) {
                 fetch('http://localhost:5000/api/categories/all')
             ]);
 
+            // Check for authentication errors
+            if (usersRes.status === 401) {
+                alert('Your session has expired. Please log out and log back in.');
+                setLoading(false);
+                return;
+            }
+
             const users = usersRes.ok ? await usersRes.json() : [];
             const jobsData = jobsRes.ok ? await jobsRes.json() : { data: [] };
             const servicesData = servicesRes.ok ? await servicesRes.json() : { data: [] };
@@ -89,6 +96,7 @@ export default function DashboardSection({ token }: DashboardSectionProps) {
             });
         } catch (error) {
             console.error('Error loading dashboard stats:', error);
+            alert('Failed to load dashboard data. Please try refreshing the page.');
         } finally {
             setLoading(false);
         }

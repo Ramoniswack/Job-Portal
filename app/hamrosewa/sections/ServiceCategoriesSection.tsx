@@ -52,9 +52,18 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
             console.log('Response status:', response.status);
 
             if (!response.ok) {
+                // Handle authentication errors
+                if (response.status === 401) {
+                    alert('Your session has expired. Please log out and log back in.');
+                    setCategories([]);
+                    setLoading(false);
+                    return;
+                }
+
                 let errorData;
                 try {
-                    errorData = await response.json();
+                    const text = await response.text();
+                    errorData = text ? JSON.parse(text) : { message: 'Empty error response' };
                 } catch (e) {
                     errorData = { message: 'Failed to parse error response' };
                 }

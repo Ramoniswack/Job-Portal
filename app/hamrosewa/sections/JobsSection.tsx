@@ -1,13 +1,10 @@
 'use client';
-
 import React, { useState, useEffect } from 'react';
-
 interface User {
     _id: string;
     name: string;
     email: string;
 }
-
 interface Job {
     _id: string;
     title: string;
@@ -148,6 +145,7 @@ export default function JobsSection({ token }: JobsSectionProps) {
             accepted: 'bg-blue-100 text-blue-700',
             confirmed: 'bg-green-100 text-green-700',
             completed: 'bg-gray-100 text-gray-700',
+            closed: 'bg-red-100 text-red-700',
         };
         return styles[status as keyof typeof styles] || 'bg-gray-100 text-gray-700';
     };
@@ -182,24 +180,24 @@ export default function JobsSection({ token }: JobsSectionProps) {
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
                     <div className="bg-gray-50 rounded-lg p-4">
                         <p className="text-sm text-gray-600">Total Jobs</p>
-                        <p className="text-2xl font-bold text-gray-900">{jobs.length}</p>
+                        <p className="text-2xl font-bold text-gray-900">{jobs.filter(j => j.client).length}</p>
                     </div>
                     <div className="bg-yellow-50 rounded-lg p-4">
                         <p className="text-sm text-yellow-600">Pending</p>
                         <p className="text-2xl font-bold text-yellow-700">
-                            {jobs.filter(j => j.status === 'pending').length}
+                            {jobs.filter(j => j.client && j.status === 'pending').length}
                         </p>
                     </div>
                     <div className="bg-green-50 rounded-lg p-4">
                         <p className="text-sm text-green-600">Active</p>
                         <p className="text-2xl font-bold text-green-700">
-                            {jobs.filter(j => ['accepted', 'confirmed'].includes(j.status)).length}
+                            {jobs.filter(j => j.client && ['accepted', 'confirmed'].includes(j.status)).length}
                         </p>
                     </div>
                     <div className="bg-gray-50 rounded-lg p-4">
                         <p className="text-sm text-gray-600">Completed</p>
                         <p className="text-2xl font-bold text-gray-700">
-                            {jobs.filter(j => j.status === 'completed').length}
+                            {jobs.filter(j => j.client && j.status === 'completed').length}
                         </p>
                     </div>
                 </div>
@@ -212,7 +210,7 @@ export default function JobsSection({ token }: JobsSectionProps) {
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#26cf71] mx-auto"></div>
                         <p className="mt-4 text-gray-600">Loading jobs...</p>
                     </div>
-                ) : jobs.length === 0 ? (
+                ) : jobs.filter(j => j.client).length === 0 ? (
                     <div className="p-12 text-center">
                         <span className="material-symbols-outlined text-gray-300 text-[64px]">work_off</span>
                         <p className="mt-4 text-gray-600">No jobs found</p>
@@ -242,15 +240,15 @@ export default function JobsSection({ token }: JobsSectionProps) {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
-                            {jobs.map((job) => (
+                            {jobs.filter(job => job.client).map((job) => (
                                 <tr key={job._id} className="hover:bg-gray-50 transition-colors">
                                     <td className="px-6 py-4">
                                         <p className="font-semibold text-gray-900">{job.title}</p>
                                         <p className="text-sm text-gray-500">{job.location}</p>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <p className="text-gray-900">{job.client?.name || 'Deleted User'}</p>
-                                        <p className="text-sm text-gray-500">{job.client?.email || 'N/A'}</p>
+                                        <p className="text-gray-900">{job.client.name}</p>
+                                        <p className="text-sm text-gray-500">{job.client.email}</p>
                                     </td>
                                     <td className="px-6 py-4">
                                         <p className="text-gray-600">{job.category}</p>

@@ -1,6 +1,9 @@
 'use client';
 
+import { useState } from 'react';
+import { toast } from 'sonner';
 import { User, Application } from '../DashboardLayout';
+import ConfirmDialog from '@/app/components/ConfirmDialog';
 
 interface MyApplicationsSectionProps {
     myApplications: Application[];
@@ -18,9 +21,13 @@ export default function MyApplicationsSection({
     onLoadApplications,
     onRefresh,
 }: MyApplicationsSectionProps) {
-    const cancelApplication = async (applicationId: string) => {
-        if (!confirm('Are you sure you want to cancel this application?')) return;
+    const [cancelConfirm, setCancelConfirm] = useState<{ isOpen: boolean; appId: string | null; jobTitle: string }>({
+        isOpen: false,
+        appId: null,
+        jobTitle: ''
+    });
 
+    const cancelApplication = async (applicationId: string) => {
         try {
             const response = await fetch(`http://localhost:5000/api/applications/${applicationId}`, {
                 method: 'DELETE',
@@ -29,14 +36,34 @@ export default function MyApplicationsSection({
 
             const data = await response.json();
             if (data.success) {
-                alert('Application cancelled successfully!');
+                toast.success('Application cancelled successfully!', {
+                    description: 'Your application has been withdrawn.'
+                });
                 onRefresh();
             } else {
-                alert(data.message || 'Failed to cancel application');
+                toast.error('Failed to cancel application', {
+                    description: data.message || 'Please try again.'
+                });
             }
         } catch (error) {
             console.error('Error cancelling application:', error);
-            alert('Error cancelling application');
+            toast.error('Error cancelling application', {
+                description: 'Please check your connection and try again.'
+            });
+        }
+    };
+
+    const openCancelConfirm = (appId: string, jobTitle: string) => {
+        setCancelConfirm({ isOpen: true, appId, jobTitle });
+    };
+
+    const closeCancelConfirm = () => {
+        setCancelConfirm({ isOpen: false, appId: null, jobTitle: '' });
+    };
+
+    const handleCancelConfirm = () => {
+        if (cancelConfirm.appId) {
+            cancelApplication(cancelConfirm.appId);
         }
     };
 
@@ -93,7 +120,7 @@ export default function MyApplicationsSection({
                                         <td className="px-6 py-4">
                                             {application.status === 'requested' ? (
                                                 <button
-                                                    onClick={() => cancelApplication(application._id)}
+                                                    onClick={() => openCancelConfirm(application._id, application.job.title)}
                                                     className="px-3 py-1 bg-red-100 text-red-700 hover:bg-red-200 rounded text-xs font-bold transition-all"
                                                 >
                                                     Cancel
@@ -114,6 +141,18 @@ export default function MyApplicationsSection({
                     </div>
                 )}
             </div>
+
+            {/* Cancel Confirmation Dialog */}
+            <ConfirmDialog
+                isOpen={cancelConfirm.isOpen}
+                onClose={closeCancelConfirm}
+                onConfirm={handleCancelConfirm}
+                title="Cancel Application?"
+                message={`Are you sure you want to cancel your application for "${cancelConfirm.jobTitle}"? This action cannot be undone.`}
+                confirmText="Cancel Application"
+                cancelText="Keep Application"
+                type="warning"
+            />
         </div>
     );
 }
