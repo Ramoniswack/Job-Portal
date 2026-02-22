@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { CheckCircle, Users, Wrench } from 'lucide-react';
 
 export default function Statistics() {
     const [count1, setCount1] = useState(0);
@@ -52,6 +53,9 @@ export default function Statistics() {
             <div className="max-w-6xl mx-auto">
                 <div ref={statsRef} className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
                     <div className="flex flex-col items-center">
+                        <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mb-4">
+                            <CheckCircle className="w-10 h-10 text-white" />
+                        </div>
                         <div className="relative">
                             <span className="text-8xl font-bold text-[#26cf71]/10 select-none absolute -top-8 left-1/2 -translate-x-1/2">
                                 {count1}K+
@@ -63,6 +67,9 @@ export default function Statistics() {
                     </div>
 
                     <div className="flex flex-col items-center">
+                        <div className="w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center mb-4">
+                            <Users className="w-10 h-10 text-white" />
+                        </div>
                         <div className="relative">
                             <span className="text-8xl font-bold text-[#26cf71]/10 select-none absolute -top-8 left-1/2 -translate-x-1/2">
                                 {count2}+
@@ -74,6 +81,9 @@ export default function Statistics() {
                     </div>
 
                     <div className="flex flex-col items-center">
+                        <div className="w-20 h-20 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center mb-4">
+                            <Wrench className="w-10 h-10 text-white" />
+                        </div>
                         <div className="relative">
                             <span className="text-8xl font-bold text-[#26cf71]/10 select-none absolute -top-8 left-1/2 -translate-x-1/2">
                                 {count3}+

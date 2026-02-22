@@ -227,8 +227,8 @@ export default function MessagesSection({
                                 key={connection._id}
                                 onClick={() => setSelectedConnection(connection)}
                                 className={`p-4 flex gap-4 cursor-pointer transition-colors ${isSelected
-                                        ? 'bg-white border-l-4 border-[#26cf71]'
-                                        : 'hover:bg-white border-l-4 border-transparent'
+                                    ? 'bg-white border-l-4 border-[#26cf71]'
+                                    : 'hover:bg-white border-l-4 border-transparent'
                                     }`}
                             >
                                 <div className="relative shrink-0">
@@ -242,14 +242,6 @@ export default function MessagesSection({
                                         <h3 className="font-semibold text-sm truncate">{otherUser.name}</h3>
                                         <span className="text-[10px] font-medium text-gray-400">
                                             {new Date(connection.createdAt).toLocaleDateString()}
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${userRole === 'Client'
-                                                ? 'bg-amber-100 text-amber-700'
-                                                : 'bg-green-100 text-[#26cf71]'
-                                            }`}>
-                                            {userRole}
                                         </span>
                                     </div>
                                     <p className="text-xs text-gray-500 truncate">{connection.job.title}</p>
@@ -334,8 +326,8 @@ export default function MessagesSection({
                                     </div>
                                     <div className={`flex flex-col ${isSent ? 'items-end' : ''}`}>
                                         <div className={`p-4 rounded-xl ${isSent
-                                                ? 'bg-[#26cf71] text-white rounded-tr-none'
-                                                : 'bg-white border border-gray-200 rounded-tl-none'
+                                            ? 'bg-[#26cf71] text-white rounded-tr-none'
+                                            : 'bg-white border border-gray-200 rounded-tl-none'
                                             }`}>
                                             <p className="text-sm">{message.content}</p>
                                         </div>

@@ -15,16 +15,16 @@ export default function Footer() {
                     <div className="text-sm uppercase text-[#26cf71] font-bold">Menu</div>
                     <ul>
                         <li className="my-2">
-                            <a className="hover:text-[#26cf71]" href="#home">Home</a>
+                            <a className="hover:text-[#26cf71]" href="/">Home</a>
                         </li>
                         <li className="my-2">
-                            <a className="hover:text-[#26cf71]" href="#services">Services</a>
+                            <a className="hover:text-[#26cf71]" href="/services">Services</a>
                         </li>
                         <li className="my-2">
-                            <a className="hover:text-[#26cf71]" href="#about">About</a>
+                            <a className="hover:text-[#26cf71]" href="/about">About</a>
                         </li>
                         <li className="my-2">
-                            <a className="hover:text-[#26cf71]" href="#contact">Contact</a>
+                            <a className="hover:text-[#26cf71]" href="/contact">Contact</a>
                         </li>
                     </ul>
                 </div>

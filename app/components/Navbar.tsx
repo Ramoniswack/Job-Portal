@@ -189,7 +189,7 @@ export default function Navbar({ location: propLocation, setLocation: propSetLoc
                         </li>
                         <li>
                             <a
-                                href="#contact"
+                                href="/contact"
                                 className="text-[#333] font-medium no-underline relative transition-colors duration-300 hover:text-[#26cf71] 
                   after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#26cf71] 
                   after:transition-[width] after:duration-300 hover:after:w-full"

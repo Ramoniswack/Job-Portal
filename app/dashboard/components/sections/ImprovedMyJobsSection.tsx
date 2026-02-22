@@ -29,6 +29,11 @@ export default function ImprovedMyJobsSection({ myJobs, jobApplications, token, 
         jobId: null,
         jobTitle: ''
     });
+    const [rejectConfirm, setRejectConfirm] = useState<{ isOpen: boolean; appId: string | null; workerName: string }>({
+        isOpen: false,
+        appId: null,
+        workerName: ''
+    });
     const [editFormData, setEditFormData] = useState({
         title: '',
         description: '',
@@ -120,6 +125,20 @@ export default function ImprovedMyJobsSection({ myJobs, jobApplications, token, 
     const handleDeleteConfirm = () => {
         if (deleteConfirm.jobId) {
             deleteJob(deleteConfirm.jobId);
+        }
+    };
+
+    const openRejectConfirm = (appId: string, workerName: string) => {
+        setRejectConfirm({ isOpen: true, appId, workerName });
+    };
+
+    const closeRejectConfirm = () => {
+        setRejectConfirm({ isOpen: false, appId: null, workerName: '' });
+    };
+
+    const handleRejectConfirm = () => {
+        if (rejectConfirm.appId) {
+            updateApplicationStatus(rejectConfirm.appId, 'rejected');
         }
     };
 
@@ -380,7 +399,7 @@ export default function ImprovedMyJobsSection({ myJobs, jobApplications, token, 
                                                                         Approve
                                                                     </button>
                                                                     <button
-                                                                        onClick={() => updateApplicationStatus(app._id, 'rejected')}
+                                                                        onClick={() => openRejectConfirm(app._id, app.worker?.name || 'Unknown Worker')}
                                                                         className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm font-semibold"
                                                                     >
                                                                         Reject
@@ -393,9 +412,18 @@ export default function ImprovedMyJobsSection({ myJobs, jobApplications, token, 
                                                                 </span>
                                                             )}
                                                             {app.status === 'rejected' && (
-                                                                <span className="px-4 py-2 bg-red-100 text-red-800 rounded-lg text-sm font-semibold">
-                                                                    ✗ Rejected
-                                                                </span>
+                                                                <div className="flex items-center gap-2">
+                                                                    <span className="px-4 py-2 bg-red-100 text-red-800 rounded-lg text-sm font-semibold">
+                                                                        ✗ Rejected
+                                                                    </span>
+                                                                    <button
+                                                                        onClick={() => updateApplicationStatus(app._id, 'requested')}
+                                                                        className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition text-sm font-semibold"
+                                                                        title="Undo rejection and restore to pending"
+                                                                    >
+                                                                        Undo
+                                                                    </button>
+                                                                </div>
                                                             )}
                                                         </div>
                                                     </div>
@@ -418,6 +446,18 @@ export default function ImprovedMyJobsSection({ myJobs, jobApplications, token, 
                 title="Delete Job?"
                 message={`Are you sure you want to delete "${deleteConfirm.jobTitle}"? This will also delete all applications. This action cannot be undone.`}
                 confirmText="Delete Job"
+                cancelText="Cancel"
+                type="danger"
+            />
+
+            {/* Reject Confirmation Dialog */}
+            <ConfirmDialog
+                isOpen={rejectConfirm.isOpen}
+                onClose={closeRejectConfirm}
+                onConfirm={handleRejectConfirm}
+                title="Reject Application?"
+                message={`Are you sure you want to reject the application from "${rejectConfirm.workerName}"? This action cannot be undone.`}
+                confirmText="Reject Application"
                 cancelText="Cancel"
                 type="danger"
             />

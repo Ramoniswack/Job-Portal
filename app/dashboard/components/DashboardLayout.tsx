@@ -197,7 +197,7 @@ export default function DashboardLayout() {
                     onLoadMessages={() => loadMyApplications(token)}
                 />
 
-                <main className="flex-1 ml-64 min-h-screen">
+                <main className="flex-1 lg:ml-64 min-h-screen w-full">
                     <Header
                         currentUser={currentUser}
                         onCreateJob={() => setShowCreateJobModal(true)}

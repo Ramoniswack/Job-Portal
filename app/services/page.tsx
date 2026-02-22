@@ -44,6 +44,14 @@ export default function ServicesPage() {
     const [services, setServices] = useState<Service[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState(true);
+    const [heroSection, setHeroSection] = useState({
+        title: 'Find the Perfect Service',
+        subtitle: 'Browse through professional services',
+        searchPlaceholder: 'Search for any service...',
+        locationPlaceholder: 'Location...',
+        backgroundImage: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1920&q=80',
+        overlayOpacity: 0.6
+    });
 
     // Filter states
     const [searchQuery, setSearchQuery] = useState('');
@@ -74,6 +82,7 @@ export default function ServicesPage() {
     useEffect(() => {
         fetchServices();
         fetchCategories();
+        fetchHeroSection();
     }, []);
 
     // Debounce search query
@@ -117,6 +126,20 @@ export default function ServicesPage() {
             }
         } catch (error) {
             console.error('Error fetching categories:', error);
+        }
+    };
+
+    const fetchHeroSection = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/api/services-hero');
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    setHeroSection(data.data);
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching hero section:', error);
         }
     };
 
@@ -227,14 +250,26 @@ export default function ServicesPage() {
 
             <div className="min-h-screen bg-gray-50">
                 {/* Hero Section with Search */}
-                <div className="bg-gradient-to-br from-[#26cf71] to-[#1eb863] pt-24 pb-12">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6">
+                <div className="relative pt-24 pb-12 overflow-hidden">
+                    {/* Background Image */}
+                    <div
+                        className="absolute inset-0 bg-cover bg-center"
+                        style={{ backgroundImage: `url(${heroSection.backgroundImage})` }}
+                    />
+                    {/* Overlay */}
+                    <div
+                        className="absolute inset-0 bg-black"
+                        style={{ opacity: heroSection.overlayOpacity }}
+                    />
+
+                    {/* Content */}
+                    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
                         <div className="text-center mb-8">
                             <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">
-                                Find the Perfect Service
+                                {heroSection.title}
                             </h1>
                             <p className="text-lg text-white/90 max-w-2xl mx-auto">
-                                Browse through {services.length}+ professional services
+                                {heroSection.subtitle} • {services.length}+ services available
                             </p>
                         </div>
 
@@ -245,7 +280,7 @@ export default function ServicesPage() {
                                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                                     <input
                                         type="text"
-                                        placeholder="Search for any service..."
+                                        placeholder={heroSection.searchPlaceholder}
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
                                         className="w-full pl-12 pr-4 py-3 text-base border-0 focus:outline-none rounded-lg"
@@ -255,7 +290,7 @@ export default function ServicesPage() {
                                     <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                                     <input
                                         type="text"
-                                        placeholder="Location..."
+                                        placeholder={heroSection.locationPlaceholder}
                                         value={searchLocation}
                                         onChange={(e) => setSearchLocation(e.target.value)}
                                         className="w-full pl-12 pr-4 py-3 text-base border-0 focus:outline-none rounded-lg"
