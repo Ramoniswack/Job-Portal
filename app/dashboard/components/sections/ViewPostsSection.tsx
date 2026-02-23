@@ -92,8 +92,8 @@ export default function ViewPostsSection({ token, onEditPost }: ViewPostsSection
 
     const getStatusBadge = (status: string) => {
         const styles = {
-            draft: 'bg-gray-100 text-gray-700',
-            published: 'bg-green-100 text-green-700',
+            draft: 'bg-[#F1F3F5] text-gray-700',
+            published: 'bg-[#F1F3F5] text-green-700',
             archived: 'bg-red-100 text-red-700'
         };
         return styles[status as keyof typeof styles] || styles.draft;
@@ -116,27 +116,27 @@ export default function ViewPostsSection({ token, onEditPost }: ViewPostsSection
                             placeholder="Search posts..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                         />
                     </div>
                     <div className="flex gap-2">
                         <button
                             onClick={() => setFilter('all')}
-                            className={`px-4 py-2 rounded-lg font-medium transition ${filter === 'all' ? 'bg-[#26cf71] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            className={`px-4 py-2 rounded-lg font-medium transition ${filter === 'all' ? 'bg-[#FF6B35] text-white' : 'bg-[#F1F3F5] text-gray-700 hover:bg-[#E9ECEF]'
                                 }`}
                         >
                             All
                         </button>
                         <button
                             onClick={() => setFilter('published')}
-                            className={`px-4 py-2 rounded-lg font-medium transition ${filter === 'published' ? 'bg-[#26cf71] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            className={`px-4 py-2 rounded-lg font-medium transition ${filter === 'published' ? 'bg-[#FF6B35] text-white' : 'bg-[#F1F3F5] text-gray-700 hover:bg-[#E9ECEF]'
                                 }`}
                         >
                             Published
                         </button>
                         <button
                             onClick={() => setFilter('draft')}
-                            className={`px-4 py-2 rounded-lg font-medium transition ${filter === 'draft' ? 'bg-[#26cf71] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            className={`px-4 py-2 rounded-lg font-medium transition ${filter === 'draft' ? 'bg-[#FF6B35] text-white' : 'bg-[#F1F3F5] text-gray-700 hover:bg-[#E9ECEF]'
                                 }`}
                         >
                             Drafts
@@ -148,7 +148,7 @@ export default function ViewPostsSection({ token, onEditPost }: ViewPostsSection
             {/* Posts List */}
             {loading ? (
                 <div className="text-center py-12">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#26cf71] mx-auto"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35] mx-auto"></div>
                     <p className="mt-4 text-gray-600">Loading posts...</p>
                 </div>
             ) : filteredPosts.length === 0 ? (
@@ -204,7 +204,7 @@ export default function ViewPostsSection({ token, onEditPost }: ViewPostsSection
                                     <div className="flex gap-2">
                                         <button
                                             onClick={() => onEditPost(post)}
-                                            className="px-4 py-2 bg-[#26cf71] text-white rounded-lg hover:bg-[#1eb863] transition flex items-center gap-2"
+                                            className="px-4 py-2 bg-[#FF6B35] text-white rounded-lg hover:bg-[#FF5722] transition flex items-center gap-2"
                                         >
                                             <span className="material-symbols-outlined text-[18px]">edit</span>
                                             Edit

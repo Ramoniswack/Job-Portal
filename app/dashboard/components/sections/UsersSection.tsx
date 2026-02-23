@@ -72,9 +72,9 @@ export default function UsersSection({ token }: UsersSectionProps) {
             case 'worker':
                 return 'bg-blue-100 text-blue-700';
             case 'client':
-                return 'bg-green-100 text-green-700';
+                return 'bg-[#F1F3F5] text-green-700';
             default:
-                return 'bg-gray-100 text-gray-700';
+                return 'bg-[#F1F3F5] text-gray-700';
         }
     };
 
@@ -185,7 +185,7 @@ export default function UsersSection({ token }: UsersSectionProps) {
                                 placeholder="Search by name or email..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
+                                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                             />
                         </div>
                     </div>
@@ -193,7 +193,7 @@ export default function UsersSection({ token }: UsersSectionProps) {
                         <select
                             value={roleFilter}
                             onChange={(e) => setRoleFilter(e.target.value)}
-                            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
+                            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                         >
                             <option value="all">All Roles</option>
                             <option value="admin">Admin</option>
@@ -205,7 +205,7 @@ export default function UsersSection({ token }: UsersSectionProps) {
 
                 {/* Stats */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
-                    <div className="bg-gray-50 rounded-lg p-4">
+                    <div className="bg-[#F8F9FA] rounded-lg p-4">
                         <p className="text-sm text-gray-600">Total Users</p>
                         <p className="text-2xl font-bold text-gray-900">{users.length}</p>
                     </div>
@@ -217,7 +217,7 @@ export default function UsersSection({ token }: UsersSectionProps) {
                         <p className="text-sm text-blue-600">Workers</p>
                         <p className="text-2xl font-bold text-blue-700">{users.filter(u => u.role === 'worker').length}</p>
                     </div>
-                    <div className="bg-green-50 rounded-lg p-4">
+                    <div className="bg-[#F8F9FA] rounded-lg p-4">
                         <p className="text-sm text-green-600">Clients</p>
                         <p className="text-2xl font-bold text-green-700">{users.filter(u => u.role === 'client').length}</p>
                     </div>
@@ -228,7 +228,7 @@ export default function UsersSection({ token }: UsersSectionProps) {
             <div className="overflow-x-auto">
                 {loading ? (
                     <div className="p-12 text-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#26cf71] mx-auto"></div>
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35] mx-auto"></div>
                         <p className="mt-4 text-gray-600">Loading users...</p>
                     </div>
                 ) : filteredUsers.length === 0 ? (
@@ -240,7 +240,7 @@ export default function UsersSection({ token }: UsersSectionProps) {
                     </div>
                 ) : (
                     <table className="w-full">
-                        <thead className="bg-gray-50 border-b border-gray-200">
+                        <thead className="bg-[#F8F9FA] border-b border-gray-200">
                             <tr>
                                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                                     User
@@ -261,10 +261,10 @@ export default function UsersSection({ token }: UsersSectionProps) {
                         </thead>
                         <tbody className="divide-y divide-gray-200">
                             {filteredUsers.map((user) => (
-                                <tr key={user._id} className="hover:bg-gray-50 transition-colors">
+                                <tr key={user._id} className="hover:bg-[#F8F9FA] transition-colors">
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-full bg-[#26cf71] flex items-center justify-center text-white font-semibold">
+                                            <div className="w-10 h-10 rounded-full bg-[#FF6B35] flex items-center justify-center text-white font-semibold">
                                                 {user.name.charAt(0).toUpperCase()}
                                             </div>
                                             <div>
@@ -310,7 +310,7 @@ export default function UsersSection({ token }: UsersSectionProps) {
 
             {/* Footer */}
             {!loading && filteredUsers.length > 0 && (
-                <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                <div className="px-6 py-4 border-t border-gray-200 bg-[#F8F9FA]">
                     <p className="text-sm text-gray-600">
                         Showing {filteredUsers.length} of {users.length} users
                     </p>
@@ -333,7 +333,7 @@ export default function UsersSection({ token }: UsersSectionProps) {
                                     type="text"
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#26cf71]"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35]"
                                     required
                                 />
                             </div>
@@ -345,7 +345,7 @@ export default function UsersSection({ token }: UsersSectionProps) {
                                     type="email"
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#26cf71]"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35]"
                                     required
                                 />
                             </div>
@@ -356,7 +356,7 @@ export default function UsersSection({ token }: UsersSectionProps) {
                                 <select
                                     value={formData.role}
                                     onChange={(e) => setFormData({ ...formData, role: e.target.value as 'worker' | 'client' | 'admin' })}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#26cf71]"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35]"
                                     required
                                 >
                                     {getAvailableRoles(editingUser).map(role => (
@@ -383,13 +383,13 @@ export default function UsersSection({ token }: UsersSectionProps) {
                                         setShowEditModal(false);
                                         setEditingUser(null);
                                     }}
-                                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"
+                                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-[#F8F9FA] transition-colors font-semibold"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 px-4 py-2 bg-[#26cf71] text-white rounded-lg hover:bg-[#1eb863] transition-colors font-semibold"
+                                    className="flex-1 px-4 py-2 bg-[#FF6B35] text-white rounded-lg hover:bg-[#FF5722] transition-colors font-semibold"
                                 >
                                     Update User
                                 </button>

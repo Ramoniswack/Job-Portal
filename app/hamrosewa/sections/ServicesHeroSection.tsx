@@ -79,7 +79,7 @@ export default function ServicesHeroSection({ token }: ServicesHeroSectionProps)
     if (loading) {
         return (
             <div className="flex items-center justify-center h-64">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#26cf71]"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35]"></div>
             </div>
         );
     }
@@ -94,7 +94,7 @@ export default function ServicesHeroSection({ token }: ServicesHeroSectionProps)
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Preview */}
                 <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                    <div className="p-4 border-b border-gray-200 bg-gray-50">
+                    <div className="p-4 border-b border-gray-200 bg-[#F8F9FA]">
                         <h3 className="font-semibold text-gray-900">Live Preview</h3>
                     </div>
                     <div className="relative h-80 overflow-hidden">
@@ -139,7 +139,7 @@ export default function ServicesHeroSection({ token }: ServicesHeroSectionProps)
                             type="text"
                             value={heroData.title}
                             onChange={(e) => setHeroData({ ...heroData, title: e.target.value })}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#26cf71]"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                             placeholder="e.g., Find the Perfect Service"
                         />
                     </div>
@@ -152,7 +152,7 @@ export default function ServicesHeroSection({ token }: ServicesHeroSectionProps)
                             type="text"
                             value={heroData.subtitle}
                             onChange={(e) => setHeroData({ ...heroData, subtitle: e.target.value })}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#26cf71]"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                             placeholder="e.g., Browse through professional services"
                         />
                     </div>
@@ -165,7 +165,7 @@ export default function ServicesHeroSection({ token }: ServicesHeroSectionProps)
                             type="text"
                             value={heroData.searchPlaceholder}
                             onChange={(e) => setHeroData({ ...heroData, searchPlaceholder: e.target.value })}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#26cf71]"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                             placeholder="e.g., Search for any service..."
                         />
                     </div>
@@ -178,7 +178,7 @@ export default function ServicesHeroSection({ token }: ServicesHeroSectionProps)
                             type="text"
                             value={heroData.locationPlaceholder}
                             onChange={(e) => setHeroData({ ...heroData, locationPlaceholder: e.target.value })}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#26cf71]"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                             placeholder="e.g., Location..."
                         />
                     </div>
@@ -192,7 +192,7 @@ export default function ServicesHeroSection({ token }: ServicesHeroSectionProps)
                             type="url"
                             value={heroData.backgroundImage}
                             onChange={(e) => setHeroData({ ...heroData, backgroundImage: e.target.value })}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#26cf71]"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                             placeholder="https://example.com/image.jpg"
                         />
                         <p className="text-xs text-gray-500 mt-1">Recommended size: 1920x600px</p>
@@ -220,7 +220,7 @@ export default function ServicesHeroSection({ token }: ServicesHeroSectionProps)
                     <button
                         onClick={handleSave}
                         disabled={saving}
-                        className="w-full flex items-center justify-center gap-2 bg-[#26cf71] hover:bg-green-600 text-white px-4 py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+                        className="w-full flex items-center justify-center gap-2 bg-[#FF6B35] hover:bg-green-600 text-white px-4 py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
                     >
                         <Save className="w-5 h-5" />
                         {saving ? 'Saving...' : 'Save Changes'}

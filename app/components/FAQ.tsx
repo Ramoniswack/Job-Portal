@@ -86,7 +86,7 @@ export default function FAQ() {
                         <div key={index}>
                             <div
                                 onClick={() => toggleFAQ(index)}
-                                className="bg-gray-50 rounded-md border border-gray-100 px-6 py-4 flex justify-between items-center cursor-pointer hover:bg-gray-100 transition"
+                                className="bg-[#F8F9FA] rounded-md border border-gray-100 px-6 py-4 flex justify-between items-center cursor-pointer hover:bg-[#F1F3F5] transition"
                             >
                                 <span className="text-gray-800 font-medium text-sm md:text-base">
                                     {faq.question}
@@ -110,34 +110,34 @@ export default function FAQ() {
                 <div ref={statsRef} className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
                     <div className="flex flex-col items-center">
                         <div className="relative">
-                            <span className="text-8xl font-bold text-[#26cf71]/10 select-none absolute -top-8 left-1/2 -translate-x-1/2">
+                            <span className="text-8xl font-bold text-[#FF6B35]/10 select-none absolute -top-8 left-1/2 -translate-x-1/2">
                                 {count1}K+
                             </span>
-                            <span className="text-5xl font-extrabold text-[#26cf71] relative">{count1}K+</span>
+                            <span className="text-5xl font-extrabold text-[#FF6B35] relative">{count1}K+</span>
                         </div>
-                        <div className="w-12 h-0.5 bg-[#26cf71] my-4"></div>
+                        <div className="w-12 h-0.5 bg-[#FF6B35] my-4"></div>
                         <p className="text-xl font-bold text-gray-800">Service Delivered</p>
                     </div>
 
                     <div className="flex flex-col items-center">
                         <div className="relative">
-                            <span className="text-8xl font-bold text-[#26cf71]/10 select-none absolute -top-8 left-1/2 -translate-x-1/2">
+                            <span className="text-8xl font-bold text-[#FF6B35]/10 select-none absolute -top-8 left-1/2 -translate-x-1/2">
                                 {count2}+
                             </span>
-                            <span className="text-5xl font-extrabold text-[#26cf71] relative">{count2}+</span>
+                            <span className="text-5xl font-extrabold text-[#FF6B35] relative">{count2}+</span>
                         </div>
-                        <div className="w-12 h-0.5 bg-[#26cf71] my-4"></div>
+                        <div className="w-12 h-0.5 bg-[#FF6B35] my-4"></div>
                         <p className="text-xl font-bold text-gray-800">Service Providers</p>
                     </div>
 
                     <div className="flex flex-col items-center">
                         <div className="relative">
-                            <span className="text-8xl font-bold text-[#26cf71]/10 select-none absolute -top-8 left-1/2 -translate-x-1/2">
+                            <span className="text-8xl font-bold text-[#FF6B35]/10 select-none absolute -top-8 left-1/2 -translate-x-1/2">
                                 {count3}+
                             </span>
-                            <span className="text-5xl font-extrabold text-[#26cf71] relative">{count3}+</span>
+                            <span className="text-5xl font-extrabold text-[#FF6B35] relative">{count3}+</span>
                         </div>
-                        <div className="w-12 h-0.5 bg-[#26cf71] my-4"></div>
+                        <div className="w-12 h-0.5 bg-[#FF6B35] my-4"></div>
                         <p className="text-xl font-bold text-gray-800">Home Services</p>
                     </div>
                 </div>

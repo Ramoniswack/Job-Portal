@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { toast } from 'sonner';
 import {
     Briefcase,
@@ -17,7 +17,8 @@ import {
     UserCircle,
     Ban,
     X,
-    Mail
+    Mail,
+    Search
 } from 'lucide-react';
 import { User, Job, Application } from '../DashboardLayout';
 import ApplyJobModal from '../ApplyJobModal';
@@ -49,7 +50,38 @@ export default function BrowseJobsSection({
         jobId: null,
         jobTitle: ''
     });
+    const [searchQuery, setSearchQuery] = useState('');
+    const [debouncedSearch, setDebouncedSearch] = useState('');
+
     const appliedJobIds = myApplications.map(app => app.job._id);
+
+    // Debounce search query
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearch(searchQuery);
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [searchQuery]);
+
+    // Filter jobs based on search
+    const filteredJobs = useMemo(() => {
+        if (!debouncedSearch.trim()) {
+            return allJobs.filter(job => job.client);
+        }
+
+        const query = debouncedSearch.toLowerCase();
+        return allJobs.filter(job => {
+            if (!job.client) return false;
+
+            return (
+                job.title.toLowerCase().includes(query) ||
+                job.description.toLowerCase().includes(query) ||
+                job.category.toLowerCase().includes(query) ||
+                job.location.toLowerCase().includes(query)
+            );
+        });
+    }, [allJobs, debouncedSearch]);
 
     const openApplyModal = (jobId: string, jobTitle: string) => {
         setSelectedJob({ id: jobId, title: jobTitle });
@@ -114,16 +146,16 @@ export default function BrowseJobsSection({
 
         const statusMap: Record<string, { text: string; color: string }> = {
             'requested': { text: 'Pending', color: 'bg-yellow-100 text-yellow-800' },
-            'approved': { text: 'Accepted', color: 'bg-green-100 text-green-800' },
+            'approved': { text: 'Accepted', color: 'bg-[#F1F3F5] text-green-800' },
             'rejected': { text: 'Rejected', color: 'bg-red-100 text-red-800' },
         };
 
-        return statusMap[application.status] || { text: 'Applied', color: 'bg-green-100 text-[#26cf71]' };
+        return statusMap[application.status] || { text: 'Applied', color: 'bg-[#F1F3F5] text-[#FF6B35]' };
     };
 
     return (
         <>
-            <div className="p-6 md:p-8 bg-gray-50 min-h-screen">
+            <div className="p-6 md:p-8 bg-[#F8F9FA] min-h-screen">
                 {/* Header Section */}
                 <div className="mb-8">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -134,11 +166,33 @@ export default function BrowseJobsSection({
                         <button
                             onClick={onLoadAllJobs}
                             disabled={loadingAllJobs}
-                            className="flex items-center gap-2 bg-[#26cf71] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#1eb863] transition-all disabled:opacity-50 shadow-lg shadow-green-200"
+                            className="flex items-center gap-2 bg-[#FF6B35] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#FF5722] transition-all disabled:opacity-50 shadow-lg shadow-green-200"
                         >
                             <RefreshCw className={`w-5 h-5 ${loadingAllJobs ? 'animate-spin' : ''}`} />
                             {loadingAllJobs ? 'Loading...' : 'Refresh'}
                         </button>
+                    </div>
+
+                    {/* Search Bar */}
+                    <div className="mt-6">
+                        <div className="relative">
+                            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                            <input
+                                type="text"
+                                placeholder="Search jobs by title, description, category, or location..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-all"
+                            />
+                            {searchQuery && (
+                                <button
+                                    onClick={() => setSearchQuery('')}
+                                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                >
+                                    <X className="w-5 h-5" />
+                                </button>
+                            )}
+                        </div>
                     </div>
 
                     {/* Stats Bar */}
@@ -149,14 +203,14 @@ export default function BrowseJobsSection({
                                     <Briefcase className="w-6 h-6 text-blue-600" />
                                 </div>
                                 <div>
-                                    <p className="text-2xl font-bold text-gray-900">{allJobs.filter(job => job.client).length}</p>
-                                    <p className="text-sm text-gray-600">Available Jobs</p>
+                                    <p className="text-2xl font-bold text-gray-900">{filteredJobs.length}</p>
+                                    <p className="text-sm text-gray-600">{debouncedSearch ? 'Matching Jobs' : 'Available Jobs'}</p>
                                 </div>
                             </div>
                         </div>
                         <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                             <div className="flex items-center gap-3">
-                                <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center">
+                                <div className="w-12 h-12 bg-[#F8F9FA] rounded-lg flex items-center justify-center">
                                     <CheckCircle className="w-6 h-6 text-green-600" />
                                 </div>
                                 <div>
@@ -182,9 +236,9 @@ export default function BrowseJobsSection({
                 </div>
 
                 {/* Jobs Grid */}
-                {allJobs.filter(job => job.client).length > 0 ? (
+                {filteredJobs.length > 0 ? (
                     <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-6">
-                        {allJobs.filter(job => job.client).map((job) => {
+                        {filteredJobs.map((job) => {
                             const clientId = typeof job.client === 'string' ? job.client : job.client._id;
                             const clientName = typeof job.client === 'string' ? 'Anonymous' : job.client.name;
                             const clientEmail = typeof job.client === 'string' ? '' : job.client.email;
@@ -201,11 +255,11 @@ export default function BrowseJobsSection({
                                     <div className="p-6 pb-4">
                                         <div className="flex items-start justify-between mb-4">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-12 h-12 bg-gradient-to-br from-[#26cf71] to-[#1eb863] rounded-xl flex items-center justify-center shadow-lg shadow-green-200">
+                                                <div className="w-12 h-12 bg-gradient-to-br from-[#FF6B35] to-[#FF5722] rounded-xl flex items-center justify-center shadow-lg shadow-green-200">
                                                     <Briefcase className="w-6 h-6 text-white" />
                                                 </div>
                                                 <div>
-                                                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#26cf71] transition-colors line-clamp-1">
+                                                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#FF6B35] transition-colors line-clamp-1">
                                                         {job.title}
                                                     </h3>
                                                     <p className="text-sm text-gray-500">{clientName}</p>
@@ -219,9 +273,9 @@ export default function BrowseJobsSection({
                                             </div>
                                             <span className={`px-3 py-1 rounded-full text-xs font-semibold ${job.status === 'pending' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
                                                 job.status === 'accepted' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
-                                                    job.status === 'confirmed' ? 'bg-green-50 text-green-700 border border-green-200' :
+                                                    job.status === 'confirmed' ? 'bg-[#F8F9FA] text-green-700 border border-green-200' :
                                                         job.status === 'closed' ? 'bg-red-50 text-red-700 border border-red-200' :
-                                                            'bg-gray-50 text-gray-700 border border-gray-200'
+                                                            'bg-[#F8F9FA] text-gray-700 border border-gray-200'
                                                 }`}>
                                                 {job.status.charAt(0).toUpperCase() + job.status.slice(1)}
                                             </span>
@@ -232,15 +286,15 @@ export default function BrowseJobsSection({
                                         </p>
 
                                         <div className="flex flex-wrap gap-2 mb-4">
-                                            <div className="flex items-center gap-1 px-3 py-1.5 bg-gray-50 rounded-lg text-xs text-gray-700 border border-gray-200">
+                                            <div className="flex items-center gap-1 px-3 py-1.5 bg-[#F8F9FA] rounded-lg text-xs text-gray-700 border border-gray-200">
                                                 <Tag className="w-3.5 h-3.5" />
                                                 {job.category}
                                             </div>
-                                            <div className="flex items-center gap-1 px-3 py-1.5 bg-gray-50 rounded-lg text-xs text-gray-700 border border-gray-200">
+                                            <div className="flex items-center gap-1 px-3 py-1.5 bg-[#F8F9FA] rounded-lg text-xs text-gray-700 border border-gray-200">
                                                 <MapPin className="w-3.5 h-3.5" />
                                                 {job.location}
                                             </div>
-                                            <div className="flex items-center gap-1 px-3 py-1.5 bg-green-50 rounded-lg text-xs font-bold text-[#26cf71] border border-green-200">
+                                            <div className="flex items-center gap-1 px-3 py-1.5 bg-[#F8F9FA] rounded-lg text-xs font-bold text-[#FF6B35] border border-green-200">
                                                 <DollarSign className="w-3.5 h-3.5" />
                                                 {job.budget}
                                             </div>
@@ -296,14 +350,14 @@ export default function BrowseJobsSection({
                                             ) : (
                                                 <button
                                                     onClick={() => openApplyModal(job._id, job.title)}
-                                                    className="w-full py-3 bg-gradient-to-r from-[#26cf71] to-[#1eb863] text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-green-200 transition-all flex items-center justify-center gap-2"
+                                                    className="w-full py-3 bg-gradient-to-r from-[#FF6B35] to-[#FF5722] text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-green-200 transition-all flex items-center justify-center gap-2"
                                                 >
                                                     <Send className="w-4 h-4" />
                                                     Apply Now
                                                 </button>
                                             )
                                         ) : (
-                                            <div className="w-full py-3 bg-gray-50 text-gray-600 rounded-xl text-sm font-semibold text-center border border-gray-200 flex items-center justify-center gap-1">
+                                            <div className="w-full py-3 bg-[#F8F9FA] text-gray-600 rounded-xl text-sm font-semibold text-center border border-gray-200 flex items-center justify-center gap-1">
                                                 <Lock className="w-4 h-4" />
                                                 Workers Only
                                             </div>
@@ -315,7 +369,7 @@ export default function BrowseJobsSection({
                     </div>
                 ) : (
                     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center">
-                        <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <div className="w-24 h-24 bg-[#F8F9FA] rounded-full flex items-center justify-center mx-auto mb-4">
                             <Briefcase className="w-16 h-16 text-gray-300" />
                         </div>
                         <h3 className="text-xl font-bold text-gray-900 mb-2">No Jobs Available</h3>

@@ -109,7 +109,7 @@ export default function ApplyJobModal({ jobId, jobTitle, token, currentUserEmail
                                 value={formData.email}
                                 readOnly
                                 disabled
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-[#F1F3F5] text-gray-600 cursor-not-allowed"
                                 placeholder="your@email.com"
                             />
                             <p className="text-xs text-gray-500 mt-1">This is your registered email and cannot be changed</p>
@@ -166,14 +166,14 @@ export default function ApplyJobModal({ jobId, jobTitle, token, currentUserEmail
                         <button
                             type="submit"
                             disabled={loading}
-                            className="flex-1 bg-[#26cf71] text-white py-3 rounded-lg font-bold hover:opacity-90 transition-all disabled:opacity-50"
+                            className="flex-1 bg-[#FF6B35] text-white py-3 rounded-lg font-bold hover:opacity-90 transition-all disabled:opacity-50"
                         >
                             {loading ? 'Submitting...' : 'Submit Application'}
                         </button>
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-6 py-3 border border-gray-300 rounded-lg font-bold hover:bg-gray-50 transition-all"
+                            className="px-6 py-3 border border-gray-300 rounded-lg font-bold hover:bg-[#F8F9FA] transition-all"
                         >
                             Cancel
                         </button>

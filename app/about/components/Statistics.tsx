@@ -57,12 +57,12 @@ export default function Statistics() {
                             <CheckCircle className="w-10 h-10 text-white" />
                         </div>
                         <div className="relative">
-                            <span className="text-8xl font-bold text-[#26cf71]/10 select-none absolute -top-8 left-1/2 -translate-x-1/2">
+                            <span className="text-8xl font-bold text-[#FF6B35]/10 select-none absolute -top-8 left-1/2 -translate-x-1/2">
                                 {count1}K+
                             </span>
-                            <span className="text-5xl font-extrabold text-[#26cf71] relative">{count1}K+</span>
+                            <span className="text-5xl font-extrabold text-[#FF6B35] relative">{count1}K+</span>
                         </div>
-                        <div className="w-12 h-0.5 bg-[#26cf71] my-4"></div>
+                        <div className="w-12 h-0.5 bg-[#FF6B35] my-4"></div>
                         <p className="text-xl font-bold text-gray-800">Service Delivered</p>
                     </div>
 
@@ -71,12 +71,12 @@ export default function Statistics() {
                             <Users className="w-10 h-10 text-white" />
                         </div>
                         <div className="relative">
-                            <span className="text-8xl font-bold text-[#26cf71]/10 select-none absolute -top-8 left-1/2 -translate-x-1/2">
+                            <span className="text-8xl font-bold text-[#FF6B35]/10 select-none absolute -top-8 left-1/2 -translate-x-1/2">
                                 {count2}+
                             </span>
-                            <span className="text-5xl font-extrabold text-[#26cf71] relative">{count2}+</span>
+                            <span className="text-5xl font-extrabold text-[#FF6B35] relative">{count2}+</span>
                         </div>
-                        <div className="w-12 h-0.5 bg-[#26cf71] my-4"></div>
+                        <div className="w-12 h-0.5 bg-[#FF6B35] my-4"></div>
                         <p className="text-xl font-bold text-gray-800">Service Providers</p>
                     </div>
 
@@ -85,12 +85,12 @@ export default function Statistics() {
                             <Wrench className="w-10 h-10 text-white" />
                         </div>
                         <div className="relative">
-                            <span className="text-8xl font-bold text-[#26cf71]/10 select-none absolute -top-8 left-1/2 -translate-x-1/2">
+                            <span className="text-8xl font-bold text-[#FF6B35]/10 select-none absolute -top-8 left-1/2 -translate-x-1/2">
                                 {count3}+
                             </span>
-                            <span className="text-5xl font-extrabold text-[#26cf71] relative">{count3}+</span>
+                            <span className="text-5xl font-extrabold text-[#FF6B35] relative">{count3}+</span>
                         </div>
-                        <div className="w-12 h-0.5 bg-[#26cf71] my-4"></div>
+                        <div className="w-12 h-0.5 bg-[#FF6B35] my-4"></div>
                         <p className="text-xl font-bold text-gray-800">Home Services</p>
                     </div>
                 </div>

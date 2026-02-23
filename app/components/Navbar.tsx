@@ -141,7 +141,7 @@ export default function Navbar({ location: propLocation, setLocation: propSetLoc
                     href="/"
                     className="flex items-center transition-opacity duration-300 hover:opacity-80"
                 >
-                    <img src="/logo.png" alt="Hamro Sewa" className="h-8 w-auto" />
+                    <img src="/logo.jpg" alt="Hamro Sewa" className="h-8 w-auto" />
                 </a>
 
                 <div
@@ -160,8 +160,8 @@ export default function Navbar({ location: propLocation, setLocation: propSetLoc
                         <li>
                             <a
                                 href="/"
-                                className="text-[#333] font-medium no-underline relative transition-colors duration-300 hover:text-[#26cf71] 
-                  after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#26cf71] 
+                                className="text-[#333] font-medium no-underline relative transition-colors duration-300 hover:text-[#FF6B35] 
+                  after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#FF6B35] 
                   after:transition-[width] after:duration-300 hover:after:w-full"
                             >
                                 Home
@@ -170,8 +170,8 @@ export default function Navbar({ location: propLocation, setLocation: propSetLoc
                         <li>
                             <a
                                 href="/services"
-                                className="text-[#333] font-medium no-underline relative transition-colors duration-300 hover:text-[#26cf71] 
-                  after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#26cf71] 
+                                className="text-[#333] font-medium no-underline relative transition-colors duration-300 hover:text-[#FF6B35] 
+                  after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#FF6B35] 
                   after:transition-[width] after:duration-300 hover:after:w-full"
                             >
                                 Services
@@ -180,8 +180,8 @@ export default function Navbar({ location: propLocation, setLocation: propSetLoc
                         <li>
                             <a
                                 href="/about"
-                                className="text-[#333] font-medium no-underline relative transition-colors duration-300 hover:text-[#26cf71] 
-                  after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#26cf71] 
+                                className="text-[#333] font-medium no-underline relative transition-colors duration-300 hover:text-[#FF6B35] 
+                  after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#FF6B35] 
                   after:transition-[width] after:duration-300 hover:after:w-full"
                             >
                                 About
@@ -190,8 +190,8 @@ export default function Navbar({ location: propLocation, setLocation: propSetLoc
                         <li>
                             <a
                                 href="/contact"
-                                className="text-[#333] font-medium no-underline relative transition-colors duration-300 hover:text-[#26cf71] 
-                  after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#26cf71] 
+                                className="text-[#333] font-medium no-underline relative transition-colors duration-300 hover:text-[#FF6B35] 
+                  after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#FF6B35] 
                   after:transition-[width] after:duration-300 hover:after:w-full"
                             >
                                 Contact
@@ -200,8 +200,8 @@ export default function Navbar({ location: propLocation, setLocation: propSetLoc
                         <li>
                             <a
                                 href={mounted && isLoggedIn ? "/hamrosewa" : "/login"}
-                                className="text-[#333] font-medium no-underline relative transition-colors duration-300 hover:text-[#26cf71] 
-                  after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#26cf71] 
+                                className="text-[#333] font-medium no-underline relative transition-colors duration-300 hover:text-[#FF6B35] 
+                  after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#FF6B35] 
                   after:transition-[width] after:duration-300 hover:after:w-full"
                             >
                                 {mounted && isLoggedIn ? "Dashboard" : "Login"}
@@ -212,7 +212,7 @@ export default function Navbar({ location: propLocation, setLocation: propSetLoc
                     <div className="relative md:w-auto w-full">
                         <button
                             onClick={() => setShowLocationDropdown(!showLocationDropdown)}
-                            className="bg-white border border-gray-300 text-gray-700 py-3 px-4 rounded-lg font-medium cursor-pointer transition-all duration-300 hover:border-[#26cf71] flex items-center gap-2 md:w-auto w-full justify-between"
+                            className="bg-white border border-gray-300 text-gray-700 py-3 px-4 rounded-lg font-medium cursor-pointer transition-all duration-300 hover:border-[#FF6B35] flex items-center gap-2 md:w-auto w-full justify-between"
                         >
                             <MapPin className="w-5 h-5 text-red-500" />
                             <span>{location}</span>
@@ -223,7 +223,7 @@ export default function Navbar({ location: propLocation, setLocation: propSetLoc
                             <div className="absolute top-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg w-full md:w-64 z-50">
                                 <button
                                     onClick={detectLocation}
-                                    className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-2 border-b border-gray-200 text-[#26cf71] font-medium"
+                                    className="w-full px-4 py-3 text-left hover:bg-[#F8F9FA] flex items-center gap-2 border-b border-gray-200 text-[#FF6B35] font-medium"
                                 >
                                     <Navigation className="w-4 h-4" />
                                     Detect My Location
@@ -232,7 +232,7 @@ export default function Navbar({ location: propLocation, setLocation: propSetLoc
                                     <input
                                         type="text"
                                         placeholder="Enter location manually"
-                                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#26cf71] focus:border-transparent outline-none"
+                                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent outline-none"
                                         onKeyDown={(e) => {
                                             if (e.key === 'Enter' && e.currentTarget.value.trim()) {
                                                 selectLocation(e.currentTarget.value.trim());

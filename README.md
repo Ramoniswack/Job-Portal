@@ -163,13 +163,9 @@ Application will run on `http://localhost:3000`
 npm run build
 npm start
 ```
-
 ---
-
 ## 🔐 Environment Variables
-
 Create a `.env.local` file in the frontend root:
-
 ```env
 # API Configuration
 NEXT_PUBLIC_API_URL=http://localhost:5000
@@ -177,13 +173,9 @@ NEXT_PUBLIC_API_URL=http://localhost:5000
 # Socket.IO (if different from API)
 NEXT_PUBLIC_SOCKET_URL=http://localhost:5000
 ```
-
 ---
-
 ## 🌐 Pages & Routes
-
 ### Public Routes
-
 | Route | Page | Description |
 |-------|------|-------------|
 | `/` | Homepage | Hero, categories, featured services, AMC packages |
@@ -474,7 +466,6 @@ Filter services client-side
     ↓
 Update display
 ```
-
 ### 3. Job Posting Workflow (Client)
 
 ```
@@ -537,7 +528,6 @@ Close modal
     ↓
 Application appears in "My Applications"
 ```
-
 ### 5. Real-time Messaging Workflow
 
 ```

@@ -1,6 +1,5 @@
 'use client';
 
-import { Check } from 'lucide-react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import { useEffect, useState } from 'react';
@@ -59,10 +58,10 @@ export default function AMCPackagesPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-50">
+            <div className="min-h-screen bg-[#F8F9FA]">
                 <Navbar />
                 <div className="flex items-center justify-center h-screen">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#26cf71]"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35]"></div>
                 </div>
             </div>
         );
@@ -70,7 +69,7 @@ export default function AMCPackagesPage() {
 
     if (!packageData) {
         return (
-            <div className="min-h-screen bg-gray-50">
+            <div className="min-h-screen bg-[#F8F9FA]">
                 <Navbar />
                 <div className="flex items-center justify-center h-screen">
                     <p className="text-gray-600 text-lg">Package not found</p>
@@ -80,7 +79,7 @@ export default function AMCPackagesPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-[#F8F9FA]">
             <Navbar />
 
             {/* Hero Image Section */}
@@ -93,7 +92,7 @@ export default function AMCPackagesPage() {
                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                     <div className="text-center text-white px-4">
                         <h1 className="text-5xl md:text-6xl font-bold mb-4 drop-shadow-lg">
-                            {packageData.category} <span className="text-[#26cf71]">AMC Packages</span>
+                            {packageData.category} <span className="text-[#FF6B35]">AMC Packages</span>
                         </h1>
                         <p className="text-xl md:text-2xl font-medium drop-shadow-md max-w-3xl mx-auto">
                             {packageData.description}
@@ -114,45 +113,41 @@ export default function AMCPackagesPage() {
                 </div>
 
                 {/* Packages Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
+                <div className="flex flex-wrap justify-center gap-8 max-w-6xl mx-auto">
                     {packageData.pricingTiers.map((tier, index) => (
                         <div
                             key={index}
-                            className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-2xl hover:border-orange-300 transition-all duration-300 flex flex-col"
+                            className="w-80 border border-gray-200 rounded-lg p-5 bg-white shadow-[0_2px_10px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.15)] transition-shadow duration-300"
                         >
                             {/* Package Header */}
-                            <div className="bg-orange-500 text-white text-center py-5 px-6">
-                                <h2 className="text-2xl font-bold uppercase tracking-wide">{tier.name}</h2>
+                            <div className="bg-[#FF6B35] text-white text-center py-4 px-4 font-bold text-lg rounded mb-5">
+                                {tier.name.toUpperCase()}
                             </div>
 
                             {/* Price */}
-                            <div className="text-center py-10 border-b border-gray-100 bg-gradient-to-b from-orange-50 to-white">
-                                <div className="text-4xl font-bold text-gray-900">
-                                    NPR {tier.price.toLocaleString()}
+                            <div className="text-center mb-5">
+                                <div className="text-lg text-gray-800 mb-1">
+                                    NPR <span className="text-5xl font-extrabold text-[#1a2a3a]">{tier.price.toLocaleString()}</span>/mo
                                 </div>
-                                <div className="text-gray-500 text-base mt-3">/{tier.duration}</div>
-                            </div>
-
-                            {/* Features */}
-                            <div className="flex-1 p-8">
-                                <ul className="space-y-5">
-                                    {tier.features.map((feature, idx) => (
-                                        <li key={idx} className="flex items-start gap-3">
-                                            <div className="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
-                                                <Check className="w-4 h-4 text-green-600 font-bold" />
-                                            </div>
-                                            <span className="text-gray-700 text-base leading-relaxed">{feature}</span>
-                                        </li>
-                                    ))}
-                                </ul>
+                                <div className="text-gray-600 text-base -mt-1 mb-5">
+                                    {tier.duration === 'month' ? 'Monthly' : tier.duration === 'quarter' ? 'Quarterly' : 'Yearly'} Billing
+                                </div>
                             </div>
 
                             {/* Book Button */}
-                            <div className="p-8 pt-0">
-                                <button className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl text-lg">
-                                    Book Now
-                                </button>
-                            </div>
+                            <button className="w-full py-3 px-4 border-2 border-[#FF6B35] bg-white text-[#FF6B35] font-bold rounded cursor-pointer text-center mb-6 hover:bg-[#FF6B35] hover:text-white transition-colors duration-200">
+                                Book Now
+                            </button>
+
+                            {/* Features */}
+                            <ul className="list-none p-0 m-0">
+                                {tier.features.map((feature, idx) => (
+                                    <li key={idx} className="mb-3 text-gray-800 flex items-center text-[1.05rem]">
+                                        <span className="text-[#FF6B35] mr-3 font-bold text-lg">✔</span>
+                                        {feature}
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
                     ))}
                 </div>
@@ -163,7 +158,7 @@ export default function AMCPackagesPage() {
                     <div className="grid md:grid-cols-2 gap-6 text-gray-700">
                         {packageData.benefits.map((benefit, index) => (
                             <div key={index}>
-                                <h4 className="font-semibold text-lg mb-2 text-orange-500">✓ {benefit.title}</h4>
+                                <h4 className="font-semibold text-lg mb-2 text-[#FF6B35]">✓ {benefit.title}</h4>
                                 <p className="text-sm">{benefit.description}</p>
                             </div>
                         ))}

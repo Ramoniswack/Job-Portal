@@ -46,7 +46,7 @@ export default function Sidebar({
         <>
             <button
                 onClick={() => handleSectionChange('dashboard')}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'dashboard' ? 'bg-[#26cf71] text-white' : 'text-gray-600 hover:bg-green-50 hover:text-[#26cf71]'
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'dashboard' ? 'bg-[#FF6B35] text-white' : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">dashboard</span>
@@ -56,7 +56,7 @@ export default function Sidebar({
             {currentUser?.role === 'worker' && (
                 <button
                     onClick={() => handleSectionChange('browse-jobs')}
-                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'browse-jobs' ? 'bg-[#26cf71] text-white' : 'text-gray-600 hover:bg-green-50 hover:text-[#26cf71]'
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'browse-jobs' ? 'bg-[#FF6B35] text-white' : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
                         }`}
                 >
                     <span className="material-symbols-outlined text-[20px]">search</span>
@@ -66,7 +66,7 @@ export default function Sidebar({
 
             <button
                 onClick={() => handleSectionChange('my-jobs')}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'my-jobs' ? 'bg-[#26cf71] text-white' : 'text-gray-600 hover:bg-green-50 hover:text-[#26cf71]'
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'my-jobs' ? 'bg-[#FF6B35] text-white' : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">work_outline</span>
@@ -76,7 +76,7 @@ export default function Sidebar({
             {currentUser?.role === 'worker' && (
                 <button
                     onClick={() => handleSectionChange('my-applications')}
-                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'my-applications' ? 'bg-[#26cf71] text-white' : 'text-gray-600 hover:bg-green-50 hover:text-[#26cf71]'
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'my-applications' ? 'bg-[#FF6B35] text-white' : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
                         }`}
                 >
                     <span className="material-symbols-outlined text-[20px]">description</span>
@@ -86,7 +86,7 @@ export default function Sidebar({
 
             <button
                 onClick={() => handleSectionChange('messages')}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'messages' ? 'bg-[#26cf71] text-white' : 'text-gray-600 hover:bg-green-50 hover:text-[#26cf71]'
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'messages' ? 'bg-[#FF6B35] text-white' : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">chat</span>
@@ -101,7 +101,7 @@ export default function Sidebar({
                     </div>
                     <button
                         onClick={() => handleSectionChange('view-posts')}
-                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'view-posts' ? 'bg-[#26cf71] text-white' : 'text-gray-600 hover:bg-green-50 hover:text-[#26cf71]'
+                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'view-posts' ? 'bg-[#FF6B35] text-white' : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
                             }`}
                     >
                         <span className="material-symbols-outlined text-[20px]">article</span>
@@ -109,7 +109,7 @@ export default function Sidebar({
                     </button>
                     <button
                         onClick={() => handleSectionChange('add-post')}
-                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'add-post' ? 'bg-[#26cf71] text-white' : 'text-gray-600 hover:bg-green-50 hover:text-[#26cf71]'
+                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'add-post' ? 'bg-[#FF6B35] text-white' : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
                             }`}
                     >
                         <span className="material-symbols-outlined text-[20px]">add_circle</span>
@@ -117,7 +117,7 @@ export default function Sidebar({
                     </button>
                     <button
                         onClick={() => handleSectionChange('post-categories')}
-                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'post-categories' ? 'bg-[#26cf71] text-white' : 'text-gray-600 hover:bg-green-50 hover:text-[#26cf71]'
+                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'post-categories' ? 'bg-[#FF6B35] text-white' : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
                             }`}
                     >
                         <span className="material-symbols-outlined text-[20px]">category</span>
@@ -149,8 +149,8 @@ export default function Sidebar({
             {/* Desktop Sidebar */}
             <aside className="hidden lg:flex w-64 bg-white border-r border-gray-200 flex-col fixed h-[calc(100vh-4rem)] top-16 z-40">
                 <div className="p-6 flex items-center gap-3 border-b border-gray-200">
-                    <span className="material-symbols-outlined text-[#26cf71] text-[24px]">dashboard</span>
-                    <h2 className="text-[#26cf71] text-lg font-bold tracking-tight">Navigation</h2>
+                    <span className="material-symbols-outlined text-[#FF6B35] text-[24px]">dashboard</span>
+                    <h2 className="text-[#FF6B35] text-lg font-bold tracking-tight">Navigation</h2>
                 </div>
 
                 <div className="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
@@ -164,8 +164,8 @@ export default function Sidebar({
                     }`}
             >
                 <div className="p-6 flex items-center gap-3 border-b border-gray-200">
-                    <span className="material-symbols-outlined text-[#26cf71] text-[24px]">dashboard</span>
-                    <h2 className="text-[#26cf71] text-lg font-bold tracking-tight">Navigation</h2>
+                    <span className="material-symbols-outlined text-[#FF6B35] text-[24px]">dashboard</span>
+                    <h2 className="text-[#FF6B35] text-lg font-bold tracking-tight">Navigation</h2>
                 </div>
 
                 <div className="flex-1 px-4 py-4 space-y-2 overflow-y-auto">

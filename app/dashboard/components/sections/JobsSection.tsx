@@ -146,19 +146,19 @@ export default function JobsSection({ token }: JobsSectionProps) {
         const styles = {
             pending: 'bg-yellow-100 text-yellow-700',
             accepted: 'bg-blue-100 text-blue-700',
-            confirmed: 'bg-green-100 text-green-700',
-            completed: 'bg-gray-100 text-gray-700',
+            confirmed: 'bg-[#F1F3F5] text-green-700',
+            completed: 'bg-[#F1F3F5] text-gray-700',
         };
-        return styles[status as keyof typeof styles] || 'bg-gray-100 text-gray-700';
+        return styles[status as keyof typeof styles] || 'bg-[#F1F3F5] text-gray-700';
     };
 
     const getApplicationStatusBadge = (status: string) => {
         const styles = {
             requested: 'bg-yellow-100 text-yellow-700',
-            approved: 'bg-green-100 text-green-700',
+            approved: 'bg-[#F1F3F5] text-green-700',
             rejected: 'bg-red-100 text-red-700',
         };
-        return styles[status as keyof typeof styles] || 'bg-gray-100 text-gray-700';
+        return styles[status as keyof typeof styles] || 'bg-[#F1F3F5] text-gray-700';
     };
 
     const formatDate = (dateString: string) => {
@@ -180,7 +180,7 @@ export default function JobsSection({ token }: JobsSectionProps) {
 
                 {/* Stats */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
-                    <div className="bg-gray-50 rounded-lg p-4">
+                    <div className="bg-[#F8F9FA] rounded-lg p-4">
                         <p className="text-sm text-gray-600">Total Jobs</p>
                         <p className="text-2xl font-bold text-gray-900">{jobs.length}</p>
                     </div>
@@ -190,13 +190,13 @@ export default function JobsSection({ token }: JobsSectionProps) {
                             {jobs.filter(j => j.status === 'pending').length}
                         </p>
                     </div>
-                    <div className="bg-green-50 rounded-lg p-4">
+                    <div className="bg-[#F8F9FA] rounded-lg p-4">
                         <p className="text-sm text-green-600">Active</p>
                         <p className="text-2xl font-bold text-green-700">
                             {jobs.filter(j => ['accepted', 'confirmed'].includes(j.status)).length}
                         </p>
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-4">
+                    <div className="bg-[#F8F9FA] rounded-lg p-4">
                         <p className="text-sm text-gray-600">Completed</p>
                         <p className="text-2xl font-bold text-gray-700">
                             {jobs.filter(j => j.status === 'completed').length}
@@ -209,7 +209,7 @@ export default function JobsSection({ token }: JobsSectionProps) {
             <div className="overflow-x-auto">
                 {loading ? (
                     <div className="p-12 text-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#26cf71] mx-auto"></div>
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35] mx-auto"></div>
                         <p className="mt-4 text-gray-600">Loading jobs...</p>
                     </div>
                 ) : jobs.length === 0 ? (
@@ -219,7 +219,7 @@ export default function JobsSection({ token }: JobsSectionProps) {
                     </div>
                 ) : (
                     <table className="w-full">
-                        <thead className="bg-gray-50 border-b border-gray-200">
+                        <thead className="bg-[#F8F9FA] border-b border-gray-200">
                             <tr>
                                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                                     Job Title
@@ -243,7 +243,7 @@ export default function JobsSection({ token }: JobsSectionProps) {
                         </thead>
                         <tbody className="divide-y divide-gray-200">
                             {jobs.map((job) => (
-                                <tr key={job._id} className="hover:bg-gray-50 transition-colors">
+                                <tr key={job._id} className="hover:bg-[#F8F9FA] transition-colors">
                                     <td className="px-6 py-4">
                                         <p className="font-semibold text-gray-900">{job.title}</p>
                                         <p className="text-sm text-gray-500">{job.location}</p>
@@ -266,7 +266,7 @@ export default function JobsSection({ token }: JobsSectionProps) {
                                     <td className="px-6 py-4">
                                         <button
                                             onClick={() => loadJobDetails(job)}
-                                            className="px-4 py-2 bg-[#26cf71] text-white rounded-lg hover:bg-[#1eb863] transition-colors text-sm font-semibold"
+                                            className="px-4 py-2 bg-[#FF6B35] text-white rounded-lg hover:bg-[#FF5722] transition-colors text-sm font-semibold"
                                         >
                                             View Details
                                         </button>
@@ -306,7 +306,7 @@ export default function JobsSection({ token }: JobsSectionProps) {
                         {/* Modal Content */}
                         <div className="p-6 space-y-6">
                             {/* Job Details */}
-                            <div className="bg-gray-50 rounded-lg p-4">
+                            <div className="bg-[#F8F9FA] rounded-lg p-4">
                                 <h4 className="font-bold text-gray-900 mb-3">Job Details</h4>
                                 <div className="grid grid-cols-2 gap-4 text-sm">
                                     <div>
@@ -359,13 +359,13 @@ export default function JobsSection({ token }: JobsSectionProps) {
                                     const approvedApp = applications.find(app => app.status === 'approved');
                                     if (approvedApp) {
                                         return (
-                                            <div className="bg-green-50 rounded-lg p-4 border-2 border-green-200">
+                                            <div className="bg-[#F8F9FA] rounded-lg p-4 border-2 border-green-200">
                                                 <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
                                                     <span className="material-symbols-outlined text-green-600">check_circle</span>
                                                     Assigned Worker
                                                 </h4>
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-12 h-12 rounded-full bg-[#26cf71] flex items-center justify-center text-white font-bold text-lg">
+                                                    <div className="w-12 h-12 rounded-full bg-[#FF6B35] flex items-center justify-center text-white font-bold text-lg">
                                                         {approvedApp.worker?.name?.charAt(0).toUpperCase() || 'U'}
                                                     </div>
                                                     <div className="flex-1">
@@ -396,7 +396,7 @@ export default function JobsSection({ token }: JobsSectionProps) {
                             {/* Applications */}
                             {loadingDetails ? (
                                 <div className="text-center py-8">
-                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#26cf71] mx-auto"></div>
+                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FF6B35] mx-auto"></div>
                                     <p className="mt-2 text-gray-600">Loading applications...</p>
                                 </div>
                             ) : (
@@ -414,7 +414,7 @@ export default function JobsSection({ token }: JobsSectionProps) {
                                                         <div className="flex items-start justify-between mb-3">
                                                             <div className="flex-1">
                                                                 <div className="flex items-center gap-2 mb-1">
-                                                                    <div className="w-10 h-10 rounded-full bg-[#26cf71] flex items-center justify-center text-white font-semibold">
+                                                                    <div className="w-10 h-10 rounded-full bg-[#FF6B35] flex items-center justify-center text-white font-semibold">
                                                                         {app.worker?.name?.charAt(0).toUpperCase() || 'U'}
                                                                     </div>
                                                                     <div>
@@ -427,7 +427,7 @@ export default function JobsSection({ token }: JobsSectionProps) {
                                                                 {app.status}
                                                             </span>
                                                         </div>
-                                                        <div className="grid grid-cols-2 gap-3 text-sm mb-3 bg-gray-50 p-3 rounded-lg">
+                                                        <div className="grid grid-cols-2 gap-3 text-sm mb-3 bg-[#F8F9FA] p-3 rounded-lg">
                                                             <div>
                                                                 <p className="text-gray-600 font-semibold mb-1">Contact Phone</p>
                                                                 <p className="text-gray-900">{app.phone}</p>
@@ -447,7 +447,7 @@ export default function JobsSection({ token }: JobsSectionProps) {
                                                         </div>
                                                         <div className="text-sm">
                                                             <p className="text-gray-600 font-semibold mb-1">Application Message:</p>
-                                                            <p className="text-gray-700 bg-gray-50 p-2 rounded">{app.message}</p>
+                                                            <p className="text-gray-700 bg-[#F8F9FA] p-2 rounded">{app.message}</p>
                                                         </div>
                                                     </div>
                                                 ))}
@@ -463,7 +463,7 @@ export default function JobsSection({ token }: JobsSectionProps) {
                                             </h4>
                                             <div className="space-y-2 max-h-96 overflow-y-auto">
                                                 {messages.map((msg) => (
-                                                    <div key={msg._id} className="bg-gray-50 rounded-lg p-3">
+                                                    <div key={msg._id} className="bg-[#F8F9FA] rounded-lg p-3">
                                                         <div className="flex items-start justify-between mb-1">
                                                             <p className="font-semibold text-sm text-gray-900">
                                                                 {msg.sender?.name || 'Unknown'}

@@ -14,6 +14,7 @@ import ViewPostsSection from './sections/ViewPostsSection';
 import AddPostSection from './sections/AddPostSection';
 import PostCategoriesSection from './sections/PostCategoriesSection';
 import CreateJobModal from './CreateJobModal';
+import { useFCMNotifications } from '@/lib/useFCMNotifications';
 
 export interface User {
     id: string;
@@ -66,6 +67,9 @@ export default function DashboardLayout() {
     const [loadingAllJobs, setLoadingAllJobs] = useState(false);
     const [loadingApplications, setLoadingApplications] = useState(false);
     const [editingPost, setEditingPost] = useState<any>(null);
+
+    // Initialize FCM notifications
+    const { notification } = useFCMNotifications(token);
 
     useEffect(() => {
         const storedToken = localStorage.getItem('authToken') || '';
@@ -179,8 +183,16 @@ export default function DashboardLayout() {
         }
     };
 
+    // Refresh data when notification is received
+    useEffect(() => {
+        if (notification) {
+            console.log('New notification received, refreshing data...');
+            refreshData();
+        }
+    }, [notification]);
+
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-[#F8F9FA]">
             {/* Top Navbar */}
             <TopNavbar currentUser={currentUser} onLogout={handleLogout} />
 

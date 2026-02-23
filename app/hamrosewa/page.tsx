@@ -61,9 +61,9 @@ export default function AdminDashboard() {
 
     if (!currentUser) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div className="min-h-screen bg-[#F8F9FA] flex items-center justify-center">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#26cf71] mx-auto"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35] mx-auto"></div>
                     <p className="mt-4 text-gray-600">Loading...</p>
                 </div>
             </div>
@@ -75,8 +75,8 @@ export default function AdminDashboard() {
             <button
                 onClick={() => handleSectionChange('dashboard')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'dashboard'
-                    ? 'bg-[#26cf71] text-white'
-                    : 'text-gray-600 hover:bg-green-50 hover:text-[#26cf71]'
+                    ? 'bg-[#FF6B35] text-white'
+                    : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">dashboard</span>
@@ -86,8 +86,8 @@ export default function AdminDashboard() {
             <button
                 onClick={() => handleSectionChange('services-hero')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'services-hero'
-                    ? 'bg-[#26cf71] text-white'
-                    : 'text-gray-600 hover:bg-green-50 hover:text-[#26cf71]'
+                    ? 'bg-[#FF6B35] text-white'
+                    : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">image</span>
@@ -102,8 +102,8 @@ export default function AdminDashboard() {
             <button
                 onClick={() => handleSectionChange('add-service')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'add-service'
-                    ? 'bg-[#26cf71] text-white'
-                    : 'text-gray-600 hover:bg-green-50 hover:text-[#26cf71]'
+                    ? 'bg-[#FF6B35] text-white'
+                    : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">add_circle</span>
@@ -113,8 +113,8 @@ export default function AdminDashboard() {
             <button
                 onClick={() => handleSectionChange('services')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'services'
-                    ? 'bg-[#26cf71] text-white'
-                    : 'text-gray-600 hover:bg-green-50 hover:text-[#26cf71]'
+                    ? 'bg-[#FF6B35] text-white'
+                    : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">inventory_2</span>
@@ -124,8 +124,8 @@ export default function AdminDashboard() {
             <button
                 onClick={() => handleSectionChange('service-categories')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'service-categories'
-                    ? 'bg-[#26cf71] text-white'
-                    : 'text-gray-600 hover:bg-green-50 hover:text-[#26cf71]'
+                    ? 'bg-[#FF6B35] text-white'
+                    : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">category</span>
@@ -138,8 +138,8 @@ export default function AdminDashboard() {
             <button
                 onClick={() => handleSectionChange('users')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'users'
-                    ? 'bg-[#26cf71] text-white'
-                    : 'text-gray-600 hover:bg-green-50 hover:text-[#26cf71]'
+                    ? 'bg-[#FF6B35] text-white'
+                    : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">group</span>
@@ -149,8 +149,8 @@ export default function AdminDashboard() {
             <button
                 onClick={() => handleSectionChange('jobs')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'jobs'
-                    ? 'bg-[#26cf71] text-white'
-                    : 'text-gray-600 hover:bg-green-50 hover:text-[#26cf71]'
+                    ? 'bg-[#FF6B35] text-white'
+                    : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">work_outline</span>
@@ -160,8 +160,8 @@ export default function AdminDashboard() {
             <button
                 onClick={() => handleSectionChange('amc-packages')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'amc-packages'
-                    ? 'bg-[#26cf71] text-white'
-                    : 'text-gray-600 hover:bg-green-50 hover:text-[#26cf71]'
+                    ? 'bg-[#FF6B35] text-white'
+                    : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">inventory</span>
@@ -171,8 +171,8 @@ export default function AdminDashboard() {
             <button
                 onClick={() => handleSectionChange('settings')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'settings'
-                    ? 'bg-[#26cf71] text-white'
-                    : 'text-gray-600 hover:bg-green-50 hover:text-[#26cf71]'
+                    ? 'bg-[#FF6B35] text-white'
+                    : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">settings</span>
@@ -182,7 +182,7 @@ export default function AdminDashboard() {
     );
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-[#F8F9FA]">
             {/* Top Navbar */}
             <nav className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50 h-16">
                 <div className="h-full px-4 lg:px-6 flex items-center justify-between">
@@ -191,21 +191,21 @@ export default function AdminDashboard() {
                         {/* Mobile Menu Button */}
                         <button
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                            className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                            className="lg:hidden p-2 hover:bg-[#F1F3F5] rounded-lg transition-colors"
                         >
                             {isMobileMenuOpen ? <X className="w-6 h-6 text-gray-600" /> : <Menu className="w-6 h-6 text-gray-600" />}
                         </button>
 
                         <a href="/" className="flex items-center gap-3">
-                            <img src="/logo.png" alt="Hamro Sewa" className="h-8 lg:h-10 w-auto" />
+                            <img src="/logo.jpg" alt="Hamro Sewa" className="h-8 lg:h-10 w-auto" />
                         </a>
 
                         {/* Navigation Links */}
                         <div className="hidden md:flex items-center gap-6">
-                            <a href="/" className="text-sm font-medium text-gray-600 hover:text-[#26cf71] transition-colors">
+                            <a href="/" className="text-sm font-medium text-gray-600 hover:text-[#FF6B35] transition-colors">
                                 Home
                             </a>
-                            <span className="text-sm font-medium text-[#26cf71]">
+                            <span className="text-sm font-medium text-[#FF6B35]">
                                 Admin Dashboard
                             </span>
                         </div>
@@ -224,8 +224,8 @@ export default function AdminDashboard() {
                         </div>
 
                         {/* User Menu */}
-                        <div className="flex items-center gap-2 lg:gap-3 px-2 lg:px-3 py-2 bg-gray-50 rounded-lg">
-                            <div className="w-8 h-8 rounded-full bg-[#26cf71] flex items-center justify-center text-white font-semibold text-sm">
+                        <div className="flex items-center gap-2 lg:gap-3 px-2 lg:px-3 py-2 bg-[#F8F9FA] rounded-lg">
+                            <div className="w-8 h-8 rounded-full bg-[#FF6B35] flex items-center justify-center text-white font-semibold text-sm">
                                 {currentUser.name.charAt(0).toUpperCase()}
                             </div>
                             <div className="hidden md:block">
@@ -259,8 +259,8 @@ export default function AdminDashboard() {
                 {/* Desktop Sidebar */}
                 <aside className="hidden lg:flex w-64 bg-white border-r border-gray-200 flex-col fixed h-[calc(100vh-4rem)] top-16 z-40">
                     <div className="p-6 flex items-center gap-3 border-b border-gray-200">
-                        <span className="material-symbols-outlined text-[#26cf71] text-[24px]">dashboard</span>
-                        <h2 className="text-[#26cf71] text-lg font-bold tracking-tight">Navigation</h2>
+                        <span className="material-symbols-outlined text-[#FF6B35] text-[24px]">dashboard</span>
+                        <h2 className="text-[#FF6B35] text-lg font-bold tracking-tight">Navigation</h2>
                     </div>
 
                     <div className="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
@@ -274,8 +274,8 @@ export default function AdminDashboard() {
                         }`}
                 >
                     <div className="p-6 flex items-center gap-3 border-b border-gray-200">
-                        <span className="material-symbols-outlined text-[#26cf71] text-[24px]">dashboard</span>
-                        <h2 className="text-[#26cf71] text-lg font-bold tracking-tight">Navigation</h2>
+                        <span className="material-symbols-outlined text-[#FF6B35] text-[24px]">dashboard</span>
+                        <h2 className="text-[#FF6B35] text-lg font-bold tracking-tight">Navigation</h2>
                     </div>
 
                     <div className="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
@@ -289,9 +289,9 @@ export default function AdminDashboard() {
                     <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 h-auto lg:h-16 sticky top-0 z-40 px-4 lg:px-8 py-3 lg:py-0 flex items-center justify-between">
                         <div className="flex-1 max-w-full lg:max-w-xl">
                             <div className="relative group">
-                                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#26cf71] transition-colors text-[20px]">search</span>
+                                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#FF6B35] transition-colors text-[20px]">search</span>
                                 <input
-                                    className="w-full bg-gray-50 border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-green-200 transition-all"
+                                    className="w-full bg-[#F8F9FA] border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-green-200 transition-all"
                                     placeholder="Search..."
                                     type="text"
                                 />

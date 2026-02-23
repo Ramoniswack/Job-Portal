@@ -4,7 +4,7 @@ import { CheckCircle, Clock, Shield } from 'lucide-react';
 
 export default function AboutMission() {
     return (
-        <div className="bg-white py-20 px-4 sm:px-6">
+        <div className="bg-white pt-24 pb-20 px-4 sm:px-6">
             <div className="max-w-6xl mx-auto">
                 <div className="grid md:grid-cols-2 gap-12 items-center">
                     {/* Left Side - Image */}
@@ -16,7 +16,7 @@ export default function AboutMission() {
                                 className="w-full h-[400px] object-cover"
                             />
                         </div>
-                        <div className="absolute -bottom-6 -right-6 bg-[#26cf71] text-white p-6 rounded-xl shadow-lg">
+                        <div className="absolute -bottom-6 -right-6 bg-[#FF6B35] text-white p-6 rounded-xl shadow-lg">
                             <div className="text-4xl font-bold">5+</div>
                             <div className="text-sm">Years of Service</div>
                         </div>
@@ -40,8 +40,8 @@ export default function AboutMission() {
 
                         <div className="space-y-4">
                             <div className="flex items-start gap-4">
-                                <div className="bg-green-100 p-3 rounded-lg">
-                                    <CheckCircle className="w-6 h-6 text-[#26cf71]" />
+                                <div className="bg-[#F1F3F5] p-3 rounded-lg">
+                                    <CheckCircle className="w-6 h-6 text-[#FF6B35]" />
                                 </div>
                                 <div>
                                     <h3 className="font-bold text-lg mb-1">Quality Assurance</h3>
@@ -50,8 +50,8 @@ export default function AboutMission() {
                             </div>
 
                             <div className="flex items-start gap-4">
-                                <div className="bg-green-100 p-3 rounded-lg">
-                                    <Clock className="w-6 h-6 text-[#26cf71]" />
+                                <div className="bg-[#F1F3F5] p-3 rounded-lg">
+                                    <Clock className="w-6 h-6 text-[#FF6B35]" />
                                 </div>
                                 <div>
                                     <h3 className="font-bold text-lg mb-1">24/7 Support</h3>
@@ -60,8 +60,8 @@ export default function AboutMission() {
                             </div>
 
                             <div className="flex items-start gap-4">
-                                <div className="bg-green-100 p-3 rounded-lg">
-                                    <Shield className="w-6 h-6 text-[#26cf71]" />
+                                <div className="bg-[#F1F3F5] p-3 rounded-lg">
+                                    <Shield className="w-6 h-6 text-[#FF6B35]" />
                                 </div>
                                 <div>
                                     <h3 className="font-bold text-lg mb-1">Transparent Pricing</h3>

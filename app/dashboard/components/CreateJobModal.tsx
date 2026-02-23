@@ -166,14 +166,14 @@ export default function CreateJobModal({ token, onClose, onSuccess }: CreateJobM
                     <div className="flex gap-3 pt-4">
                         <button
                             type="submit"
-                            className="flex-1 bg-[#26cf71] text-white py-3 rounded-lg font-bold hover:opacity-90 transition-all"
+                            className="flex-1 bg-[#FF6B35] text-white py-3 rounded-lg font-bold hover:opacity-90 transition-all"
                         >
                             Create Job
                         </button>
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-6 py-3 border border-gray-300 rounded-lg font-bold hover:bg-gray-50 transition-all"
+                            className="px-6 py-3 border border-gray-300 rounded-lg font-bold hover:bg-[#F8F9FA] transition-all"
                         >
                             Cancel
                         </button>

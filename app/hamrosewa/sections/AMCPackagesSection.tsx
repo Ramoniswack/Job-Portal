@@ -269,7 +269,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
     if (loading) {
         return (
             <div className="flex items-center justify-center h-64">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#26cf71]"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35]"></div>
             </div>
         );
     }
@@ -289,18 +289,18 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                     type="text"
                                     value={tempHeading}
                                     onChange={(e) => setTempHeading(e.target.value)}
-                                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#26cf71]"
+                                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                                     placeholder="e.g., AMC Packages"
                                 />
                                 <button
                                     onClick={handleSaveHeading}
-                                    className="px-4 py-2 bg-[#26cf71] hover:bg-green-600 text-white rounded-lg transition-colors"
+                                    className="px-4 py-2 bg-[#FF6B35] hover:bg-green-600 text-white rounded-lg transition-colors"
                                 >
                                     Save
                                 </button>
                                 <button
                                     onClick={handleCancelHeading}
-                                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-[#F8F9FA] transition-colors"
                                 >
                                     Cancel
                                 </button>
@@ -327,7 +327,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                 </div>
                 <button
                     onClick={() => setShowModal(true)}
-                    className="flex items-center gap-2 bg-[#26cf71] hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors"
+                    className="flex items-center gap-2 bg-[#FF6B35] hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors"
                 >
                     <Plus className="w-5 h-5" />
                     Add Package
@@ -384,7 +384,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
 
                         <form onSubmit={handleSubmit} className="p-6 space-y-6">
                             {/* Basic Info */}
-                            <div className="bg-gray-50 p-4 rounded-lg space-y-4">
+                            <div className="bg-[#F8F9FA] p-4 rounded-lg space-y-4">
                                 <h4 className="font-semibold text-gray-900">Basic Information</h4>
 
                                 <div>
@@ -393,7 +393,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                         type="text"
                                         value={formData.title}
                                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#26cf71]"
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                                         placeholder="e.g., Plumbing AMC Packages"
                                         required
                                     />
@@ -404,7 +404,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                     <select
                                         value={formData.category}
                                         onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#26cf71]"
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                                         required
                                     >
                                         <option value="Plumbing">Plumbing</option>
@@ -420,7 +420,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                     <textarea
                                         value={formData.description}
                                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#26cf71]"
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                                         rows={2}
                                         placeholder="Brief description of the package"
                                         required
@@ -434,7 +434,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                             type="url"
                                             value={formData.cardImage}
                                             onChange={(e) => setFormData({ ...formData, cardImage: e.target.value })}
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#26cf71]"
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                                             placeholder="For homepage card"
                                             required
                                         />
@@ -445,7 +445,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                             type="url"
                                             value={formData.heroImage}
                                             onChange={(e) => setFormData({ ...formData, heroImage: e.target.value })}
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#26cf71]"
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                                             placeholder="For detail page banner"
                                             required
                                         />
@@ -460,7 +460,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                     <button
                                         type="button"
                                         onClick={addTier}
-                                        className="flex items-center gap-2 text-[#26cf71] hover:text-green-600 font-medium text-sm"
+                                        className="flex items-center gap-2 text-[#FF6B35] hover:text-green-600 font-medium text-sm"
                                     >
                                         <Plus className="w-4 h-4" />
                                         Add Tier
@@ -468,7 +468,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                 </div>
 
                                 {formData.pricingTiers.map((tier, tierIndex) => (
-                                    <div key={tierIndex} className="bg-gray-50 p-4 rounded-lg space-y-3">
+                                    <div key={tierIndex} className="bg-[#F8F9FA] p-4 rounded-lg space-y-3">
                                         <div className="flex items-center justify-between">
                                             <h5 className="font-medium text-gray-900">Tier {tierIndex + 1}</h5>
                                             {formData.pricingTiers.length > 1 && (
@@ -489,7 +489,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                                     type="text"
                                                     value={tier.name}
                                                     onChange={(e) => updateTier(tierIndex, 'name', e.target.value)}
-                                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#26cf71]"
+                                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                                                     placeholder="Basic"
                                                     required
                                                 />
@@ -500,7 +500,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                                     type="number"
                                                     value={tier.price}
                                                     onChange={(e) => updateTier(tierIndex, 'price', Number(e.target.value))}
-                                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#26cf71]"
+                                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                                                     required
                                                     min="0"
                                                 />
@@ -510,7 +510,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                                 <select
                                                     value={tier.duration}
                                                     onChange={(e) => updateTier(tierIndex, 'duration', e.target.value)}
-                                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#26cf71]"
+                                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                                                 >
                                                     <option value="year">Year</option>
                                                     <option value="month">Month</option>
@@ -528,7 +528,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                                             type="text"
                                                             value={feature}
                                                             onChange={(e) => updateFeature(tierIndex, featureIndex, e.target.value)}
-                                                            className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#26cf71]"
+                                                            className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                                                             placeholder="Enter feature"
                                                             required
                                                         />
@@ -546,7 +546,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                                 <button
                                                     type="button"
                                                     onClick={() => addFeature(tierIndex)}
-                                                    className="flex items-center gap-2 text-[#26cf71] hover:text-green-600 font-medium text-sm"
+                                                    className="flex items-center gap-2 text-[#FF6B35] hover:text-green-600 font-medium text-sm"
                                                 >
                                                     <Plus className="w-4 h-4" />
                                                     Add Feature
@@ -558,7 +558,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                             </div>
 
                             {/* Why Choose Section */}
-                            <div className="bg-gray-50 p-4 rounded-lg space-y-4">
+                            <div className="bg-[#F8F9FA] p-4 rounded-lg space-y-4">
                                 <h4 className="font-semibold text-gray-900">Why Choose Section</h4>
 
                                 <div>
@@ -567,7 +567,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                         type="text"
                                         value={formData.whyChooseHeading}
                                         onChange={(e) => setFormData({ ...formData, whyChooseHeading: e.target.value })}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#26cf71]"
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                                         placeholder="e.g., Why Choose Our AMC Packages?"
                                         required
                                     />
@@ -579,7 +579,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                         <button
                                             type="button"
                                             onClick={addBenefit}
-                                            className="flex items-center gap-2 text-[#26cf71] hover:text-green-600 font-medium text-sm"
+                                            className="flex items-center gap-2 text-[#FF6B35] hover:text-green-600 font-medium text-sm"
                                         >
                                             <Plus className="w-4 h-4" />
                                             Add Benefit
@@ -604,14 +604,14 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                                 type="text"
                                                 value={benefit.title}
                                                 onChange={(e) => updateBenefit(index, 'title', e.target.value)}
-                                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#26cf71]"
+                                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                                                 placeholder="Benefit title (e.g., Professional Service)"
                                                 required
                                             />
                                             <textarea
                                                 value={benefit.description}
                                                 onChange={(e) => updateBenefit(index, 'description', e.target.value)}
-                                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#26cf71]"
+                                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                                                 rows={2}
                                                 placeholder="Benefit description"
                                                 required
@@ -627,7 +627,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                     id="isActive"
                                     checked={formData.isActive}
                                     onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                                    className="w-4 h-4 text-[#26cf71] border-gray-300 rounded focus:ring-green-200"
+                                    className="w-4 h-4 text-[#FF6B35] border-gray-300 rounded focus:ring-green-200"
                                 />
                                 <label htmlFor="isActive" className="text-sm font-medium text-gray-700">
                                     Active Package
@@ -638,13 +638,13 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                 <button
                                     type="button"
                                     onClick={handleCloseModal}
-                                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-[#F8F9FA] transition-colors"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 px-4 py-2 bg-[#26cf71] hover:bg-green-600 text-white rounded-lg transition-colors"
+                                    className="flex-1 px-4 py-2 bg-[#FF6B35] hover:bg-green-600 text-white rounded-lg transition-colors"
                                 >
                                     {editingPackage ? 'Update Package' : 'Create Package'}
                                 </button>

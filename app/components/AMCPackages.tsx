@@ -48,11 +48,11 @@ export default function AMCPackages() {
 
     if (loading) {
         return (
-            <section className="bg-gray-50 w-full py-12 px-4">
+            <section className="bg-[#F8F9FA] w-full py-12 px-4">
                 <div className="max-w-6xl mx-auto">
                     <h2 className="text-3xl font-bold text-[#1A2B3C] mb-8">{heading}</h2>
                     <div className="flex items-center justify-center h-64">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#26cf71]"></div>
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35]"></div>
                     </div>
                 </div>
             </section>
@@ -60,7 +60,7 @@ export default function AMCPackages() {
     }
 
     return (
-        <section className="bg-gray-50 w-full py-12 px-4">
+        <section className="bg-[#F8F9FA] w-full py-12 px-4">
             <div className="max-w-6xl mx-auto">
                 <h2 className="text-3xl font-bold text-[#1A2B3C] mb-8">{heading}</h2>
 
@@ -83,7 +83,7 @@ export default function AMCPackages() {
                                         alt={pkg.title}
                                     />
                                 </div>
-                                <p className="text-center font-bold text-slate-800 text-lg group-hover:text-[#26cf71] transition-colors">
+                                <p className="text-center font-bold text-slate-800 text-lg group-hover:text-[#FF6B35] transition-colors">
                                     {pkg.title}
                                 </p>
                             </Link>

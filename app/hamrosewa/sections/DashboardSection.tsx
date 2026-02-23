@@ -106,7 +106,7 @@ export default function DashboardSection({ token }: DashboardSectionProps) {
         return (
             <div className="flex items-center justify-center py-20">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#26cf71] mx-auto"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35] mx-auto"></div>
                     <p className="mt-4 text-gray-600">Loading dashboard...</p>
                 </div>
             </div>
@@ -118,64 +118,64 @@ export default function DashboardSection({ token }: DashboardSectionProps) {
             {/* Main Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {/* Total Users */}
-                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow">
+                <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all">
                     <div className="flex items-center justify-between mb-4">
-                        <span className="material-symbols-outlined text-[48px] opacity-80">group</span>
+                        <span className="material-symbols-outlined text-[48px] text-[#FF6B35]">group</span>
                         <div className="text-right">
-                            <p className="text-sm opacity-90">Total Users</p>
-                            <p className="text-4xl font-bold">{stats.totalUsers}</p>
+                            <p className="text-sm text-gray-600">Total Users</p>
+                            <p className="text-4xl font-bold text-gray-900">{stats.totalUsers}</p>
                         </div>
                     </div>
                     <div className="flex gap-4 text-sm">
                         <div>
-                            <p className="opacity-75">Admins</p>
-                            <p className="font-semibold">{stats.usersByRole.admin}</p>
+                            <p className="text-gray-500">Admins</p>
+                            <p className="font-semibold text-gray-900">{stats.usersByRole.admin}</p>
                         </div>
                         <div>
-                            <p className="opacity-75">Workers</p>
-                            <p className="font-semibold">{stats.usersByRole.worker}</p>
+                            <p className="text-gray-500">Workers</p>
+                            <p className="font-semibold text-gray-900">{stats.usersByRole.worker}</p>
                         </div>
                         <div>
-                            <p className="opacity-75">Clients</p>
-                            <p className="font-semibold">{stats.usersByRole.client}</p>
+                            <p className="text-gray-500">Clients</p>
+                            <p className="font-semibold text-gray-900">{stats.usersByRole.client}</p>
                         </div>
                     </div>
                 </div>
 
                 {/* Total Jobs */}
-                <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow">
+                <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all">
                     <div className="flex items-center justify-between">
-                        <span className="material-symbols-outlined text-[48px] opacity-80">work</span>
+                        <span className="material-symbols-outlined text-[48px] text-[#FF6B35]">work</span>
                         <div className="text-right">
-                            <p className="text-sm opacity-90">Total Jobs</p>
-                            <p className="text-4xl font-bold">{stats.totalJobs}</p>
+                            <p className="text-sm text-gray-600">Total Jobs</p>
+                            <p className="text-4xl font-bold text-gray-900">{stats.totalJobs}</p>
                         </div>
                     </div>
-                    <p className="mt-4 text-sm opacity-90">All job postings</p>
+                    <p className="mt-4 text-sm text-gray-500">All job postings</p>
                 </div>
 
                 {/* Total Services */}
-                <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow">
+                <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all">
                     <div className="flex items-center justify-between">
-                        <span className="material-symbols-outlined text-[48px] opacity-80">inventory_2</span>
+                        <span className="material-symbols-outlined text-[48px] text-[#FF6B35]">inventory_2</span>
                         <div className="text-right">
-                            <p className="text-sm opacity-90">Total Services</p>
-                            <p className="text-4xl font-bold">{stats.totalServices}</p>
+                            <p className="text-sm text-gray-600">Total Services</p>
+                            <p className="text-4xl font-bold text-gray-900">{stats.totalServices}</p>
                         </div>
                     </div>
-                    <p className="mt-4 text-sm opacity-90">Active service listings</p>
+                    <p className="mt-4 text-sm text-gray-500">Active service listings</p>
                 </div>
 
                 {/* Total Categories */}
-                <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow">
+                <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all">
                     <div className="flex items-center justify-between">
-                        <span className="material-symbols-outlined text-[48px] opacity-80">category</span>
+                        <span className="material-symbols-outlined text-[48px] text-[#FF6B35]">category</span>
                         <div className="text-right">
-                            <p className="text-sm opacity-90">Total Categories</p>
-                            <p className="text-4xl font-bold">{stats.totalCategories}</p>
+                            <p className="text-sm text-gray-600">Total Categories</p>
+                            <p className="text-4xl font-bold text-gray-900">{stats.totalCategories}</p>
                         </div>
                     </div>
-                    <p className="mt-4 text-sm opacity-90">Service categories</p>
+                    <p className="mt-4 text-sm text-gray-500">Service categories</p>
                 </div>
             </div>
 
@@ -196,7 +196,7 @@ export default function DashboardSection({ token }: DashboardSectionProps) {
                             <span className="text-gray-700 font-medium">Service Workers</span>
                             <span className="text-2xl font-bold text-blue-600">{stats.usersByRole.worker}</span>
                         </div>
-                        <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                        <div className="flex items-center justify-between p-3 bg-[#F8F9FA] rounded-lg">
                             <span className="text-gray-700 font-medium">Clients</span>
                             <span className="text-2xl font-bold text-green-600">{stats.usersByRole.client}</span>
                         </div>

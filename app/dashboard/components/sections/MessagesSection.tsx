@@ -203,13 +203,13 @@ export default function MessagesSection({
 
     return (
         <div className="flex h-[calc(100vh-8rem)]">
-            <section className="flex flex-col w-96 bg-gray-50 border-r border-gray-200">
+            <section className="flex flex-col w-96 bg-[#F8F9FA] border-r border-gray-200">
                 <div className="p-6 border-b border-gray-200 bg-white">
                     <h2 className="text-xl font-bold mb-4">Messages</h2>
                     <div className="relative">
                         <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">search</span>
                         <input
-                            className="w-full bg-gray-50 border border-gray-200 rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
+                            className="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                             placeholder="Search chats..."
                             type="text"
                         />
@@ -227,15 +227,15 @@ export default function MessagesSection({
                                 key={connection._id}
                                 onClick={() => setSelectedConnection(connection)}
                                 className={`p-4 flex gap-4 cursor-pointer transition-colors ${isSelected
-                                    ? 'bg-white border-l-4 border-[#26cf71]'
+                                    ? 'bg-white border-l-4 border-[#FF6B35]'
                                     : 'hover:bg-white border-l-4 border-transparent'
                                     }`}
                             >
                                 <div className="relative shrink-0">
-                                    <div className="size-12 rounded-full bg-[#26cf71] flex items-center justify-center text-white font-bold text-lg">
+                                    <div className="size-12 rounded-full bg-[#FF6B35] flex items-center justify-center text-white font-bold text-lg">
                                         {otherUser.name.charAt(0).toUpperCase()}
                                     </div>
-                                    <span className="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full border-2 border-white"></span>
+                                    <span className="absolute bottom-0 right-0 size-3 bg-[#F8F9FA]0 rounded-full border-2 border-white"></span>
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <div className="flex justify-between items-start mb-1">
@@ -256,7 +256,7 @@ export default function MessagesSection({
                 <main className="flex-1 flex flex-col bg-white">
                     <header className="h-20 border-b border-gray-200 flex items-center justify-between px-8 shrink-0">
                         <div className="flex items-center gap-4">
-                            <div className="size-10 rounded-full bg-[#26cf71] flex items-center justify-center text-white font-bold">
+                            <div className="size-10 rounded-full bg-[#FF6B35] flex items-center justify-center text-white font-bold">
                                 {(currentUser?.role === 'worker'
                                     ? selectedConnection.client.name
                                     : selectedConnection.worker.name
@@ -269,25 +269,25 @@ export default function MessagesSection({
                                         : selectedConnection.worker.name}
                                 </h2>
                                 <div className="flex items-center gap-2">
-                                    <span className="size-2 bg-green-500 rounded-full"></span>
+                                    <span className="size-2 bg-[#F8F9FA]0 rounded-full"></span>
                                     <span className="text-xs text-gray-500">Active now</span>
                                 </div>
                             </div>
                         </div>
                         <div className="flex gap-2">
-                            <button className="p-2 hover:bg-gray-50 rounded-lg text-gray-500 transition-colors">
+                            <button className="p-2 hover:bg-[#F8F9FA] rounded-lg text-gray-500 transition-colors">
                                 <span className="material-symbols-outlined">call</span>
                             </button>
-                            <button className="p-2 hover:bg-gray-50 rounded-lg text-gray-500 transition-colors">
+                            <button className="p-2 hover:bg-[#F8F9FA] rounded-lg text-gray-500 transition-colors">
                                 <span className="material-symbols-outlined">videocam</span>
                             </button>
-                            <button className="p-2 hover:bg-gray-50 rounded-lg text-gray-500 transition-colors">
+                            <button className="p-2 hover:bg-[#F8F9FA] rounded-lg text-gray-500 transition-colors">
                                 <span className="material-symbols-outlined">info</span>
                             </button>
                         </div>
                     </header>
 
-                    <div className="flex-1 overflow-y-auto p-8 flex flex-col gap-6 bg-gray-50">
+                    <div className="flex-1 overflow-y-auto p-8 flex flex-col gap-6 bg-[#F8F9FA]">
                         <div className="flex justify-center">
                             <span className="px-3 py-1 bg-white text-[10px] font-bold text-gray-400 uppercase tracking-widest rounded-full">
                                 Today
@@ -297,15 +297,15 @@ export default function MessagesSection({
                         <div className="flex justify-center">
                             <div className="bg-white border border-gray-200 rounded-xl p-4 max-w-md">
                                 <div className="flex items-center gap-2 mb-2">
-                                    <span className="material-symbols-outlined text-[#26cf71] text-[20px]">work</span>
+                                    <span className="material-symbols-outlined text-[#FF6B35] text-[20px]">work</span>
                                     <h4 className="font-semibold text-sm">{selectedConnection.job.title}</h4>
                                 </div>
                                 <p className="text-xs text-gray-600 mb-2">{selectedConnection.job.description}</p>
                                 <div className="flex gap-2">
-                                    <span className="px-2 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-600">
+                                    <span className="px-2 py-1 bg-[#F1F3F5] rounded-full text-xs font-medium text-gray-600">
                                         {selectedConnection.job.category}
                                     </span>
-                                    <span className="px-2 py-1 bg-green-100 rounded-full text-xs font-bold text-[#26cf71]">
+                                    <span className="px-2 py-1 bg-[#F1F3F5] rounded-full text-xs font-bold text-[#FF6B35]">
                                         ${selectedConnection.job.budget}
                                     </span>
                                 </div>
@@ -320,13 +320,13 @@ export default function MessagesSection({
                                     key={message._id}
                                     className={`flex gap-3 max-w-[80%] ${isSent ? 'flex-row-reverse self-end' : ''}`}
                                 >
-                                    <div className={`size-8 rounded-full shrink-0 flex items-center justify-center text-white font-bold text-xs ${isSent ? 'bg-[#26cf71]' : 'bg-gray-400'
+                                    <div className={`size-8 rounded-full shrink-0 flex items-center justify-center text-white font-bold text-xs ${isSent ? 'bg-[#FF6B35]' : 'bg-gray-400'
                                         }`}>
                                         {message.sender.name.charAt(0).toUpperCase()}
                                     </div>
                                     <div className={`flex flex-col ${isSent ? 'items-end' : ''}`}>
                                         <div className={`p-4 rounded-xl ${isSent
-                                            ? 'bg-[#26cf71] text-white rounded-tr-none'
+                                            ? 'bg-[#FF6B35] text-white rounded-tr-none'
                                             : 'bg-white border border-gray-200 rounded-tl-none'
                                             }`}>
                                             <p className="text-sm">{message.content}</p>
@@ -342,8 +342,8 @@ export default function MessagesSection({
                     </div>
 
                     <footer className="p-6 border-t border-gray-200 shrink-0 bg-white">
-                        <div className="flex items-center gap-4 bg-gray-50 p-2 rounded-xl border border-gray-200 focus-within:border-[#26cf71] focus-within:bg-white transition-all">
-                            <button className="p-2 text-gray-400 hover:text-[#26cf71] transition-colors">
+                        <div className="flex items-center gap-4 bg-[#F8F9FA] p-2 rounded-xl border border-gray-200 focus-within:border-[#FF6B35] focus-within:bg-white transition-all">
+                            <button className="p-2 text-gray-400 hover:text-[#FF6B35] transition-colors">
                                 <span className="material-symbols-outlined">add_circle</span>
                             </button>
                             <input
@@ -355,12 +355,12 @@ export default function MessagesSection({
                                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                             />
                             <div className="flex items-center gap-2">
-                                <button className="p-2 text-gray-400 hover:text-[#26cf71] transition-colors">
+                                <button className="p-2 text-gray-400 hover:text-[#FF6B35] transition-colors">
                                     <span className="material-symbols-outlined">mood</span>
                                 </button>
                                 <button
                                     onClick={handleSendMessage}
-                                    className="bg-[#26cf71] text-white p-2.5 rounded-lg flex items-center justify-center hover:bg-[#1fb862] transition-colors shadow-lg shadow-green-200"
+                                    className="bg-[#FF6B35] text-white p-2.5 rounded-lg flex items-center justify-center hover:bg-[#1fb862] transition-colors shadow-lg shadow-green-200"
                                 >
                                     <span className="material-symbols-outlined text-xl">send</span>
                                 </button>

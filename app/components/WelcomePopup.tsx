@@ -94,7 +94,7 @@ export default function WelcomePopup({ onLocationSelect }: WelcomePopupProps) {
                     {/* Close button */}
                     <button
                         onClick={closePopup}
-                        className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors z-10 bg-gray-100 rounded-full p-1"
+                        className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors z-10 bg-[#F1F3F5] rounded-full p-1"
                     >
                         <X className="w-5 h-5" />
                     </button>
@@ -102,7 +102,7 @@ export default function WelcomePopup({ onLocationSelect }: WelcomePopupProps) {
                     {/* Logo positioned in header */}
                     <div className="absolute top-3 left-8 bg-white rounded-2xl p-2 shadow-md border border-gray-100">
                         <img
-                            src="/logo.png"
+                            src="/logo.jpg"
                             alt="Hamro Sewa"
                             className="h-10 w-auto"
                         />
@@ -133,7 +133,7 @@ export default function WelcomePopup({ onLocationSelect }: WelcomePopupProps) {
                                         required
                                         value={formData.name}
                                         onChange={handleInputChange}
-                                        className="w-full px-4 py-2 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#26cf71] focus:border-transparent outline-none transition-all bg-gray-50 focus:bg-white"
+                                        className="w-full px-4 py-2 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent outline-none transition-all bg-[#F8F9FA] focus:bg-white"
                                         placeholder="Enter your full name"
                                     />
                                 </div>
@@ -149,7 +149,7 @@ export default function WelcomePopup({ onLocationSelect }: WelcomePopupProps) {
                                         required
                                         value={formData.email}
                                         onChange={handleInputChange}
-                                        className="w-full px-4 py-2 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#26cf71] focus:border-transparent outline-none transition-all bg-gray-50 focus:bg-white"
+                                        className="w-full px-4 py-2 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent outline-none transition-all bg-[#F8F9FA] focus:bg-white"
                                         placeholder="your@email.com"
                                     />
                                 </div>
@@ -165,7 +165,7 @@ export default function WelcomePopup({ onLocationSelect }: WelcomePopupProps) {
                                         required
                                         value={formData.phone}
                                         onChange={handleInputChange}
-                                        className="w-full px-4 py-2 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#26cf71] focus:border-transparent outline-none transition-all bg-gray-50 focus:bg-white"
+                                        className="w-full px-4 py-2 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent outline-none transition-all bg-[#F8F9FA] focus:bg-white"
                                         placeholder="98XXXXXXXX"
                                         pattern="[0-9]{10}"
                                     />
@@ -184,7 +184,7 @@ export default function WelcomePopup({ onLocationSelect }: WelcomePopupProps) {
                                             required
                                             value={formData.location}
                                             onChange={handleInputChange}
-                                            className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#26cf71] focus:border-transparent outline-none transition-all bg-gray-50 focus:bg-white"
+                                            className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent outline-none transition-all bg-[#F8F9FA] focus:bg-white"
                                             placeholder="Enter your location"
                                         />
                                     </div>
@@ -192,7 +192,7 @@ export default function WelcomePopup({ onLocationSelect }: WelcomePopupProps) {
                             </div>
 
                             <div className="py-3">
-                                <p className="text-[#26cf71] font-bold text-base text-center flex items-center justify-center gap-2">
+                                <p className="text-[#FF6B35] font-bold text-base text-center flex items-center justify-center gap-2">
                                     <Gift className="w-5 h-5" />
                                     Get 10% off on your first service booking!
                                 </p>
@@ -201,7 +201,7 @@ export default function WelcomePopup({ onLocationSelect }: WelcomePopupProps) {
                             <div className="flex gap-3">
                                 <button
                                     type="submit"
-                                    className="flex-1 bg-gradient-to-r from-[#26cf71] to-[#1eb863] text-white py-2.5 px-4 rounded-xl text-sm font-semibold hover:shadow-lg hover:scale-[1.02] transition-all duration-300"
+                                    className="flex-1 bg-gradient-to-r from-[#FF6B35] to-[#FF5722] text-white py-2.5 px-4 rounded-xl text-sm font-semibold hover:shadow-lg hover:scale-[1.02] transition-all duration-300"
                                 >
                                     Get Started
                                 </button>

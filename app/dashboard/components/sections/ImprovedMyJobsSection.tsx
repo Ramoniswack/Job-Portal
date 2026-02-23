@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { toast } from 'sonner';
 import {
     Briefcase,
@@ -10,7 +10,9 @@ import {
     MapPin,
     DollarSign,
     Users,
-    FileText
+    FileText,
+    Search,
+    X
 } from 'lucide-react';
 import { Job, Application } from '../DashboardLayout';
 import ConfirmDialog from '@/app/components/ConfirmDialog';
@@ -41,6 +43,32 @@ export default function ImprovedMyJobsSection({ myJobs, jobApplications, token, 
         location: '',
         budget: 0,
     });
+    const [searchQuery, setSearchQuery] = useState('');
+    const [debouncedSearch, setDebouncedSearch] = useState('');
+
+    // Debounce search query
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearch(searchQuery);
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [searchQuery]);
+
+    // Filter jobs based on search
+    const filteredJobs = useMemo(() => {
+        if (!debouncedSearch.trim()) {
+            return myJobs;
+        }
+
+        const query = debouncedSearch.toLowerCase();
+        return myJobs.filter(job =>
+            job.title.toLowerCase().includes(query) ||
+            job.description.toLowerCase().includes(query) ||
+            job.category.toLowerCase().includes(query) ||
+            job.location.toLowerCase().includes(query)
+        );
+    }, [myJobs, debouncedSearch]);
 
     const startEditJob = (job: Job) => {
         setEditingJobId(job._id);
@@ -213,10 +241,10 @@ export default function ImprovedMyJobsSection({ myJobs, jobApplications, token, 
         switch (status) {
             case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
             case 'accepted': return 'bg-blue-100 text-blue-800 border-blue-200';
-            case 'confirmed': return 'bg-green-100 text-green-800 border-green-200';
-            case 'completed': return 'bg-gray-100 text-gray-800 border-gray-200';
+            case 'confirmed': return 'bg-[#F1F3F5] text-green-800 border-green-200';
+            case 'completed': return 'bg-[#F1F3F5] text-gray-800 border-gray-200';
             case 'closed': return 'bg-red-100 text-red-800 border-red-200';
-            default: return 'bg-gray-100 text-gray-800 border-gray-200';
+            default: return 'bg-[#F1F3F5] text-gray-800 border-gray-200';
         }
     };
 
@@ -227,15 +255,41 @@ export default function ImprovedMyJobsSection({ myJobs, jobApplications, token, 
                 <p className="text-gray-600 mt-1">Manage your job listings and review applications</p>
             </div>
 
-            {myJobs.length === 0 ? (
+            {/* Search Bar */}
+            <div className="mb-6">
+                <div className="relative">
+                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <input
+                        type="text"
+                        placeholder="Search your jobs by title, description, category, or location..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-all"
+                    />
+                    {searchQuery && (
+                        <button
+                            onClick={() => setSearchQuery('')}
+                            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
+                    )}
+                </div>
+            </div>
+
+            {filteredJobs.length === 0 ? (
                 <div className="bg-white rounded-xl border-2 border-dashed border-gray-300 p-12 text-center">
                     <Briefcase className="w-16 h-16 text-gray-300 mx-auto" />
-                    <h3 className="text-lg font-semibold text-gray-900 mt-4">No jobs posted yet</h3>
-                    <p className="text-gray-600 mt-2">Create your first job posting to find workers</p>
+                    <h3 className="text-lg font-semibold text-gray-900 mt-4">
+                        {debouncedSearch ? 'No matching jobs found' : 'No jobs posted yet'}
+                    </h3>
+                    <p className="text-gray-600 mt-2">
+                        {debouncedSearch ? 'Try adjusting your search terms' : 'Create your first job posting to find workers'}
+                    </p>
                 </div>
             ) : (
                 <div className="space-y-6">
-                    {myJobs.map((job) => {
+                    {filteredJobs.map((job) => {
                         const applications = getApplicationsForJob(job._id);
 
                         return (
@@ -248,14 +302,14 @@ export default function ImprovedMyJobsSection({ myJobs, jobApplications, token, 
                                                 type="text"
                                                 value={editFormData.title}
                                                 onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
-                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                                                 placeholder="Job Title"
                                             />
                                             <textarea
                                                 value={editFormData.description}
                                                 onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
                                                 rows={3}
-                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                                                 placeholder="Job Description"
                                             />
                                             <div className="grid grid-cols-3 gap-4">
@@ -263,20 +317,20 @@ export default function ImprovedMyJobsSection({ myJobs, jobApplications, token, 
                                                     type="text"
                                                     value={editFormData.location}
                                                     onChange={(e) => setEditFormData({ ...editFormData, location: e.target.value })}
-                                                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
+                                                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                                                     placeholder="Location"
                                                 />
                                                 <input
                                                     type="number"
                                                     value={editFormData.budget}
                                                     onChange={(e) => setEditFormData({ ...editFormData, budget: Number(e.target.value) })}
-                                                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
+                                                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                                                     placeholder="Budget"
                                                 />
                                                 <select
                                                     value={editFormData.category}
                                                     onChange={(e) => setEditFormData({ ...editFormData, category: e.target.value })}
-                                                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
+                                                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                                                 >
                                                     <option value="Home Repairs">Home Repairs</option>
                                                     <option value="Automobile">Automobile</option>
@@ -292,13 +346,13 @@ export default function ImprovedMyJobsSection({ myJobs, jobApplications, token, 
                                             <div className="flex gap-3">
                                                 <button
                                                     onClick={() => updateJob(job._id)}
-                                                    className="px-6 py-2 bg-[#26cf71] text-white rounded-lg hover:bg-[#1eb863] transition font-semibold"
+                                                    className="px-6 py-2 bg-[#FF6B35] text-white rounded-lg hover:bg-[#FF5722] transition font-semibold"
                                                 >
                                                     Save Changes
                                                 </button>
                                                 <button
                                                     onClick={cancelEditJob}
-                                                    className="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-semibold"
+                                                    className="px-6 py-2 bg-[#F1F3F5] text-gray-700 rounded-lg hover:bg-[#E9ECEF] transition font-semibold"
                                                 >
                                                     Cancel
                                                 </button>
@@ -315,7 +369,7 @@ export default function ImprovedMyJobsSection({ myJobs, jobApplications, token, 
                                                     <select
                                                         value={job.status}
                                                         onChange={(e) => updateJobStatus(job._id, e.target.value)}
-                                                        className={`px-3 py-1.5 text-sm font-semibold rounded-lg border-2 focus:outline-none focus:ring-2 focus:ring-[#26cf71] ${getStatusColor(job.status)}`}
+                                                        className={`px-3 py-1.5 text-sm font-semibold rounded-lg border-2 focus:outline-none focus:ring-2 focus:ring-[#FF6B35] ${getStatusColor(job.status)}`}
                                                     >
                                                         <option value="pending">Pending</option>
                                                         <option value="accepted">Accepted</option>
@@ -339,15 +393,15 @@ export default function ImprovedMyJobsSection({ myJobs, jobApplications, token, 
                                                 </div>
                                             </div>
                                             <div className="flex flex-wrap gap-3">
-                                                <span className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-700 flex items-center gap-1">
+                                                <span className="px-3 py-1 bg-[#F1F3F5] rounded-full text-sm text-gray-700 flex items-center gap-1">
                                                     <Tag className="w-4 h-4" />
                                                     {job.category}
                                                 </span>
-                                                <span className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-700 flex items-center gap-1">
+                                                <span className="px-3 py-1 bg-[#F1F3F5] rounded-full text-sm text-gray-700 flex items-center gap-1">
                                                     <MapPin className="w-4 h-4" />
                                                     {job.location}
                                                 </span>
-                                                <span className="px-3 py-1 bg-green-100 rounded-full text-sm font-semibold text-[#26cf71] flex items-center gap-1">
+                                                <span className="px-3 py-1 bg-[#F1F3F5] rounded-full text-sm font-semibold text-[#FF6B35] flex items-center gap-1">
                                                     <DollarSign className="w-4 h-4" />
                                                     {job.budget}
                                                 </span>
@@ -364,7 +418,7 @@ export default function ImprovedMyJobsSection({ myJobs, jobApplications, token, 
 
                                 {/* Applications */}
                                 {applications.length > 0 && (
-                                    <div className="p-6 bg-gray-50">
+                                    <div className="p-6 bg-[#F8F9FA]">
                                         <h4 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                             <FileText className="w-5 h-5" />
                                             Applications ({applications.length})
@@ -375,7 +429,7 @@ export default function ImprovedMyJobsSection({ myJobs, jobApplications, token, 
                                                     <div className="flex items-start justify-between">
                                                         <div className="flex-1">
                                                             <div className="flex items-center gap-2 mb-2">
-                                                                <div className="w-10 h-10 rounded-full bg-[#26cf71] flex items-center justify-center text-white font-semibold">
+                                                                <div className="w-10 h-10 rounded-full bg-[#FF6B35] flex items-center justify-center text-white font-semibold">
                                                                     {app.worker?.name?.charAt(0).toUpperCase() || 'W'}
                                                                 </div>
                                                                 <div>
@@ -407,7 +461,7 @@ export default function ImprovedMyJobsSection({ myJobs, jobApplications, token, 
                                                                 </>
                                                             )}
                                                             {app.status === 'approved' && (
-                                                                <span className="px-4 py-2 bg-green-100 text-green-800 rounded-lg text-sm font-semibold">
+                                                                <span className="px-4 py-2 bg-[#F1F3F5] text-green-800 rounded-lg text-sm font-semibold">
                                                                     ✓ Approved
                                                                 </span>
                                                             )}

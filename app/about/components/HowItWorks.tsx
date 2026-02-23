@@ -35,7 +35,7 @@ export default function HowItWorks() {
     ];
 
     return (
-        <div id="how-it-works" className="bg-gray-50 py-20 px-4 sm:px-6">
+        <div id="how-it-works" className="bg-[#F8F9FA] py-20 px-4 sm:px-6">
             <div className="max-w-6xl mx-auto">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -53,7 +53,7 @@ export default function HowItWorks() {
                             <div key={index} className="relative">
                                 {/* Connector Line */}
                                 {index < steps.length - 1 && (
-                                    <div className="hidden lg:block absolute top-20 left-[60%] w-full h-1 bg-gradient-to-r from-[#26cf71] to-transparent"></div>
+                                    <div className="hidden lg:block absolute top-20 left-[60%] w-full h-1 bg-gradient-to-r from-[#FF6B35] to-transparent"></div>
                                 )}
 
                                 <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow relative z-10">

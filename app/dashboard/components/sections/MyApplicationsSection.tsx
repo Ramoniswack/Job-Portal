@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { toast } from 'sonner';
-import { Eye, X, Briefcase, MapPin, DollarSign, Tag, Calendar, User as UserIcon, Mail, Phone, FileText } from 'lucide-react';
+import { Eye, X, Briefcase, MapPin, DollarSign, Tag, Calendar, User as UserIcon, Mail, Phone, FileText, Search } from 'lucide-react';
 import { User, Application } from '../DashboardLayout';
 import ConfirmDialog from '@/app/components/ConfirmDialog';
 
@@ -30,6 +30,32 @@ export default function MyApplicationsSection({
     });
     const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
     const [showDetailsModal, setShowDetailsModal] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [debouncedSearch, setDebouncedSearch] = useState('');
+
+    // Debounce search query
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearch(searchQuery);
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [searchQuery]);
+
+    // Filter applications based on search
+    const filteredApplications = useMemo(() => {
+        if (!debouncedSearch.trim()) {
+            return myApplications;
+        }
+
+        const query = debouncedSearch.toLowerCase();
+        return myApplications.filter(app =>
+            app.job.title.toLowerCase().includes(query) ||
+            app.job.description.toLowerCase().includes(query) ||
+            app.job.category.toLowerCase().includes(query) ||
+            app.job.location.toLowerCase().includes(query)
+        );
+    }, [myApplications, debouncedSearch]);
 
     const openDetailsModal = (application: Application) => {
         setSelectedApplication(application);
@@ -91,17 +117,39 @@ export default function MyApplicationsSection({
                 <button
                     onClick={onLoadApplications}
                     disabled={loadingApplications}
-                    className="bg-[#26cf71] text-white px-5 py-2 rounded-lg text-sm font-bold hover:opacity-90 transition-all disabled:opacity-50"
+                    className="bg-[#FF6B35] text-white px-5 py-2 rounded-lg text-sm font-bold hover:opacity-90 transition-all disabled:opacity-50"
                 >
                     {loadingApplications ? 'Loading...' : 'Refresh'}
                 </button>
             </div>
 
+            {/* Search Bar */}
+            <div className="mb-6">
+                <div className="relative">
+                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <input
+                        type="text"
+                        placeholder="Search applications by job title, description, category, or location..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-all"
+                    />
+                    {searchQuery && (
+                        <button
+                            onClick={() => setSearchQuery('')}
+                            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
+                    )}
+                </div>
+            </div>
+
             <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                {myApplications.length > 0 ? (
+                {filteredApplications.length > 0 ? (
                     <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-50">
+                            <thead className="bg-[#F8F9FA]">
                                 <tr>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Job Title</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
@@ -112,17 +160,17 @@ export default function MyApplicationsSection({
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                                {myApplications.map((application) => (
-                                    <tr key={application._id} className="hover:bg-gray-50">
+                                {filteredApplications.map((application) => (
+                                    <tr key={application._id} className="hover:bg-[#F8F9FA]">
                                         <td className="px-6 py-4">
                                             <div className="text-sm font-medium text-gray-900">{application.job.title}</div>
                                             <div className="text-sm text-gray-500">{application.job.location}</div>
                                         </td>
                                         <td className="px-6 py-4 text-sm text-gray-900">{application.job.category}</td>
-                                        <td className="px-6 py-4 text-sm font-semibold text-[#26cf71]">${application.job.budget}</td>
+                                        <td className="px-6 py-4 text-sm font-semibold text-[#FF6B35]">${application.job.budget}</td>
                                         <td className="px-6 py-4">
                                             <span className={`px-2 py-1 text-xs font-semibold rounded-full ${application.status === 'requested' ? 'bg-yellow-100 text-yellow-800' :
-                                                application.status === 'approved' ? 'bg-green-100 text-green-800' :
+                                                application.status === 'approved' ? 'bg-[#F1F3F5] text-green-800' :
                                                     'bg-red-100 text-red-800'
                                                 }`}>
                                                 {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
@@ -158,7 +206,9 @@ export default function MyApplicationsSection({
                 ) : (
                     <div className="text-center py-12">
                         <span className="material-symbols-outlined text-gray-300 text-[64px]">description</span>
-                        <p className="text-gray-500 mt-4">No applications found. Start applying for jobs!</p>
+                        <p className="text-gray-500 mt-4">
+                            {debouncedSearch ? 'No matching applications found. Try adjusting your search terms.' : 'No applications found. Start applying for jobs!'}
+                        </p>
                     </div>
                 )}
             </div>
@@ -187,7 +237,7 @@ export default function MyApplicationsSection({
                             </div>
                             <button
                                 onClick={closeDetailsModal}
-                                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                                className="p-2 hover:bg-[#F1F3F5] rounded-lg transition-colors"
                             >
                                 <X className="w-6 h-6 text-gray-500" />
                             </button>
@@ -195,13 +245,13 @@ export default function MyApplicationsSection({
 
                         <div className="p-6 space-y-6">
                             {/* Application Status */}
-                            <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                            <div className="bg-[#F8F9FA] rounded-xl p-4 border border-gray-200">
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <p className="text-sm text-gray-600 mb-1">Application Status</p>
                                         <span className={`inline-flex px-4 py-2 text-sm font-semibold rounded-lg ${selectedApplication.status === 'requested' ? 'bg-yellow-100 text-yellow-800' :
-                                                selectedApplication.status === 'approved' ? 'bg-green-100 text-green-800' :
-                                                    'bg-red-100 text-red-800'
+                                            selectedApplication.status === 'approved' ? 'bg-[#F1F3F5] text-green-800' :
+                                                'bg-red-100 text-red-800'
                                             }`}>
                                             {selectedApplication.status.charAt(0).toUpperCase() + selectedApplication.status.slice(1)}
                                         </span>
@@ -222,7 +272,7 @@ export default function MyApplicationsSection({
                             {/* Job Details */}
                             <div>
                                 <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                    <Briefcase className="w-5 h-5 text-[#26cf71]" />
+                                    <Briefcase className="w-5 h-5 text-[#FF6B35]" />
                                     Job Details
                                 </h3>
                                 <div className="bg-white border border-gray-200 rounded-xl p-6 space-y-4">
@@ -244,7 +294,7 @@ export default function MyApplicationsSection({
                                         <div className="flex items-center gap-2 text-sm">
                                             <DollarSign className="w-4 h-4 text-gray-400" />
                                             <span className="text-gray-600">Budget:</span>
-                                            <span className="font-semibold text-[#26cf71]">${selectedApplication.job.budget}</span>
+                                            <span className="font-semibold text-[#FF6B35]">${selectedApplication.job.budget}</span>
                                         </div>
                                         <div className="flex items-center gap-2 text-sm">
                                             <Calendar className="w-4 h-4 text-gray-400" />
@@ -258,12 +308,12 @@ export default function MyApplicationsSection({
                             {/* Client Information */}
                             <div>
                                 <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                    <UserIcon className="w-5 h-5 text-[#26cf71]" />
+                                    <UserIcon className="w-5 h-5 text-[#FF6B35]" />
                                     Client Information
                                 </h3>
                                 <div className="bg-white border border-gray-200 rounded-xl p-6">
                                     <div className="flex items-start gap-4">
-                                        <div className="w-16 h-16 bg-gradient-to-br from-[#26cf71] to-[#1eb863] rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                                        <div className="w-16 h-16 bg-gradient-to-br from-[#FF6B35] to-[#FF5722] rounded-full flex items-center justify-center text-white text-2xl font-bold">
                                             {typeof selectedApplication.job.client === 'object'
                                                 ? selectedApplication.job.client.name.charAt(0).toUpperCase()
                                                 : 'C'}
@@ -292,7 +342,7 @@ export default function MyApplicationsSection({
                             {/* Your Application */}
                             <div>
                                 <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                    <FileText className="w-5 h-5 text-[#26cf71]" />
+                                    <FileText className="w-5 h-5 text-[#FF6B35]" />
                                     Your Application
                                 </h3>
                                 <div className="bg-white border border-gray-200 rounded-xl p-6 space-y-4">
@@ -312,10 +362,10 @@ export default function MyApplicationsSection({
                         </div>
 
                         {/* Modal Footer */}
-                        <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-6 flex justify-end gap-3">
+                        <div className="sticky bottom-0 bg-[#F8F9FA] border-t border-gray-200 p-6 flex justify-end gap-3">
                             <button
                                 onClick={closeDetailsModal}
-                                className="px-6 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-all"
+                                className="px-6 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-[#F8F9FA] transition-all"
                             >
                                 Close
                             </button>

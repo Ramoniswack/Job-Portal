@@ -25,7 +25,7 @@ export default function PostCategoriesSection({ token }: PostCategoriesSectionPr
         name: '',
         description: '',
         icon: 'category',
-        color: '#26cf71',
+        color: '#FF6B35',
         status: 'active' as 'active' | 'inactive'
     });
 
@@ -75,7 +75,7 @@ export default function PostCategoriesSection({ token }: PostCategoriesSectionPr
                 alert(editingCategory ? 'Category updated!' : 'Category created!');
                 setShowModal(false);
                 setEditingCategory(null);
-                setFormData({ name: '', description: '', icon: 'category', color: '#26cf71', status: 'active' });
+                setFormData({ name: '', description: '', icon: 'category', color: '#FF6B35', status: 'active' });
                 loadCategories();
             } else {
                 alert(data.message || 'Failed to save category');
@@ -122,7 +122,7 @@ export default function PostCategoriesSection({ token }: PostCategoriesSectionPr
     const closeModal = () => {
         setShowModal(false);
         setEditingCategory(null);
-        setFormData({ name: '', description: '', icon: 'category', color: '#26cf71', status: 'active' });
+        setFormData({ name: '', description: '', icon: 'category', color: '#FF6B35', status: 'active' });
     };
 
     return (
@@ -134,7 +134,7 @@ export default function PostCategoriesSection({ token }: PostCategoriesSectionPr
                 </div>
                 <button
                     onClick={() => setShowModal(true)}
-                    className="px-4 py-2 bg-[#26cf71] text-white rounded-lg hover:bg-[#1eb863] transition flex items-center gap-2"
+                    className="px-4 py-2 bg-[#FF6B35] text-white rounded-lg hover:bg-[#FF5722] transition flex items-center gap-2"
                 >
                     <span className="material-symbols-outlined">add</span>
                     Add Category
@@ -143,7 +143,7 @@ export default function PostCategoriesSection({ token }: PostCategoriesSectionPr
 
             {loading ? (
                 <div className="text-center py-12">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#26cf71] mx-auto"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35] mx-auto"></div>
                     <p className="mt-4 text-gray-600">Loading categories...</p>
                 </div>
             ) : (
@@ -163,7 +163,7 @@ export default function PostCategoriesSection({ token }: PostCategoriesSectionPr
                                         <p className="text-sm text-gray-500">{category.slug}</p>
                                     </div>
                                 </div>
-                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${category.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
+                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${category.status === 'active' ? 'bg-[#F1F3F5] text-green-700' : 'bg-[#F1F3F5] text-gray-700'
                                     }`}>
                                     {category.status}
                                 </span>
@@ -172,7 +172,7 @@ export default function PostCategoriesSection({ token }: PostCategoriesSectionPr
                             <div className="flex gap-2">
                                 <button
                                     onClick={() => handleEdit(category)}
-                                    className="flex-1 px-3 py-2 bg-[#26cf71] text-white rounded-lg hover:bg-[#1eb863] transition text-sm"
+                                    className="flex-1 px-3 py-2 bg-[#FF6B35] text-white rounded-lg hover:bg-[#FF5722] transition text-sm"
                                 >
                                     Edit
                                 </button>
@@ -203,7 +203,7 @@ export default function PostCategoriesSection({ token }: PostCategoriesSectionPr
                                     required
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                                 />
                             </div>
                             <div>
@@ -212,7 +212,7 @@ export default function PostCategoriesSection({ token }: PostCategoriesSectionPr
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                     rows={3}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                                 />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
@@ -222,7 +222,7 @@ export default function PostCategoriesSection({ token }: PostCategoriesSectionPr
                                         type="text"
                                         value={formData.icon}
                                         onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                                         placeholder="category"
                                     />
                                 </div>
@@ -241,7 +241,7 @@ export default function PostCategoriesSection({ token }: PostCategoriesSectionPr
                                 <select
                                     value={formData.status}
                                     onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                                 >
                                     <option value="active">Active</option>
                                     <option value="inactive">Inactive</option>
@@ -250,14 +250,14 @@ export default function PostCategoriesSection({ token }: PostCategoriesSectionPr
                             <div className="flex gap-2 pt-4">
                                 <button
                                     type="submit"
-                                    className="flex-1 px-4 py-2 bg-[#26cf71] text-white rounded-lg hover:bg-[#1eb863] transition"
+                                    className="flex-1 px-4 py-2 bg-[#FF6B35] text-white rounded-lg hover:bg-[#FF5722] transition"
                                 >
                                     {editingCategory ? 'Update' : 'Create'}
                                 </button>
                                 <button
                                     type="button"
                                     onClick={closeModal}
-                                    className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition"
+                                    className="flex-1 px-4 py-2 bg-[#F1F3F5] text-gray-700 rounded-lg hover:bg-[#E9ECEF] transition"
                                 >
                                     Cancel
                                 </button>

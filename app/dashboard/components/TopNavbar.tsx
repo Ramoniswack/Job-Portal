@@ -15,15 +15,15 @@ export default function TopNavbar({ currentUser, onLogout }: TopNavbarProps) {
                 {/* Left: Logo and Brand */}
                 <div className="flex items-center gap-8">
                     <Link href="/" className="flex items-center gap-3">
-                        <img src="/logo.png" alt="Hamro Sewa" className="h-10 w-auto" />
+                        <img src="/logo.jpg" alt="Hamro Sewa" className="h-10 w-auto" />
                     </Link>
 
                     {/* Navigation Links */}
                     <div className="hidden md:flex items-center gap-6">
-                        <Link href="/" className="text-sm font-medium text-gray-600 hover:text-[#26cf71] transition-colors">
+                        <Link href="/" className="text-sm font-medium text-gray-600 hover:text-[#FF6B35] transition-colors">
                             Home
                         </Link>
-                        <Link href="/dashboard" className="text-sm font-medium text-[#26cf71]">
+                        <Link href="/dashboard" className="text-sm font-medium text-[#FF6B35]">
                             Dashboard
                         </Link>
                     </div>
@@ -34,18 +34,18 @@ export default function TopNavbar({ currentUser, onLogout }: TopNavbarProps) {
                     {currentUser ? (
                         <>
                             {/* User Role Badge */}
-                            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-green-50 rounded-lg">
-                                <span className="material-symbols-outlined text-[#26cf71] text-[18px]">
+                            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-[#F8F9FA] rounded-lg">
+                                <span className="material-symbols-outlined text-[#FF6B35] text-[18px]">
                                     {currentUser.role === 'worker' ? 'person' : 'business'}
                                 </span>
-                                <span className="text-sm font-medium text-[#26cf71] capitalize">
+                                <span className="text-sm font-medium text-[#FF6B35] capitalize">
                                     {currentUser.role}
                                 </span>
                             </div>
 
                             {/* User Menu */}
-                            <div className="flex items-center gap-3 px-3 py-2 bg-gray-50 rounded-lg">
-                                <div className="w-8 h-8 rounded-full bg-[#26cf71] flex items-center justify-center text-white font-semibold text-sm">
+                            <div className="flex items-center gap-3 px-3 py-2 bg-[#F8F9FA] rounded-lg">
+                                <div className="w-8 h-8 rounded-full bg-[#FF6B35] flex items-center justify-center text-white font-semibold text-sm">
                                     {currentUser.name.charAt(0).toUpperCase()}
                                 </div>
                                 <div className="hidden sm:block">
@@ -67,13 +67,13 @@ export default function TopNavbar({ currentUser, onLogout }: TopNavbarProps) {
                         <div className="flex items-center gap-3">
                             <Link
                                 href="/login"
-                                className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-[#26cf71] transition-colors"
+                                className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-[#FF6B35] transition-colors"
                             >
                                 Login
                             </Link>
                             <Link
                                 href="/register"
-                                className="px-4 py-2 bg-[#26cf71] hover:bg-[#1fb862] text-white rounded-lg text-sm font-medium transition-colors"
+                                className="px-4 py-2 bg-[#FF6B35] hover:bg-[#1fb862] text-white rounded-lg text-sm font-medium transition-colors"
                             >
                                 Sign Up
                             </Link>

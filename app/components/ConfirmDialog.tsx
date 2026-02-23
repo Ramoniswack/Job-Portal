@@ -101,7 +101,7 @@ export default function ConfirmDialog({
                 <div className="flex gap-3 px-8 pb-8">
                     <button
                         onClick={onClose}
-                        className="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                        className="flex-1 px-6 py-3 bg-[#F1F3F5] text-gray-700 rounded-xl font-semibold hover:bg-[#E9ECEF] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
                     >
                         {cancelText}
                     </button>

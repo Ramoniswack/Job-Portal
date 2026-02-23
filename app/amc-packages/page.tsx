@@ -59,17 +59,17 @@ export default function AMCPackagesPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-50">
+            <div className="min-h-screen bg-[#F8F9FA]">
                 <Navbar />
                 <div className="flex items-center justify-center h-screen">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#26cf71]"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35]"></div>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-[#F8F9FA]">
             {/* Navbar */}
             <Navbar />
 
@@ -83,7 +83,7 @@ export default function AMCPackagesPage() {
                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                     <div className="text-center text-white px-4">
                         <h1 className="text-5xl md:text-6xl font-bold mb-4 drop-shadow-lg">
-                            {category} <span className="text-[#26cf71]">AMC Packages</span>
+                            {category} <span className="text-[#FF6B35]">AMC Packages</span>
                         </h1>
                         <p className="text-xl md:text-2xl font-medium drop-shadow-md max-w-3xl mx-auto">
                             Professional maintenance plans to keep your {category.toLowerCase()} system running smoothly
@@ -133,7 +133,7 @@ export default function AMCPackagesPage() {
                                     <ul className="space-y-5">
                                         {pkg.features.map((feature, idx) => (
                                             <li key={idx} className="flex items-start gap-3">
-                                                <div className="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                                                <div className="flex-shrink-0 w-6 h-6 bg-[#F1F3F5] rounded-full flex items-center justify-center mt-0.5">
                                                     <Check className="w-4 h-4 text-green-600 font-bold" />
                                                 </div>
                                                 <span className="text-gray-700 text-base leading-relaxed">{feature}</span>

@@ -240,7 +240,7 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
                                 required
                                 value={formData.name}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent text-sm"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent text-sm"
                                 placeholder="Category name"
                             />
                             <p className="text-xs text-gray-500 mt-1">The name is how it appears on your site.</p>
@@ -255,7 +255,7 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
                                 type="text"
                                 value={formData.slug}
                                 onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent text-sm"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent text-sm"
                                 placeholder="category-slug"
                             />
                             <p className="text-xs text-gray-500 mt-1">
@@ -271,7 +271,7 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
                             <select
                                 value={formData.parent}
                                 onChange={(e) => setFormData({ ...formData, parent: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent text-sm"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent text-sm"
                             >
                                 <option value="">None</option>
                                 {parentCategories.map((cat) => (
@@ -294,7 +294,7 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
                                 value={formData.description}
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                 rows={4}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent text-sm"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent text-sm"
                                 placeholder="Category description"
                             />
                         </div>
@@ -309,7 +309,7 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
                                 required
                                 value={formData.image}
                                 onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent text-sm"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent text-sm"
                                 placeholder="https://example.com/image.jpg"
                             />
                         </div>
@@ -318,7 +318,7 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
                         <div className="flex gap-2 pt-2">
                             <button
                                 type="submit"
-                                className="flex-1 px-4 py-2 bg-[#26cf71] text-white rounded-md hover:bg-[#1eb863] transition text-sm font-medium"
+                                className="flex-1 px-4 py-2 bg-[#FF6B35] text-white rounded-md hover:bg-[#FF5722] transition text-sm font-medium"
                             >
                                 {editingCategory ? 'Update' : 'Add New Category'}
                             </button>
@@ -326,7 +326,7 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
                                 <button
                                     type="button"
                                     onClick={resetForm}
-                                    className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition text-sm"
+                                    className="px-4 py-2 bg-[#F1F3F5] text-gray-700 rounded-md hover:bg-[#E9ECEF] transition text-sm"
                                 >
                                     Cancel
                                 </button>
@@ -349,7 +349,7 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
                                 placeholder="Search Categories"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
+                                className="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                             />
                         </div>
                     </div>
@@ -357,7 +357,7 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
                     {/* Table */}
                     {loading ? (
                         <div className="p-12 text-center">
-                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#26cf71] mx-auto"></div>
+                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35] mx-auto"></div>
                             <p className="mt-4 text-gray-600">Loading categories...</p>
                         </div>
                     ) : filteredCategories.length === 0 ? (
@@ -368,7 +368,7 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
                     ) : (
                         <div className="overflow-x-auto">
                             <table className="w-full">
-                                <thead className="bg-gray-50 border-b border-gray-200">
+                                <thead className="bg-[#F8F9FA] border-b border-gray-200">
                                     <tr>
                                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             <input type="checkbox" className="rounded" />
@@ -395,7 +395,7 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
 
                                         return (
                                             <React.Fragment key={category._id}>
-                                                <tr className="hover:bg-gray-50">
+                                                <tr className="hover:bg-[#F8F9FA]">
                                                     <td className="px-4 py-3">
                                                         <input type="checkbox" className="rounded" />
                                                     </td>
@@ -422,7 +422,7 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
                                                                 {category.name}
                                                             </a>
                                                             {hasSubcategories && (
-                                                                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
+                                                                <span className="text-xs text-gray-500 bg-[#F1F3F5] px-2 py-0.5 rounded-full">
                                                                     {subcats.length}
                                                                 </span>
                                                             )}
@@ -455,7 +455,7 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
                                                 </tr>
                                                 {/* Subcategories - Only show when expanded */}
                                                 {hasSubcategories && isExpanded && subcats.map((subcat) => (
-                                                    <tr key={subcat._id} className="hover:bg-gray-50 bg-blue-50/30">
+                                                    <tr key={subcat._id} className="hover:bg-[#F8F9FA] bg-blue-50/30">
                                                         <td className="px-4 py-3">
                                                             <input type="checkbox" className="rounded" />
                                                         </td>

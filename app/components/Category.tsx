@@ -74,8 +74,8 @@ export default function Category() {
                     <div className="flex gap-8 pb-4">
                         {[1, 2, 3, 4, 5, 6].map((i) => (
                             <div key={i} className="flex flex-col items-center text-center min-w-[140px]">
-                                <div className="h-32 w-32 mb-4 bg-gray-200 rounded-lg animate-pulse"></div>
-                                <div className="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+                                <div className="h-32 w-32 mb-4 bg-[#E9ECEF] rounded-lg animate-pulse"></div>
+                                <div className="h-4 w-24 bg-[#E9ECEF] rounded animate-pulse"></div>
                             </div>
                         ))}
                     </div>

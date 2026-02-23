@@ -15,11 +15,9 @@ export default function AboutPage() {
     return (
         <>
             <Navbar location={location} setLocation={setLocation} />
-            <AboutHero />
             <AboutMission />
             <Statistics />
             <HowItWorks />
-            <WhyChooseUs />
             <JoinPlatform />
             <Footer />
         </>

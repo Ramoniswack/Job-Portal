@@ -164,7 +164,7 @@ export default function AddPostSection({ token, editingPost, onSuccess, onCancel
                             required
                             value={formData.title}
                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                             placeholder="Enter post title"
                         />
                     </div>
@@ -178,7 +178,7 @@ export default function AddPostSection({ token, editingPost, onSuccess, onCancel
                             required
                             value={formData.category}
                             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                         >
                             <option value="">Select a category</option>
                             {categories.map((cat) => (
@@ -198,7 +198,7 @@ export default function AddPostSection({ token, editingPost, onSuccess, onCancel
                             value={formData.excerpt}
                             onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
                             rows={3}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                             placeholder="Short description (optional, auto-generated if empty)"
                         />
                     </div>
@@ -213,7 +213,7 @@ export default function AddPostSection({ token, editingPost, onSuccess, onCancel
                             value={formData.content}
                             onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                             rows={12}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                             placeholder="Write your post content here..."
                         />
                     </div>
@@ -228,7 +228,7 @@ export default function AddPostSection({ token, editingPost, onSuccess, onCancel
                                 type="url"
                                 value={imageUrl}
                                 onChange={(e) => setImageUrl(e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                                 placeholder="https://example.com/image.jpg"
                             />
                         </div>
@@ -240,7 +240,7 @@ export default function AddPostSection({ token, editingPost, onSuccess, onCancel
                                 type="text"
                                 value={imageAlt}
                                 onChange={(e) => setImageAlt(e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                                 placeholder="Describe the image"
                             />
                         </div>
@@ -263,13 +263,13 @@ export default function AddPostSection({ token, editingPost, onSuccess, onCancel
                                 value={tagInput}
                                 onChange={(e) => setTagInput(e.target.value)}
                                 onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
-                                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
+                                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                                 placeholder="Add a tag"
                             />
                             <button
                                 type="button"
                                 onClick={addTag}
-                                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+                                className="px-4 py-2 bg-[#F1F3F5] text-gray-700 rounded-lg hover:bg-[#E9ECEF]"
                             >
                                 Add
                             </button>
@@ -278,7 +278,7 @@ export default function AddPostSection({ token, editingPost, onSuccess, onCancel
                             {formData.tags.map((tag) => (
                                 <span
                                     key={tag}
-                                    className="px-3 py-1 bg-[#26cf71] text-white rounded-full text-sm flex items-center gap-2"
+                                    className="px-3 py-1 bg-[#FF6B35] text-white rounded-full text-sm flex items-center gap-2"
                                 >
                                     {tag}
                                     <button
@@ -302,7 +302,7 @@ export default function AddPostSection({ token, editingPost, onSuccess, onCancel
                             <select
                                 value={formData.status}
                                 onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                             >
                                 <option value="draft">Draft</option>
                                 <option value="published">Published</option>
@@ -315,7 +315,7 @@ export default function AddPostSection({ token, editingPost, onSuccess, onCancel
                                     type="checkbox"
                                     checked={formData.featured}
                                     onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                                    className="w-5 h-5 text-[#26cf71] border-gray-300 rounded focus:ring-[#26cf71]"
+                                    className="w-5 h-5 text-[#FF6B35] border-gray-300 rounded focus:ring-[#FF6B35]"
                                 />
                                 <span className="text-sm font-medium text-gray-700">Mark as Featured</span>
                             </label>
@@ -327,7 +327,7 @@ export default function AddPostSection({ token, editingPost, onSuccess, onCancel
                         <button
                             type="submit"
                             disabled={loading}
-                            className="px-6 py-3 bg-[#26cf71] text-white rounded-lg hover:bg-[#1eb863] transition disabled:opacity-50 flex items-center gap-2"
+                            className="px-6 py-3 bg-[#FF6B35] text-white rounded-lg hover:bg-[#FF5722] transition disabled:opacity-50 flex items-center gap-2"
                         >
                             {loading ? (
                                 <>
@@ -344,7 +344,7 @@ export default function AddPostSection({ token, editingPost, onSuccess, onCancel
                         <button
                             type="button"
                             onClick={onCancel}
-                            className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition"
+                            className="px-6 py-3 bg-[#F1F3F5] text-gray-700 rounded-lg hover:bg-[#E9ECEF] transition"
                         >
                             Cancel
                         </button>

@@ -105,7 +105,7 @@ export default function Testimonials() {
                                 </div>
                             </div>
                             <div className="absolute top-4 right-4 bg-white p-2 rounded shadow-md">
-                                <span className="text-[#26cf71] font-bold text-xs uppercase">Hamro Sewa</span>
+                                <span className="text-[#FF6B35] font-bold text-xs uppercase">Hamro Sewa</span>
                             </div>
                         </div>
                     </div>
@@ -121,7 +121,7 @@ export default function Testimonials() {
                                     key={index}
                                     className="bg-gradient-to-br from-slate-50 to-gray-50 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow"
                                 >
-                                    <div className="text-[#26cf71] text-5xl font-serif leading-none mb-3">
+                                    <div className="text-[#FF6B35] text-5xl font-serif leading-none mb-3">
                                         "
                                     </div>
                                     <p className="text-gray-700 leading-relaxed mb-6 text-sm">

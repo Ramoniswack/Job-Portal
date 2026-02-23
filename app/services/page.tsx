@@ -58,7 +58,7 @@ export default function ServicesPage() {
     const [searchLocation, setSearchLocation] = useState('');
     const [debouncedSearch, setDebouncedSearch] = useState('');
     const [debouncedLocation, setDebouncedLocation] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('');
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [sortBy, setSortBy] = useState('featured');
     const [showMobileFilters, setShowMobileFilters] = useState(false);
     const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
@@ -175,23 +175,36 @@ export default function ServicesPage() {
             );
         }
 
-        // Category filter
-        if (selectedCategory) {
-            const isSubCategory = allSubCategories.some(cat => cat._id === selectedCategory);
+        // Category filter - support multiple selections
+        if (selectedCategories.length > 0) {
+            filtered = filtered.filter(service => {
+                // Check if service category is directly selected
+                if (selectedCategories.includes(service.category._id)) {
+                    return true;
+                }
 
-            if (isSubCategory) {
-                filtered = filtered.filter(service => service.category._id === selectedCategory);
-            } else {
-                const subCatIds = allSubCategories
-                    .filter(cat => {
-                        if (typeof cat.parent === 'object' && cat.parent) {
-                            return cat.parent._id === selectedCategory;
-                        }
-                        return cat.parent === selectedCategory;
-                    })
-                    .map(cat => cat._id);
-                filtered = filtered.filter(service => subCatIds.includes(service.category._id));
-            }
+                // Check if service's parent category is selected
+                const parentCategories = selectedCategories.filter(catId =>
+                    !allSubCategories.some(sub => sub._id === catId)
+                );
+
+                for (const parentId of parentCategories) {
+                    const subCatIds = allSubCategories
+                        .filter(cat => {
+                            if (typeof cat.parent === 'object' && cat.parent) {
+                                return cat.parent._id === parentId;
+                            }
+                            return cat.parent === parentId;
+                        })
+                        .map(cat => cat._id);
+
+                    if (subCatIds.includes(service.category._id)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            });
         }
 
         // Sort
@@ -225,12 +238,12 @@ export default function ServicesPage() {
         }
 
         return filtered;
-    }, [services, debouncedSearch, debouncedLocation, selectedCategory, sortBy, allSubCategories]);
+    }, [services, debouncedSearch, debouncedLocation, selectedCategories, sortBy, allSubCategories]);
 
     const clearFilters = () => {
         setSearchQuery('');
         setSearchLocation('');
-        setSelectedCategory('');
+        setSelectedCategories([]);
         setSortBy('featured');
     };
 
@@ -242,13 +255,21 @@ export default function ServicesPage() {
         );
     };
 
-    const hasActiveFilters = searchQuery || searchLocation || selectedCategory || sortBy !== 'featured';
+    const toggleCategorySelection = (categoryId: string) => {
+        setSelectedCategories(prev =>
+            prev.includes(categoryId)
+                ? prev.filter(id => id !== categoryId)
+                : [...prev, categoryId]
+        );
+    };
+
+    const hasActiveFilters = searchQuery || searchLocation || selectedCategories.length > 0 || sortBy !== 'featured';
 
     return (
         <>
             <Navbar location={location} setLocation={setLocation} />
 
-            <div className="min-h-screen bg-gray-50">
+            <div className="min-h-screen bg-[#F8F9FA]">
                 {/* Hero Section with Search */}
                 <div className="relative pt-24 pb-12 overflow-hidden">
                     {/* Background Image */}
@@ -303,7 +324,7 @@ export default function ServicesPage() {
                                         setDebouncedSearch(searchQuery);
                                         setDebouncedLocation(searchLocation);
                                     }}
-                                    className="bg-[#26cf71] hover:bg-[#1eb863] text-white px-8 py-3 rounded-lg font-semibold transition-colors whitespace-nowrap"
+                                    className="bg-[#FF6B35] hover:bg-[#FF5722] text-white px-8 py-3 rounded-lg font-semibold transition-colors whitespace-nowrap"
                                 >
                                     Search
                                 </button>
@@ -323,7 +344,7 @@ export default function ServicesPage() {
                                     {hasActiveFilters && (
                                         <button
                                             onClick={clearFilters}
-                                            className="text-sm text-[#26cf71] hover:text-[#1eb863] font-semibold"
+                                            className="text-sm text-[#FF6B35] hover:text-[#FF5722] font-semibold"
                                         >
                                             Clear all
                                         </button>
@@ -334,16 +355,6 @@ export default function ServicesPage() {
                                 <div className="mb-6">
                                     <h3 className="text-sm font-bold text-gray-900 mb-3 uppercase tracking-wide">Category</h3>
                                     <div className="space-y-1 max-h-96 overflow-y-auto">
-                                        <label className="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition">
-                                            <input
-                                                type="checkbox"
-                                                value=""
-                                                checked={selectedCategory === ''}
-                                                onChange={() => setSelectedCategory('')}
-                                                className="w-4 h-4 text-[#26cf71] focus:ring-[#26cf71] border-gray-300 rounded"
-                                            />
-                                            <span className="ml-3 text-sm text-gray-700">All Categories</span>
-                                        </label>
                                         {parentCategories.map(parent => {
                                             const isExpanded = expandedCategories.includes(parent._id);
                                             const subCats = allSubCategories.filter(sub => {
@@ -358,7 +369,7 @@ export default function ServicesPage() {
                                                     <div className="flex items-center">
                                                         <button
                                                             onClick={() => toggleCategory(parent._id)}
-                                                            className="p-2 hover:bg-gray-50 rounded-lg transition"
+                                                            className="p-2 hover:bg-[#F8F9FA] rounded-lg transition"
                                                         >
                                                             {isExpanded ? (
                                                                 <ChevronDown className="w-4 h-4 text-gray-600" />
@@ -366,13 +377,13 @@ export default function ServicesPage() {
                                                                 <ChevronRight className="w-4 h-4 text-gray-600" />
                                                             )}
                                                         </button>
-                                                        <label className="flex-1 flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition">
+                                                        <label className="flex-1 flex items-center p-2 hover:bg-[#F8F9FA] rounded-lg cursor-pointer transition">
                                                             <input
                                                                 type="checkbox"
                                                                 value={parent._id}
-                                                                checked={selectedCategory === parent._id}
-                                                                onChange={() => setSelectedCategory(parent._id)}
-                                                                className="w-4 h-4 text-[#26cf71] focus:ring-[#26cf71] border-gray-300 rounded"
+                                                                checked={selectedCategories.includes(parent._id)}
+                                                                onChange={() => toggleCategorySelection(parent._id)}
+                                                                className="w-4 h-4 text-[#FF6B35] focus:ring-[#FF6B35] border-gray-300 rounded"
                                                             />
                                                             <span className="ml-3 text-sm font-semibold text-gray-900">{parent.name}</span>
                                                         </label>
@@ -380,13 +391,13 @@ export default function ServicesPage() {
                                                     {isExpanded && subCats.length > 0 && (
                                                         <div className="ml-6 space-y-1">
                                                             {subCats.map(sub => (
-                                                                <label key={sub._id} className="flex items-center p-2 pl-6 hover:bg-gray-50 rounded-lg cursor-pointer transition">
+                                                                <label key={sub._id} className="flex items-center p-2 pl-6 hover:bg-[#F8F9FA] rounded-lg cursor-pointer transition">
                                                                     <input
                                                                         type="checkbox"
                                                                         value={sub._id}
-                                                                        checked={selectedCategory === sub._id}
-                                                                        onChange={() => setSelectedCategory(sub._id)}
-                                                                        className="w-4 h-4 text-[#26cf71] focus:ring-[#26cf71] border-gray-300 rounded"
+                                                                        checked={selectedCategories.includes(sub._id)}
+                                                                        onChange={() => toggleCategorySelection(sub._id)}
+                                                                        className="w-4 h-4 text-[#FF6B35] focus:ring-[#FF6B35] border-gray-300 rounded"
                                                                     />
                                                                     <span className="ml-3 text-sm text-gray-600">{sub.name}</span>
                                                                 </label>
@@ -402,10 +413,10 @@ export default function ServicesPage() {
                                 {/* Location Quick Filter */}
                                 {debouncedLocation && (
                                     <div className="mb-6 pb-6 border-b border-gray-200">
-                                        <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                                        <div className="bg-[#F8F9FA] border border-green-200 rounded-lg p-3">
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-2">
-                                                    <MapPin className="w-4 h-4 text-[#26cf71]" />
+                                                    <MapPin className="w-4 h-4 text-[#FF6B35]" />
                                                     <span className="text-sm font-semibold text-gray-900">Location: {debouncedLocation}</span>
                                                 </div>
                                                 <button
@@ -434,7 +445,7 @@ export default function ServicesPage() {
                                     <SlidersHorizontal className="w-5 h-5 text-gray-600" />
                                     <span className="font-semibold text-gray-900">Filters</span>
                                     {hasActiveFilters && (
-                                        <span className="bg-[#26cf71] text-white text-xs px-2 py-0.5 rounded-full">Active</span>
+                                        <span className="bg-[#FF6B35] text-white text-xs px-2 py-0.5 rounded-full">Active</span>
                                     )}
                                 </div>
                                 <ChevronDown className={`w-5 h-5 text-gray-600 transition-transform ${showMobileFilters ? 'rotate-180' : ''}`} />
@@ -448,7 +459,7 @@ export default function ServicesPage() {
                                         {hasActiveFilters && (
                                             <button
                                                 onClick={clearFilters}
-                                                className="text-sm text-[#26cf71] hover:text-[#1eb863] font-semibold"
+                                                className="text-sm text-[#FF6B35] hover:text-[#FF5722] font-semibold"
                                             >
                                                 Clear all
                                             </button>
@@ -459,9 +470,15 @@ export default function ServicesPage() {
                                     <div className="mb-4">
                                         <label className="block text-sm font-semibold text-gray-700 mb-2">Category</label>
                                         <select
-                                            value={selectedCategory}
-                                            onChange={(e) => setSelectedCategory(e.target.value)}
-                                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#26cf71]"
+                                            value={selectedCategories[0] || ''}
+                                            onChange={(e) => {
+                                                if (e.target.value) {
+                                                    setSelectedCategories([e.target.value]);
+                                                } else {
+                                                    setSelectedCategories([]);
+                                                }
+                                            }}
+                                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35]"
                                         >
                                             <option value="">All Categories</option>
                                             {parentCategories.map(parent => (
@@ -482,6 +499,11 @@ export default function ServicesPage() {
                                                 </optgroup>
                                             ))}
                                         </select>
+                                        {selectedCategories.length > 1 && (
+                                            <p className="text-xs text-gray-500 mt-1">
+                                                +{selectedCategories.length - 1} more selected (use desktop for multiple selection)
+                                            </p>
+                                        )}
                                     </div>
 
                                     {/* Sort */}
@@ -490,7 +512,7 @@ export default function ServicesPage() {
                                         <select
                                             value={sortBy}
                                             onChange={(e) => setSortBy(e.target.value)}
-                                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#26cf71]"
+                                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35]"
                                         >
                                             <option value="featured">Featured</option>
                                             <option value="popular">Most Popular</option>
@@ -510,7 +532,7 @@ export default function ServicesPage() {
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                                 <div>
                                     <h2 className="text-2xl font-bold text-gray-900">
-                                        {(debouncedSearch || debouncedLocation) ? 'Search Results' : selectedCategory ? 'Filtered Services' : 'All Services'}
+                                        {(debouncedSearch || debouncedLocation) ? 'Search Results' : selectedCategories.length > 0 ? 'Filtered Services' : 'All Services'}
                                     </h2>
                                     <p className="text-sm text-gray-600 mt-1">
                                         {filteredAndSortedServices.length} {filteredAndSortedServices.length === 1 ? 'service' : 'services'}
@@ -526,7 +548,7 @@ export default function ServicesPage() {
                                     <select
                                         value={sortBy}
                                         onChange={(e) => setSortBy(e.target.value)}
-                                        className="px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#26cf71] focus:border-transparent bg-white"
+                                        className="px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent bg-white"
                                     >
                                         <option value="featured">Featured</option>
                                         <option value="popular">Most Popular</option>
@@ -543,10 +565,10 @@ export default function ServicesPage() {
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                     {[1, 2, 3, 4, 5, 6].map((i) => (
                                         <div key={i} className="bg-white rounded-xl overflow-hidden shadow-sm">
-                                            <div className="h-48 bg-gray-200 animate-pulse"></div>
+                                            <div className="h-48 bg-[#E9ECEF] animate-pulse"></div>
                                             <div className="p-4 space-y-3">
-                                                <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
-                                                <div className="h-4 bg-gray-200 rounded w-2/3 animate-pulse"></div>
+                                                <div className="h-4 bg-[#E9ECEF] rounded animate-pulse"></div>
+                                                <div className="h-4 bg-[#E9ECEF] rounded w-2/3 animate-pulse"></div>
                                             </div>
                                         </div>
                                     ))}
@@ -559,7 +581,7 @@ export default function ServicesPage() {
                                     {hasActiveFilters && (
                                         <button
                                             onClick={clearFilters}
-                                            className="px-6 py-3 bg-[#26cf71] text-white rounded-lg hover:bg-[#1eb863] transition font-semibold"
+                                            className="px-6 py-3 bg-[#FF6B35] text-white rounded-lg hover:bg-[#FF5722] transition font-semibold"
                                         >
                                             Clear All Filters
                                         </button>
@@ -574,13 +596,13 @@ export default function ServicesPage() {
                                             <Link
                                                 key={service._id}
                                                 href={`/service/${service.slug}`}
-                                                className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
+                                                className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300"
                                             >
-                                                <div className="relative aspect-[4/3] overflow-hidden">
+                                                <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
                                                     <img
                                                         src={primaryImage}
                                                         alt={service.title}
-                                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                                                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                                                     />
                                                     {/* Badges */}
                                                     {(service.featured || service.popular) && (
@@ -599,13 +621,13 @@ export default function ServicesPage() {
                                                     )}
                                                 </div>
                                                 <div className="p-4">
-                                                    <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-[#26cf71] transition-colors">
+                                                    <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 hover:text-[#FF6B35] transition-colors">
                                                         {service.title}
                                                     </h3>
                                                     <div className="flex items-center gap-2 mb-2">
                                                         <span className="text-sm text-gray-600">{service.provider.name}</span>
                                                         {service.provider.verified && (
-                                                            <div className="bg-[#26cf71] rounded-full p-0.5">
+                                                            <div className="bg-[#FF6B35] rounded-full p-0.5">
                                                                 <Check className="w-3 h-3 text-white" strokeWidth={3} />
                                                             </div>
                                                         )}
@@ -623,7 +645,7 @@ export default function ServicesPage() {
                                                                 {service.rating > 0 ? service.rating.toFixed(1) : 'New'}
                                                             </span>
                                                         </div>
-                                                        <div className="text-[#26cf71] font-bold text-lg">
+                                                        <div className="text-[#FF6B35] font-bold text-lg">
                                                             {service.priceLabel}
                                                         </div>
                                                     </div>

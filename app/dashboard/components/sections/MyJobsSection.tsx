@@ -201,7 +201,7 @@ export default function MyJobsSection({
                 <button
                     onClick={onLoadMyJobs}
                     disabled={loadingJobs}
-                    className="bg-[#26cf71] text-white px-5 py-2 rounded-lg text-sm font-bold hover:opacity-90 transition-all disabled:opacity-50"
+                    className="bg-[#FF6B35] text-white px-5 py-2 rounded-lg text-sm font-bold hover:opacity-90 transition-all disabled:opacity-50"
                 >
                     {loadingJobs ? 'Loading...' : 'Refresh'}
                 </button>
@@ -220,7 +220,7 @@ export default function MyJobsSection({
                                         <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
                                             <span>{job.category}</span>
                                             <span>{job.location}</span>
-                                            <span className="font-semibold text-[#26cf71]">${job.budget}</span>
+                                            <span className="font-semibold text-[#FF6B35]">${job.budget}</span>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2">
@@ -236,7 +236,7 @@ export default function MyJobsSection({
                                         </select>
                                         <button
                                             onClick={() => startEditJob(job)}
-                                            className="px-3 py-1 bg-[#26cf71] text-white text-xs rounded hover:bg-[#26cf71]"
+                                            className="px-3 py-1 bg-[#FF6B35] text-white text-xs rounded hover:bg-[#FF6B35]"
                                         >
                                             Edit
                                         </button>
@@ -248,7 +248,7 @@ export default function MyJobsSection({
                                         </button>
                                         <button
                                             onClick={() => loadJobApplications(job._id)}
-                                            className={`px-3 py-1 text-white text-xs rounded ${currentViewingJobId === job._id ? 'bg-gray-500' : 'bg-green-500'
+                                            className={`px-3 py-1 text-white text-xs rounded ${currentViewingJobId === job._id ? 'bg-[#F8F9FA]0' : 'bg-[#F8F9FA]0'
                                                 }`}
                                         >
                                             {currentViewingJobId === job._id ? 'Hide' : 'View'} Applications
@@ -264,13 +264,13 @@ export default function MyJobsSection({
                                         ) : (
                                             <div className="space-y-3">
                                                 {selectedJobApplications.map((application) => (
-                                                    <div key={application._id} className="bg-gray-50 p-3 rounded-md flex justify-between items-start">
+                                                    <div key={application._id} className="bg-[#F8F9FA] p-3 rounded-md flex justify-between items-start">
                                                         <div className="flex-1">
                                                             <div className="flex items-center gap-2 mb-2">
                                                                 <span className="font-medium text-gray-900">{application.worker.name}</span>
                                                                 <span
                                                                     className={`text-xs px-2 py-1 rounded-full ${application.status === 'requested' ? 'bg-yellow-100 text-yellow-800' :
-                                                                        application.status === 'approved' ? 'bg-green-100 text-green-800' :
+                                                                        application.status === 'approved' ? 'bg-[#F1F3F5] text-green-800' :
                                                                             'bg-red-100 text-red-800'
                                                                         }`}
                                                                 >
@@ -287,7 +287,7 @@ export default function MyJobsSection({
                                                             <div className="flex gap-2 ml-4">
                                                                 <button
                                                                     onClick={() => updateApplicationStatus(application._id, 'approved')}
-                                                                    className="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600"
+                                                                    className="px-3 py-1 bg-[#F8F9FA]0 text-white text-xs rounded hover:bg-green-600"
                                                                 >
                                                                     Approve
                                                                 </button>
@@ -357,13 +357,13 @@ export default function MyJobsSection({
                                 <div className="flex gap-2">
                                     <button
                                         onClick={() => updateJob(job._id)}
-                                        className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                                        className="px-4 py-2 bg-[#F8F9FA]0 text-white rounded-lg hover:bg-green-600"
                                     >
                                         Save
                                     </button>
                                     <button
                                         onClick={cancelEditJob}
-                                        className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                                        className="px-4 py-2 bg-[#F8F9FA]0 text-white rounded-lg hover:bg-gray-600"
                                     >
                                         Cancel
                                     </button>

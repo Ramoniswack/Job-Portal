@@ -60,11 +60,11 @@ export default function LoginPage() {
     return (
         <>
             <Navbar />
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12 pt-24">
+            <div className="min-h-screen bg-[#F8F9FA] flex items-center justify-center px-4 py-12 pt-24">
                 <div className="bg-white rounded-2xl shadow-lg max-w-md w-full p-8 border border-gray-100">
                     <div className="text-center mb-8">
                         <div className="inline-flex items-center justify-center mb-4">
-                            <img src="/logo.png" alt="Hamro Sewa" className="h-16 w-auto" />
+                            <img src="/logo.jpg" alt="Hamro Sewa" className="h-16 w-auto" />
                         </div>
                         <h2 className="text-3xl font-bold text-gray-800">Welcome Back</h2>
                         <p className="text-gray-500 mt-2">Login to your account</p>
@@ -81,7 +81,7 @@ export default function LoginPage() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="john@example.com"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#26cf71] focus:border-transparent transition-all"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-all"
                                 required
                             />
                         </div>
@@ -96,7 +96,7 @@ export default function LoginPage() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="••••••••"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#26cf71] focus:border-transparent transition-all"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-all"
                                 required
                             />
                         </div>
@@ -104,14 +104,14 @@ export default function LoginPage() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-[#26cf71] text-white py-3 rounded-lg font-semibold hover:bg-[#1fb862] transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full bg-[#FF6B35] text-white py-3 rounded-lg font-semibold hover:bg-[#1fb862] transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {loading ? 'Logging in...' : 'Login'}
                         </button>
                     </form>
 
                     {message && (
-                        <div className={`mt-4 text-center text-sm font-medium ${messageType === 'success' ? 'text-[#26cf71]' : 'text-red-600'}`}>
+                        <div className={`mt-4 text-center text-sm font-medium ${messageType === 'success' ? 'text-[#FF6B35]' : 'text-red-600'}`}>
                             {message}
                         </div>
                     )}
@@ -119,14 +119,14 @@ export default function LoginPage() {
                     <div className="mt-6 text-center">
                         <p className="text-gray-600">
                             Don't have an account?{' '}
-                            <Link href="/register" className="text-[#26cf71] font-semibold hover:text-[#1fb862] transition-colors">
+                            <Link href="/register" className="text-[#FF6B35] font-semibold hover:text-[#1fb862] transition-colors">
                                 Register here
                             </Link>
                         </p>
                     </div>
 
                     <div className="mt-6 pt-6 border-t border-gray-200 text-center">
-                        <Link href="/" className="text-sm text-gray-500 hover:text-[#26cf71] transition-colors">
+                        <Link href="/" className="text-sm text-gray-500 hover:text-[#FF6B35] transition-colors">
                             ← Back to Home
                         </Link>
                     </div>

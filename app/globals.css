@@ -1,12 +1,30 @@
 @import "tailwindcss";
 
+/* Coral Theme Colors */
+:root {
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F8F9FA;
+  --bg-tertiary: #F1F3F5;
+  --coral-primary: #FF6B35;
+  --coral-dark: #FF5722;
+}
+
 body {
-  background: #ffffff;
+  background: var(--bg-primary);
   color: #333;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.4;
   margin: 0;
   padding: 0;
+}
+
+/* Apply warm background to main sections */
+main {
+  background: var(--bg-primary);
+}
+
+section {
+  background: var(--bg-primary);
 }
 
 .material-symbols-outlined {

@@ -103,9 +103,9 @@ export default function PopularServices() {
                     <div className="grid grid-flow-col auto-cols-[minmax(250px,1fr)] sm:auto-cols-[minmax(280px,1fr)] md:auto-cols-[minmax(300px,1fr)] gap-6">
                         {[1, 2, 3, 4].map((i) => (
                             <div key={i} className="space-y-3">
-                                <div className="h-48 bg-gray-200 rounded-2xl animate-pulse"></div>
-                                <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
-                                <div className="h-4 bg-gray-200 rounded w-2/3 animate-pulse"></div>
+                                <div className="h-48 bg-[#E9ECEF] rounded-2xl animate-pulse"></div>
+                                <div className="h-4 bg-[#E9ECEF] rounded animate-pulse"></div>
+                                <div className="h-4 bg-[#E9ECEF] rounded w-2/3 animate-pulse"></div>
                             </div>
                         ))}
                     </div>
@@ -132,14 +132,14 @@ export default function PopularServices() {
 
                 <button
                     onClick={() => scroll('left')}
-                    className="absolute left-[-20px] top-1/2 -translate-y-1/2 z-10 bg-[#26cf71] text-white p-2 rounded-full shadow-lg hover:bg-[#1eb863] transition hidden md:block"
+                    className="absolute left-[-20px] top-1/2 -translate-y-1/2 z-10 bg-[#FF6B35] text-white p-2 rounded-full shadow-lg hover:bg-[#FF5722] transition hidden md:block"
                 >
                     <ChevronLeft className="h-6 w-6" />
                 </button>
 
                 <button
                     onClick={() => scroll('right')}
-                    className="absolute right-[-20px] top-1/2 -translate-y-1/2 z-10 bg-[#26cf71] text-white p-2 rounded-full shadow-lg hover:bg-[#1eb863] transition hidden md:block"
+                    className="absolute right-[-20px] top-1/2 -translate-y-1/2 z-10 bg-[#FF6B35] text-white p-2 rounded-full shadow-lg hover:bg-[#FF5722] transition hidden md:block"
                 >
                     <ChevronRight className="h-6 w-6" />
                 </button>
@@ -166,7 +166,7 @@ export default function PopularServices() {
                                     />
                                 </div>
                                 <div className="space-y-1">
-                                    <h3 className="text-lg font-semibold text-gray-900 truncate cursor-pointer hover:text-[#26cf71] transition-colors">{service.title}</h3>
+                                    <h3 className="text-lg font-semibold text-gray-900 truncate cursor-pointer hover:text-[#FF6B35] transition-colors">{service.title}</h3>
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-1">
                                             <span className="text-sm text-gray-600">{service.provider}</span>
@@ -189,7 +189,7 @@ export default function PopularServices() {
                                             <span>{service.location}</span>
                                         </div>
                                     )}
-                                    <div className="text-[#26cf71] font-bold text-lg pt-1">{service.price}</div>
+                                    <div className="text-[#FF6B35] font-bold text-lg pt-1">{service.price}</div>
                                     <p className="text-sm text-gray-500 line-clamp-2 leading-relaxed">
                                         {service.description}
                                     </p>
