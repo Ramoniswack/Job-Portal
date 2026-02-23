@@ -166,7 +166,7 @@ export default function BrowseJobsSection({
                         <button
                             onClick={onLoadAllJobs}
                             disabled={loadingAllJobs}
-                            className="flex items-center gap-2 bg-[#FF6B35] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#FF5722] transition-all disabled:opacity-50 shadow-lg shadow-green-200"
+                            className="flex items-center gap-2 bg-[#FF6B35] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#FF5722] transition-all disabled:opacity-50 shadow-lg shadow-orange-200"
                         >
                             <RefreshCw className={`w-5 h-5 ${loadingAllJobs ? 'animate-spin' : ''}`} />
                             {loadingAllJobs ? 'Loading...' : 'Refresh'}
@@ -255,7 +255,7 @@ export default function BrowseJobsSection({
                                     <div className="p-6 pb-4">
                                         <div className="flex items-start justify-between mb-4">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-12 h-12 bg-gradient-to-br from-[#FF6B35] to-[#FF5722] rounded-xl flex items-center justify-center shadow-lg shadow-green-200">
+                                                <div className="w-12 h-12 bg-gradient-to-br from-[#FF6B35] to-[#FF5722] rounded-xl flex items-center justify-center shadow-lg shadow-orange-200">
                                                     <Briefcase className="w-6 h-6 text-white" />
                                                 </div>
                                                 <div>
@@ -350,7 +350,7 @@ export default function BrowseJobsSection({
                                             ) : (
                                                 <button
                                                     onClick={() => openApplyModal(job._id, job.title)}
-                                                    className="w-full py-3 bg-gradient-to-r from-[#FF6B35] to-[#FF5722] text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-green-200 transition-all flex items-center justify-center gap-2"
+                                                    className="w-full py-3 bg-gradient-to-r from-[#FF6B35] to-[#FF5722] text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-orange-200 transition-all flex items-center justify-center gap-2"
                                                 >
                                                     <Send className="w-4 h-4" />
                                                     Apply Now

@@ -178,14 +178,14 @@ export default function RegisterPage() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-[#FF6B35] text-white py-3 rounded-lg font-semibold hover:bg-[#1fb862] transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full bg-[#FF6B35] text-white py-3 rounded-lg font-semibold hover:bg-[#FF5722] transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {loading ? 'Creating Account...' : 'Create Account'}
                         </button>
                     </form>
 
                     {message && (
-                        <div className={`mt-4 text-center text-sm font-medium ${messageType === 'success' ? 'text-[#FF6B35]' : 'text-red-600'}`}>
+                        <div className={`mt-4 text-center text-sm font-medium ${messageType === 'success' ? 'text-green-600' : 'text-red-600'}`}>
                             {message}
                         </div>
                     )}
@@ -193,7 +193,7 @@ export default function RegisterPage() {
                     <div className="mt-6 text-center">
                         <p className="text-gray-600">
                             Already have an account?{' '}
-                            <Link href="/login" className="text-[#FF6B35] font-semibold hover:text-[#1fb862] transition-colors">
+                            <Link href="/login" className="text-[#FF6B35] font-semibold hover:text-[#FF5722] transition-colors">
                                 Login here
                             </Link>
                         </p>

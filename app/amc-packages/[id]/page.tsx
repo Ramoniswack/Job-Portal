@@ -34,6 +34,15 @@ export default function AMCPackagesPage() {
     const id = params.id as string;
     const [packageData, setPackageData] = useState<AMCPackage | null>(null);
     const [loading, setLoading] = useState(true);
+    const [showBookingModal, setShowBookingModal] = useState(false);
+    const [selectedTier, setSelectedTier] = useState<PricingTier | null>(null);
+    const [bookingData, setBookingData] = useState({
+        name: '',
+        email: '',
+        phone: '',
+        address: '',
+        notes: ''
+    });
 
     useEffect(() => {
         if (id) {
@@ -54,6 +63,26 @@ export default function AMCPackagesPage() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleBookNow = (tier: PricingTier) => {
+        setSelectedTier(tier);
+        setShowBookingModal(true);
+    };
+
+    const handleBookingSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        // Here you would typically send the booking data to your backend
+        console.log('Booking submitted:', {
+            package: packageData?.title,
+            tier: selectedTier?.name,
+            ...bookingData
+        });
+
+        alert('AMC Package booking request submitted successfully! We will contact you shortly.');
+        setShowBookingModal(false);
+        setBookingData({ name: '', email: '', phone: '', address: '', notes: '' });
     };
 
     if (loading) {
@@ -135,7 +164,10 @@ export default function AMCPackagesPage() {
                             </div>
 
                             {/* Book Button */}
-                            <button className="w-full py-3 px-4 border-2 border-[#FF6B35] bg-white text-[#FF6B35] font-bold rounded cursor-pointer text-center mb-6 hover:bg-[#FF6B35] hover:text-white transition-colors duration-200">
+                            <button
+                                onClick={() => handleBookNow(tier)}
+                                className="w-full py-3 px-4 border-2 border-[#FF6B35] bg-white text-[#FF6B35] font-bold rounded cursor-pointer text-center mb-6 hover:bg-[#FF6B35] hover:text-white transition-colors duration-200"
+                            >
                                 Book Now
                             </button>
 
@@ -165,6 +197,136 @@ export default function AMCPackagesPage() {
                     </div>
                 </div>
             </main>
+
+            {/* Booking Modal */}
+            {showBookingModal && selectedTier && (
+                <div
+                    className="fixed inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-[9999] p-4 overflow-y-auto"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) {
+                            setShowBookingModal(false);
+                        }
+                    }}
+                >
+                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl my-8 mx-auto">
+                        {/* Modal Header */}
+                        <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-4 flex justify-between items-center rounded-t-2xl">
+                            <h2 className="text-lg sm:text-2xl font-bold text-gray-900">Complete Your AMC Booking</h2>
+                            <button
+                                type="button"
+                                onClick={() => setShowBookingModal(false)}
+                                className="text-gray-400 hover:text-gray-600 transition flex-shrink-0 ml-2"
+                            >
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* Modal Body */}
+                        <form onSubmit={handleBookingSubmit} className="p-4 sm:p-6">
+                            {/* Package Info */}
+                            <div className="bg-[#FFF5F0] border-l-4 border-[#FF6B35] rounded-lg p-3 sm:p-4 mb-4 sm:mb-6">
+                                <h3 className="font-bold text-gray-900 mb-2 text-sm sm:text-base">{packageData?.category} AMC Package</h3>
+                                <div className="text-xs sm:text-sm text-gray-700 flex flex-wrap gap-x-6 gap-y-1">
+                                    <p><span className="font-semibold">Plan:</span> {selectedTier.name}</p>
+                                    <p><span className="font-semibold">Duration:</span> {selectedTier.duration === 'month' ? 'Monthly' : selectedTier.duration === 'quarter' ? 'Quarterly' : 'Yearly'}</p>
+                                    <p><span className="font-semibold">Price:</span> NPR {selectedTier.price.toLocaleString()}/mo</p>
+                                </div>
+                            </div>
+
+                            {/* Form Fields - Two Column Layout */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                                <div>
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
+                                        Full Name <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={bookingData.name}
+                                        onChange={(e) => setBookingData({ ...bookingData, name: e.target.value })}
+                                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent outline-none transition"
+                                        placeholder="Enter your full name"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
+                                        Email Address <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="email"
+                                        required
+                                        value={bookingData.email}
+                                        onChange={(e) => setBookingData({ ...bookingData, email: e.target.value })}
+                                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent outline-none transition"
+                                        placeholder="your.email@example.com"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
+                                        Phone Number <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="tel"
+                                        required
+                                        value={bookingData.phone}
+                                        onChange={(e) => setBookingData({ ...bookingData, phone: e.target.value })}
+                                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent outline-none transition"
+                                        placeholder="+977 98XXXXXXXX"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
+                                        Service Address <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={bookingData.address}
+                                        onChange={(e) => setBookingData({ ...bookingData, address: e.target.value })}
+                                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent outline-none transition"
+                                        placeholder="Enter service location address"
+                                    />
+                                </div>
+
+                                <div className="md:col-span-2">
+                                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
+                                        Additional Notes (Optional)
+                                    </label>
+                                    <textarea
+                                        value={bookingData.notes}
+                                        onChange={(e) => setBookingData({ ...bookingData, notes: e.target.value })}
+                                        rows={2}
+                                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent outline-none transition resize-none"
+                                        placeholder="Any special requirements or instructions..."
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Submit Button */}
+                            <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-2 sm:gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowBookingModal(false)}
+                                    className="w-full sm:flex-1 px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="w-full sm:flex-1 px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base bg-[#FF6B35] text-white rounded-lg font-semibold hover:bg-[#FF5722] transition shadow-lg hover:shadow-xl transform hover:scale-105 duration-300"
+                                >
+                                    Confirm Booking
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
 
             <Footer />
         </div>

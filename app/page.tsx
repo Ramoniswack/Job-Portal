@@ -8,7 +8,6 @@ import PopularServices from './components/PopularServices';
 import AMCPackages from './components/AMCPackages';
 import Testimonials from './components/Testimonials';
 import FAQ from './components/FAQ';
-import WhatsAppButton from './components/WhatsAppButton';
 import Footer from './components/Footer';
 import WelcomePopup from './components/WelcomePopup';
 export default function Home() {
@@ -24,7 +23,6 @@ export default function Home() {
       <AMCPackages />
       <Testimonials />
       <FAQ />
-      <WhatsAppButton />
       <Footer />
       <WelcomePopup onLocationSelect={setLocation} />
     </>

@@ -73,7 +73,7 @@ export default function TopNavbar({ currentUser, onLogout }: TopNavbarProps) {
                             </Link>
                             <Link
                                 href="/register"
-                                className="px-4 py-2 bg-[#FF6B35] hover:bg-[#1fb862] text-white rounded-lg text-sm font-medium transition-colors"
+                                className="px-4 py-2 bg-[#FF6B35] hover:bg-[#FF5722] text-white rounded-lg text-sm font-medium transition-colors"
                             >
                                 Sign Up
                             </Link>

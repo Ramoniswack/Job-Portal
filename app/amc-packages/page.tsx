@@ -1,6 +1,7 @@
 'use client';
 
 import { Check } from 'lucide-react';
+import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useEffect, useState } from 'react';
@@ -144,9 +145,11 @@ export default function AMCPackagesPage() {
 
                                 {/* Book Button */}
                                 <div className="p-8 pt-0">
-                                    <button className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl text-lg">
-                                        Book Now
-                                    </button>
+                                    <Link href={`/amc-packages/${pkg._id}`}>
+                                        <button className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl text-lg">
+                                            View Details
+                                        </button>
+                                    </Link>
                                 </div>
                             </div>
                         ))}

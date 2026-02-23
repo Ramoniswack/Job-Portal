@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from 'sonner';
+import WhatsAppButton from './components/WhatsAppButton';
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,6 +32,7 @@ export default function RootLayout({
         className={`${inter.variable} font-sans antialiased`}
       >
         {children}
+        <WhatsAppButton />
         <Toaster position="top-right" richColors />
       </body>
     </html>

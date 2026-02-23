@@ -15,7 +15,7 @@ export default function Header({ currentUser, onCreateJob }: HeaderProps) {
                 <div className="relative group">
                     <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#FF6B35] transition-colors text-[20px]">search</span>
                     <input
-                        className="w-full bg-[#F8F9FA] border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-green-200 transition-all"
+                        className="w-full bg-[#F8F9FA] border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-orange-200 transition-all"
                         placeholder="Search jobs..."
                         type="text"
                     />
@@ -48,7 +48,7 @@ export default function Header({ currentUser, onCreateJob }: HeaderProps) {
                 {currentUser && (
                     <button
                         onClick={onCreateJob}
-                        className="bg-[#FF6B35] text-white px-4 lg:px-5 py-2 rounded-lg text-sm font-bold shadow-lg shadow-green-200 hover:bg-[#1fb862] transition-all flex items-center justify-center gap-2 flex-1 lg:flex-initial"
+                        className="bg-[#FF6B35] text-white px-4 lg:px-5 py-2 rounded-lg text-sm font-bold shadow-lg shadow-orange-200 hover:bg-[#FF5722] transition-all flex items-center justify-center gap-2 flex-1 lg:flex-initial"
                     >
                         <span className="material-symbols-outlined text-[18px]">add</span>
                         <span className="hidden sm:inline">{currentUser.role === 'client' ? 'Post a Job' : 'Create Job'}</span>
