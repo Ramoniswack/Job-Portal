@@ -156,7 +156,11 @@ export default function PopularServices() {
                 >
                     <div className="grid grid-flow-col auto-cols-[minmax(250px,1fr)] sm:auto-cols-[minmax(280px,1fr)] md:auto-cols-[minmax(300px,1fr)] gap-6">
                         {services.map((service) => (
-                            <Link key={service.id} href={`/service/${service.slug}`} className="bg-transparent block">
+                            <Link
+                                key={service.id}
+                                href={`/service/${service.slug}`}
+                                className="bg-transparent block"
+                            >
                                 <div className="rounded-2xl overflow-hidden mb-4 aspect-[4/3]">
                                     <img
                                         src={service.image}

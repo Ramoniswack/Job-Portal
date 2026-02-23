@@ -34,7 +34,6 @@ export default function Category() {
             setCategories(data);
         } catch (error) {
             console.error('Error fetching categories:', error);
-            // Fallback to empty array - you could also set a default list here
             setCategories([]);
         } finally {
             setLoading(false);
@@ -111,7 +110,7 @@ export default function Category() {
                                 <Link
                                     key={category._id}
                                     href={`/category/${category.slug}`}
-                                    className="flex flex-col items-center text-center min-w-[140px] hover:scale-105 transition-transform duration-200"
+                                    className="flex flex-col items-center text-center min-w-[140px] transition-transform duration-200"
                                 >
                                     <div className="h-32 w-32 mb-4 flex items-center justify-center">
                                         <img

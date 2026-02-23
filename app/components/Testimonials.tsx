@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 
 export default function Testimonials() {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const testimonialsRef = useRef<HTMLDivElement>(null);
 
     const testimonials = [
         {
@@ -43,6 +44,38 @@ export default function Testimonials() {
             avatar: "https://i.pravatar.cc/150?u=rita"
         }
     ];
+
+    useEffect(() => {
+        const scrollContainer = testimonialsRef.current;
+        if (!scrollContainer) return;
+
+        let scrollInterval: NodeJS.Timeout;
+
+        const startAutoScroll = () => {
+            scrollInterval = setInterval(() => {
+                if (scrollContainer.scrollTop >= scrollContainer.scrollHeight - scrollContainer.clientHeight) {
+                    scrollContainer.scrollTop = 0;
+                } else {
+                    scrollContainer.scrollTop += 1;
+                }
+            }, 30);
+        };
+
+        const stopAutoScroll = () => {
+            clearInterval(scrollInterval);
+        };
+
+        startAutoScroll();
+
+        scrollContainer.addEventListener('mouseenter', stopAutoScroll);
+        scrollContainer.addEventListener('mouseleave', startAutoScroll);
+
+        return () => {
+            clearInterval(scrollInterval);
+            scrollContainer.removeEventListener('mouseenter', stopAutoScroll);
+            scrollContainer.removeEventListener('mouseleave', startAutoScroll);
+        };
+    }, []);
 
     useEffect(() => {
         const scrollContainer = scrollContainerRef.current;
@@ -112,7 +145,7 @@ export default function Testimonials() {
 
                     <div className="flex-1">
                         <div
-                            ref={scrollContainerRef}
+                            ref={testimonialsRef}
                             className="h-[600px] overflow-y-auto scrollbar-hide space-y-6 pr-2"
                             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                         >

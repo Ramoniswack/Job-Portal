@@ -4,7 +4,7 @@ import { Check } from 'lucide-react';
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 interface AMCPackage {
@@ -18,7 +18,7 @@ interface AMCPackage {
     image: string;
 }
 
-export default function AMCPackagesPage() {
+function AMCPackagesContent() {
     const searchParams = useSearchParams();
     const category = searchParams.get('category') || 'Plumbing';
     const [packages, setPackages] = useState<AMCPackage[]>([]);
@@ -183,5 +183,20 @@ export default function AMCPackagesPage() {
             {/* Footer */}
             <Footer />
         </div>
+    );
+}
+
+export default function AMCPackagesPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-[#F8F9FA]">
+                <Navbar />
+                <div className="flex items-center justify-center h-screen">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35]"></div>
+                </div>
+            </div>
+        }>
+            <AMCPackagesContent />
+        </Suspense>
     );
 }

@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
-export default function RegisterPage() {
+function RegisterPageContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [name, setName] = useState('');
@@ -208,5 +208,20 @@ export default function RegisterPage() {
             </div>
             <Footer />
         </>
+    );
+}
+
+export default function RegisterPage() {
+    return (
+        <Suspense fallback={
+            <>
+                <Navbar />
+                <div className="flex items-center justify-center min-h-screen">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35]"></div>
+                </div>
+            </>
+        }>
+            <RegisterPageContent />
+        </Suspense>
     );
 }

@@ -405,12 +405,6 @@ export default function ImprovedMyJobsSection({ myJobs, jobApplications, token, 
                                                     <DollarSign className="w-4 h-4" />
                                                     {job.budget}
                                                 </span>
-                                                {job.maxApplicants && (
-                                                    <span className="px-3 py-1 bg-blue-100 rounded-full text-sm text-blue-700 flex items-center gap-1">
-                                                        <Users className="w-4 h-4" />
-                                                        {job.currentApplicants || 0}/{job.maxApplicants} applicants
-                                                    </span>
-                                                )}
                                             </div>
                                         </div>
                                     )}

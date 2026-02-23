@@ -82,7 +82,7 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
             }
         } catch (error) {
             console.error('Error loading categories:', error);
-            alert(`Failed to load categories: ${error.message}`);
+            alert(`Failed to load categories: ${error instanceof Error ? error.message : 'Unknown error'}`);
         } finally {
             setLoading(false);
         }

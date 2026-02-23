@@ -1,3 +1,5 @@
+'use client';
+
 import { Search, MapPin } from 'lucide-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -24,8 +26,9 @@ export default function Hero() {
     };
 
     return (
-        <section className="relative w-full h-[500px] flex items-center justify-center bg-cover bg-center text-white px-5" style={{ background: "linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://worknp.com/images/hero-bg.png')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
-            <div className="w-full max-w-6xl mx-auto">
+        <section className="relative w-full h-[500px] flex items-center justify-center bg-cover bg-center text-white px-5 overflow-hidden">
+            <div className="absolute inset-0 bg-cover bg-center" style={{ background: "linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://worknp.com/images/hero-bg.png')", backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
+            <div className="w-full max-w-6xl mx-auto relative z-10">
                 <h1 className="text-5xl font-extrabold mb-2 tracking-tight">
                     Find Your <span className="text-white">Dream Job</span> Today
                 </h1>

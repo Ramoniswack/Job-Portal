@@ -274,7 +274,7 @@ export default function BrowseJobsSection({
                                             <span className={`px-3 py-1 rounded-full text-xs font-semibold ${job.status === 'pending' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
                                                 job.status === 'accepted' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
                                                     job.status === 'confirmed' ? 'bg-[#F8F9FA] text-green-700 border border-green-200' :
-                                                        job.status === 'closed' ? 'bg-red-50 text-red-700 border border-red-200' :
+                                                        job.status === 'completed' ? 'bg-red-50 text-red-700 border border-red-200' :
                                                             'bg-[#F8F9FA] text-gray-700 border border-gray-200'
                                                 }`}>
                                                 {job.status.charAt(0).toUpperCase() + job.status.slice(1)}
@@ -305,13 +305,6 @@ export default function BrowseJobsSection({
                                                 <Calendar className="w-3.5 h-3.5" />
                                                 {new Date(job.createdAt).toLocaleDateString()}
                                             </div>
-                                            {job.maxApplicants && (
-                                                <div className="flex items-center gap-1">
-                                                    <Users className="w-3.5 h-3.5" />
-                                                    <span className="font-semibold text-gray-700">{job.currentApplicants || 0}</span>
-                                                    <span>/ {job.maxApplicants}</span>
-                                                </div>
-                                            )}
                                         </div>
                                     </div>
 
@@ -342,7 +335,7 @@ export default function BrowseJobsSection({
                                                 )}
                                             </div>
                                         ) : currentUser?.role === 'worker' ? (
-                                            job.status === 'closed' ? (
+                                            job.status === 'completed' ? (
                                                 <div className="w-full py-3 bg-red-50 text-red-700 rounded-xl text-sm font-semibold text-center border border-red-200 flex items-center justify-center gap-1">
                                                     <Ban className="w-4 h-4" />
                                                     Position Filled

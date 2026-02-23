@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import ServiceCategoriesSection from './sections/ServiceCategoriesSection';
@@ -26,6 +26,19 @@ export default function AdminDashboard() {
     const [token, setToken] = useState('');
     const [activeSection, setActiveSection] = useState('dashboard');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsDropdownOpen(false);
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     useEffect(() => {
         const storedToken = localStorage.getItem('authToken') || '';
@@ -234,14 +247,43 @@ export default function AdminDashboard() {
                             </div>
                         </div>
 
-                        {/* Logout Button */}
-                        <button
-                            onClick={handleLogout}
-                            className="flex items-center gap-2 px-3 lg:px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors text-sm font-medium"
-                        >
-                            <span className="material-symbols-outlined text-[18px]">logout</span>
-                            <span className="hidden sm:inline">Logout</span>
-                        </button>
+                        {/* Settings Dropdown */}
+                        <div className="relative" ref={dropdownRef}>
+                            <button
+                                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                className="flex items-center gap-2 px-3 lg:px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors text-sm font-medium"
+                            >
+                                <span className="material-symbols-outlined text-[18px]">settings</span>
+                                <span className="hidden sm:inline">Settings</span>
+                            </button>
+
+                            {isDropdownOpen && (
+                                <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                                    <button
+                                        onClick={() => {
+                                            setIsDropdownOpen(false);
+                                            // Navigate to profile - you can implement this
+                                            alert('Profile view coming soon!');
+                                        }}
+                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                                    >
+                                        <span className="material-symbols-outlined text-[20px] text-[#FF6B35]">person</span>
+                                        <span className="font-medium">View Profile</span>
+                                    </button>
+                                    <div className="border-t border-gray-100 my-1"></div>
+                                    <button
+                                        onClick={() => {
+                                            setIsDropdownOpen(false);
+                                            handleLogout();
+                                        }}
+                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                                    >
+                                        <span className="material-symbols-outlined text-[20px]">logout</span>
+                                        <span className="font-medium">Logout</span>
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </nav>

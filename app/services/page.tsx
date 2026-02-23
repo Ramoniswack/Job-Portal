@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, Suspense } from 'react';
 import { Search, SlidersHorizontal, X, Star, Check, ChevronDown, MapPin, ChevronRight } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -38,7 +38,7 @@ interface Category {
     parent: string | { _id: string; name: string } | null;
 }
 
-export default function ServicesPage() {
+function ServicesPageContent() {
     const searchParams = useSearchParams();
     const [location, setLocation] = useState('Location');
     const [services, setServices] = useState<Service[]>([]);
@@ -662,5 +662,20 @@ export default function ServicesPage() {
 
             <Footer />
         </>
+    );
+}
+
+export default function ServicesPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-[#F8F9FA]">
+                <Navbar />
+                <div className="flex items-center justify-center h-screen">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35]"></div>
+                </div>
+            </div>
+        }>
+            <ServicesPageContent />
+        </Suspense>
     );
 }
