@@ -3,7 +3,6 @@
 import { useEffect, useRef } from 'react';
 
 export default function Testimonials() {
-    const scrollContainerRef = useRef<HTMLDivElement>(null);
     const testimonialsRef = useRef<HTMLDivElement>(null);
 
     const testimonials = [
@@ -45,40 +44,9 @@ export default function Testimonials() {
         }
     ];
 
+    // Auto-scroll effect for testimonials
     useEffect(() => {
         const scrollContainer = testimonialsRef.current;
-        if (!scrollContainer) return;
-
-        let scrollInterval: NodeJS.Timeout;
-
-        const startAutoScroll = () => {
-            scrollInterval = setInterval(() => {
-                if (scrollContainer.scrollTop >= scrollContainer.scrollHeight - scrollContainer.clientHeight) {
-                    scrollContainer.scrollTop = 0;
-                } else {
-                    scrollContainer.scrollTop += 1;
-                }
-            }, 30);
-        };
-
-        const stopAutoScroll = () => {
-            clearInterval(scrollInterval);
-        };
-
-        startAutoScroll();
-
-        scrollContainer.addEventListener('mouseenter', stopAutoScroll);
-        scrollContainer.addEventListener('mouseleave', startAutoScroll);
-
-        return () => {
-            clearInterval(scrollInterval);
-            scrollContainer.removeEventListener('mouseenter', stopAutoScroll);
-            scrollContainer.removeEventListener('mouseleave', startAutoScroll);
-        };
-    }, []);
-
-    useEffect(() => {
-        const scrollContainer = scrollContainerRef.current;
         if (!scrollContainer) return;
 
         let scrollInterval: NodeJS.Timeout;
@@ -130,10 +98,10 @@ export default function Testimonials() {
                             <img
                                 src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=800"
                                 alt="Video Placeholder"
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                             />
-                            <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition">
-                                <div className="w-16 h-16 bg-white/20 backdrop-blur-sm border-2 border-white rounded-full flex items-center justify-center">
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-colors duration-300">
+                                <div className="w-16 h-16 bg-white/20 backdrop-blur-sm border-2 border-white rounded-full flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
                                     <div className="w-0 h-0 border-t-[10px] border-t-transparent border-l-[18px] border-l-white border-b-[10px] border-b-transparent ml-1"></div>
                                 </div>
                             </div>
@@ -149,34 +117,36 @@ export default function Testimonials() {
                             className="h-[600px] overflow-y-auto scrollbar-hide space-y-6 pr-2"
                             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                         >
-                            {[...testimonials, ...testimonials].map((testimonial, index) => (
-                                <div
-                                    key={index}
-                                    className="bg-gradient-to-br from-slate-50 to-gray-50 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow"
-                                >
-                                    <div className="text-[#FF6B35] text-5xl font-serif leading-none mb-3">
-                                        "
-                                    </div>
-                                    <p className="text-gray-700 leading-relaxed mb-6 text-sm">
-                                        {testimonial.text}
-                                    </p>
-                                    <div className="flex items-center gap-3">
-                                        <img
-                                            src={testimonial.avatar}
-                                            className="w-12 h-12 rounded-full border-2 border-white shadow-sm"
-                                            alt={testimonial.name}
-                                        />
-                                        <div>
-                                            <h4 className="font-bold text-gray-900 text-sm leading-tight">
-                                                {testimonial.name}
-                                            </h4>
-                                            <p className="text-xs text-gray-500 uppercase tracking-wide">
-                                                {testimonial.position}
-                                            </p>
+                            <div>
+                                {[...testimonials, ...testimonials].map((testimonial, index) => (
+                                    <div
+                                        key={index}
+                                        className="bg-gradient-to-br from-slate-50 to-gray-50 rounded-2xl p-6 shadow-sm mb-6 transition-all duration-300 hover:shadow-md hover:-translate-y-1"
+                                    >
+                                        <div className="text-[#FF6B35] text-5xl font-serif leading-none mb-3">
+                                            "
+                                        </div>
+                                        <p className="text-gray-700 leading-relaxed mb-6 text-sm">
+                                            {testimonial.text}
+                                        </p>
+                                        <div className="flex items-center gap-3">
+                                            <img
+                                                src={testimonial.avatar}
+                                                className="w-12 h-12 rounded-full border-2 border-white shadow-sm"
+                                                alt={testimonial.name}
+                                            />
+                                            <div>
+                                                <h4 className="font-bold text-gray-900 text-sm leading-tight">
+                                                    {testimonial.name}
+                                                </h4>
+                                                <p className="text-xs text-gray-500 uppercase tracking-wide">
+                                                    {testimonial.position}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>

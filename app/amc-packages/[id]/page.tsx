@@ -2,8 +2,15 @@
 
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'next/navigation';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+// Register GSAP plugins
+if (typeof window !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+}
 
 interface PricingTier {
     name: string;
@@ -44,11 +51,246 @@ export default function AMCPackagesPage() {
         notes: ''
     });
 
+    // Animation refs
+    const heroRef = useRef<HTMLDivElement>(null);
+    const heroTitleRef = useRef<HTMLHeadingElement>(null);
+    const heroDescRef = useRef<HTMLParagraphElement>(null);
+    const sectionTitleRef = useRef<HTMLHeadingElement>(null);
+    const sectionDescRef = useRef<HTMLParagraphElement>(null);
+    const packagesGridRef = useRef<HTMLDivElement>(null);
+    const benefitsRef = useRef<HTMLDivElement>(null);
+
     useEffect(() => {
         if (id) {
             fetchPackage();
         }
     }, [id]);
+
+    // GSAP Animations
+    useEffect(() => {
+        if (!packageData || loading) return;
+
+        const ctx = gsap.context(() => {
+            const isMobile = window.innerWidth < 768;
+
+            // 1. Hero section animations
+            const heroTl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: heroRef.current,
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse',
+                }
+            });
+
+            heroTl.fromTo(
+                heroTitleRef.current,
+                { y: 60, opacity: 0, letterSpacing: '0.1em' },
+                {
+                    y: 0,
+                    opacity: 1,
+                    letterSpacing: '0em',
+                    duration: 1.2,
+                    ease: 'power4.out',
+                }
+            );
+
+            heroTl.fromTo(
+                heroDescRef.current,
+                { y: 40, opacity: 0 },
+                { y: 0, opacity: 1, duration: 1, ease: 'power4.out' },
+                '-=0.9'
+            );
+
+            // 2. Section title animations
+            const sectionTl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: sectionTitleRef.current,
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse',
+                }
+            });
+
+            sectionTl.fromTo(
+                sectionTitleRef.current,
+                { y: 50, opacity: 0 },
+                { y: 0, opacity: 1, duration: 1, ease: 'power4.out' }
+            );
+
+            sectionTl.fromTo(
+                sectionDescRef.current,
+                { y: 30, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.8, ease: 'power4.out' },
+                '-=0.7'
+            );
+
+            // 3. Pricing cards animations
+            const cards = packagesGridRef.current?.querySelectorAll('.pricing-card');
+            if (cards && cards.length > 0) {
+                const cardsTl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: packagesGridRef.current,
+                        start: 'top 75%',
+                        toggleActions: 'play none none reverse',
+                    }
+                });
+
+                // Animate all cards together (not sequentially)
+                cards.forEach((card, index) => {
+                    const direction = index % 2 === 0 ? -120 : 120;
+                    const rotateDirection = index % 2 === 0 ? 10 : -10;
+
+                    // Card entrance - all cards start together with slight overlap
+                    cardsTl.fromTo(
+                        card,
+                        {
+                            x: direction,
+                            opacity: 0,
+                            rotateY: isMobile ? 0 : rotateDirection,
+                        },
+                        {
+                            x: 0,
+                            opacity: 1,
+                            rotateY: 0,
+                            duration: 1.2,
+                            ease: 'power4.out',
+                        },
+                        index === 0 ? '-=0.6' : '-=1.0'
+                    );
+                });
+
+                // After cards are in, animate their contents
+                cards.forEach((card, index) => {
+                    // Card header animation
+                    const header = card.querySelector('.card-header');
+                    if (header) {
+                        cardsTl.fromTo(
+                            header,
+                            { scaleX: 0, transformOrigin: 'center' },
+                            { scaleX: 1, duration: 0.8, ease: 'power2.out' },
+                            `-=${0.9 - index * 0.1}`
+                        );
+                    }
+                });
+
+                // Features list animations
+                cards.forEach((card, index) => {
+                    const features = card.querySelectorAll('.feature-item');
+                    if (features.length > 0) {
+                        cardsTl.fromTo(
+                            features,
+                            { opacity: 0, x: -30 },
+                            {
+                                opacity: 1,
+                                x: 0,
+                                duration: 0.6,
+                                stagger: 0.15,
+                                ease: 'power2.out',
+                            },
+                            `-=${0.5 - index * 0.2}`
+                        );
+
+                        // Checkmark bounce
+                        const checkmarks = card.querySelectorAll('.checkmark');
+                        if (checkmarks.length > 0) {
+                            cardsTl.fromTo(
+                                checkmarks,
+                                { scale: 0 },
+                                {
+                                    scale: 1,
+                                    duration: 0.4,
+                                    stagger: 0.15,
+                                    ease: 'back.out(3)',
+                                },
+                                `-=${0.8 - index * 0.2}`
+                            );
+                        }
+                    }
+
+                    // Button animation with pulse glow
+                    const button = card.querySelector('.book-button');
+                    if (button) {
+                        cardsTl.fromTo(
+                            button,
+                            { opacity: 0, y: 20 },
+                            { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' },
+                            `-=${0.6 - index * 0.1}`
+                        );
+
+                        // Pulse glow effect
+                        gsap.to(button, {
+                            boxShadow: '0 0 20px rgba(255, 107, 53, 0.5)',
+                            duration: 2.5,
+                            repeat: -1,
+                            yoyo: true,
+                            ease: 'sine.inOut',
+                            delay: 1.5 + index * 0.2,
+                        });
+                    }
+                });
+
+                // 4. Hover interactions (desktop only)
+                if (!isMobile) {
+                    cards.forEach((card) => {
+                        card.addEventListener('mouseenter', () => {
+                            gsap.to(card, {
+                                scale: 1.03,
+                                y: -8,
+                                boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
+                                duration: 0.3,
+                                ease: 'power2.out',
+                            });
+                        });
+
+                        card.addEventListener('mouseleave', () => {
+                            gsap.to(card, {
+                                scale: 1,
+                                y: 0,
+                                boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+                                duration: 0.3,
+                                ease: 'power2.out',
+                            });
+                        });
+                    });
+                }
+            }
+
+            // 5. Benefits section animation
+            if (benefitsRef.current) {
+                const benefitsTl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: benefitsRef.current,
+                        start: 'top 80%',
+                        toggleActions: 'play none none none',
+                    }
+                });
+
+                benefitsTl.fromTo(
+                    benefitsRef.current,
+                    { opacity: 0, y: 100, scale: 0.95 },
+                    { opacity: 1, y: 0, scale: 1, duration: 1, ease: 'power3.out' }
+                );
+
+                const benefitItems = benefitsRef.current.querySelectorAll('.benefit-item');
+                if (benefitItems.length > 0) {
+                    benefitsTl.fromTo(
+                        benefitItems,
+                        { opacity: 0, y: 30 },
+                        {
+                            opacity: 1,
+                            y: 0,
+                            duration: 0.6,
+                            stagger: 0.15,
+                            ease: 'power2.out',
+                        },
+                        '-=0.5'
+                    );
+                }
+            }
+
+        });
+
+        return () => ctx.revert(); // Cleanup
+    }, [packageData, loading]);
 
     const fetchPackage = async () => {
         try {
@@ -112,7 +354,7 @@ export default function AMCPackagesPage() {
             <Navbar />
 
             {/* Hero Image Section */}
-            <div className="relative h-[400px] overflow-hidden">
+            <div ref={heroRef} className="relative h-[400px] overflow-hidden">
                 <img
                     src={packageData.heroImage}
                     alt={packageData.title}
@@ -120,10 +362,10 @@ export default function AMCPackagesPage() {
                 />
                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                     <div className="text-center text-white px-4">
-                        <h1 className="text-5xl md:text-6xl font-bold mb-4 drop-shadow-lg">
+                        <h1 ref={heroTitleRef} className="text-5xl md:text-6xl font-bold mb-4 drop-shadow-lg opacity-0">
                             {packageData.category} <span className="text-[#FF6B35]">AMC Packages</span>
                         </h1>
-                        <p className="text-xl md:text-2xl font-medium drop-shadow-md max-w-3xl mx-auto">
+                        <p ref={heroDescRef} className="text-xl md:text-2xl font-medium drop-shadow-md max-w-3xl mx-auto opacity-0">
                             {packageData.description}
                         </p>
                     </div>
@@ -133,32 +375,33 @@ export default function AMCPackagesPage() {
             {/* Main Content */}
             <main className="max-w-7xl mx-auto px-4 py-12">
                 <div className="text-center mb-12">
-                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                    <h2 ref={sectionTitleRef} className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 opacity-0">
                         Choose Your Perfect Plan
                     </h2>
-                    <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                    <p ref={sectionDescRef} className="text-lg text-gray-600 max-w-2xl mx-auto opacity-0">
                         Our expert team ensures your {packageData.category.toLowerCase()} system runs smoothly all year round with regular maintenance and emergency support.
                     </p>
                 </div>
 
                 {/* Packages Grid */}
-                <div className="flex flex-wrap justify-center gap-8 max-w-6xl mx-auto">
+                <div ref={packagesGridRef} className="flex flex-wrap justify-center gap-8 max-w-6xl mx-auto">
                     {packageData.pricingTiers.map((tier, index) => (
                         <div
                             key={index}
-                            className="w-80 border border-gray-200 rounded-lg p-5 bg-white shadow-[0_2px_10px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.15)] transition-shadow duration-300"
+                            className="pricing-card w-[320px] border border-[#e0e0e0] rounded-lg p-5 bg-white shadow-[0_2px_10px_rgba(0,0,0,0.1)] transition-shadow duration-300 opacity-0"
+                            style={{ willChange: 'transform' }}
                         >
                             {/* Package Header */}
-                            <div className="bg-[#FF6B35] text-white text-center py-4 px-4 font-bold text-lg rounded mb-5">
+                            <div className="card-header bg-[#ff8c42] text-white text-center py-[15px] px-4 font-bold text-[1.1rem] rounded mb-5">
                                 {tier.name.toUpperCase()}
                             </div>
 
                             {/* Price */}
                             <div className="text-center mb-5">
-                                <div className="text-lg text-gray-800 mb-1">
-                                    NPR <span className="text-5xl font-extrabold text-[#1a2a3a]">{tier.price.toLocaleString()}</span>/mo
+                                <div className="text-[1.2rem] text-[#333] mb-1">
+                                    NPR <span className="text-[3rem] font-extrabold text-[#1a2a3a]">{tier.price.toLocaleString()}</span>/mo
                                 </div>
-                                <div className="text-gray-600 text-base -mt-1 mb-5">
+                                <div className="text-[#666] text-base -mt-1 mb-5">
                                     {tier.duration === 'month' ? 'Monthly' : tier.duration === 'quarter' ? 'Quarterly' : 'Yearly'} Billing
                                 </div>
                             </div>
@@ -166,7 +409,7 @@ export default function AMCPackagesPage() {
                             {/* Book Button */}
                             <button
                                 onClick={() => handleBookNow(tier)}
-                                className="w-full py-3 px-4 border-2 border-[#FF6B35] bg-white text-[#FF6B35] font-bold rounded cursor-pointer text-center mb-6 hover:bg-[#FF6B35] hover:text-white transition-colors duration-200"
+                                className="book-button w-full py-3 px-4 border-2 border-[#ff8c42] bg-white text-[#ff8c42] font-bold rounded cursor-pointer text-center mb-[25px] hover:bg-[#ff8c42] hover:text-white transition-colors duration-200 opacity-0"
                             >
                                 Book Now
                             </button>
@@ -174,8 +417,8 @@ export default function AMCPackagesPage() {
                             {/* Features */}
                             <ul className="list-none p-0 m-0">
                                 {tier.features.map((feature, idx) => (
-                                    <li key={idx} className="mb-3 text-gray-800 flex items-center text-[1.05rem]">
-                                        <span className="text-[#FF6B35] mr-3 font-bold text-lg">✔</span>
+                                    <li key={idx} className="feature-item mb-3 text-[#333] flex items-center text-[1.05rem] opacity-0">
+                                        <span className="checkmark text-[#4caf50] mr-3 font-bold">✔</span>
                                         {feature}
                                     </li>
                                 ))}
@@ -185,11 +428,11 @@ export default function AMCPackagesPage() {
                 </div>
 
                 {/* Additional Information */}
-                <div className="mt-16 bg-white rounded-2xl border border-gray-200 p-8 max-w-4xl mx-auto">
+                <div ref={benefitsRef} className="mt-16 bg-white rounded-2xl border border-gray-200 p-8 max-w-4xl mx-auto opacity-0">
                     <h3 className="text-2xl font-bold text-gray-900 mb-4">{packageData.whyChooseHeading}</h3>
                     <div className="grid md:grid-cols-2 gap-6 text-gray-700">
                         {packageData.benefits.map((benefit, index) => (
-                            <div key={index}>
+                            <div key={index} className="benefit-item opacity-0">
                                 <h4 className="font-semibold text-lg mb-2 text-[#FF6B35]">✓ {benefit.title}</h4>
                                 <p className="text-sm">{benefit.description}</p>
                             </div>

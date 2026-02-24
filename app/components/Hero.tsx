@@ -27,41 +27,51 @@ export default function Hero() {
 
     return (
         <section className="relative w-full h-[500px] flex items-center justify-center bg-cover bg-center text-white px-5 overflow-hidden">
-            <div className="absolute inset-0 bg-cover bg-center" style={{ background: "linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://worknp.com/images/hero-bg.png')", backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
+            <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{
+                    background: "linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://worknp.com/images/hero-bg.png')",
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center'
+                }}
+            ></div>
             <div className="w-full max-w-6xl mx-auto relative z-10">
                 <h1 className="text-5xl font-extrabold mb-2 tracking-tight">
-                    Find Your <span className="text-white">Dream Job</span> Today
+                    Find Your <span className="text-white inline-block">Dream Job</span> Today
                 </h1>
-                <p className="text-lg mb-8 font-medium opacity-90">
+                <p className="text-lg mb-8 font-medium">
                     Search 27 live opportunities across Nepal • 100% Free
                 </p>
 
-                <form onSubmit={handleSearch} className="bg-white rounded-[50px] flex items-center p-[6px_8px_6px_25px] shadow-[0_10px_25px_rgba(0,0,0,0.15)] w-full max-md:flex-col max-md:rounded-[20px] max-md:p-5">
-                    <div className="flex-1 flex items-center border-r border-gray-300 px-4 max-md:border-r-0 max-md:border-b max-md:w-full max-md:mb-4 max-md:px-0 max-md:py-2">
+                <form
+                    onSubmit={handleSearch}
+                    className="bg-white rounded-[50px] flex items-center p-[6px_8px_6px_25px] shadow-[0_10px_25px_rgba(0,0,0,0.15)] w-full max-md:flex-col max-md:rounded-[20px] max-md:p-5"
+                >
+                    <div className="flex-1 flex items-center border-r border-gray-300 px-4 max-md:border-r-0 max-md:border-b max-md:w-full max-md:mb-4 max-md:px-0 max-md:py-2 transition-all duration-300">
                         <Search className="text-[#f65e19] text-lg mr-2.5" />
                         <input
                             type="text"
                             placeholder="Search by Job Title"
                             value={searchTitle}
                             onChange={(e) => setSearchTitle(e.target.value)}
-                            className="border-none outline-none w-full py-2.5 text-[0.95rem] text-gray-600 bg-transparent"
+                            className="border-none outline-none w-full py-2.5 text-[0.95rem] text-gray-600 bg-transparent focus:ring-2 focus:ring-[#f65e19] focus:ring-opacity-20 rounded transition-all duration-300"
                         />
                     </div>
 
-                    <div className="flex-1 flex items-center px-4 max-md:w-full max-md:mb-4 max-md:px-0 max-md:py-2">
+                    <div className="flex-1 flex items-center px-4 max-md:w-full max-md:mb-4 max-md:px-0 max-md:py-2 transition-all duration-300">
                         <MapPin className="text-[#f65e19] text-lg mr-2.5" />
                         <input
                             type="text"
                             placeholder="Location"
                             value={searchLocation}
                             onChange={(e) => setSearchLocation(e.target.value)}
-                            className="border-none outline-none w-full py-2.5 text-[0.95rem] text-gray-600 bg-transparent"
+                            className="border-none outline-none w-full py-2.5 text-[0.95rem] text-gray-600 bg-transparent focus:ring-2 focus:ring-[#f65e19] focus:ring-opacity-20 rounded transition-all duration-300"
                         />
                     </div>
 
                     <button
                         type="submit"
-                        className="bg-[#f65e19] text-white border-none py-3 px-9 rounded-[30px] font-semibold text-base cursor-pointer transition-colors duration-200 hover:bg-[#e54d0a] max-md:w-full max-md:mt-2.5"
+                        className="bg-[#f65e19] text-white border-none py-3 px-9 rounded-[30px] font-semibold text-base cursor-pointer transition-all duration-200 hover:bg-[#e54d0a] hover:scale-105 active:scale-95 max-md:w-full max-md:mt-2.5"
                     >
                         Search
                     </button>

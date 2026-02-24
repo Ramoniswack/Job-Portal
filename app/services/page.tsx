@@ -1,12 +1,10 @@
 'use client';
-
 import { useState, useEffect, useMemo, Suspense } from 'react';
 import { Search, SlidersHorizontal, X, Star, Check, ChevronDown, MapPin, ChevronRight } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-
 interface Service {
     _id: string;
     title: string;
@@ -30,7 +28,6 @@ interface Service {
         verified: boolean;
     };
 }
-
 interface Category {
     _id: string;
     name: string;
@@ -40,7 +37,6 @@ interface Category {
 
 function ServicesPageContent() {
     const searchParams = useSearchParams();
-    const [location, setLocation] = useState('Location');
     const [services, setServices] = useState<Service[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState(true);
@@ -267,7 +263,7 @@ function ServicesPageContent() {
 
     return (
         <>
-            <Navbar location={location} setLocation={setLocation} />
+            <Navbar />
 
             <div className="min-h-screen bg-[#F8F9FA]">
                 {/* Hero Section with Search */}

@@ -62,7 +62,9 @@ export default function AMCPackages() {
     return (
         <section className="bg-[#F8F9FA] w-full py-12 px-4">
             <div className="max-w-6xl mx-auto">
-                <h2 className="text-3xl font-bold text-[#1A2B3C] mb-8">{heading}</h2>
+                <h2 className="text-3xl font-bold text-[#1A2B3C] mb-8">
+                    {heading}
+                </h2>
 
                 {packages.length === 0 ? (
                     <div className="text-center py-12">
@@ -74,12 +76,12 @@ export default function AMCPackages() {
                             <Link
                                 key={pkg._id}
                                 href={`/amc-packages/${pkg._id}`}
-                                className="group cursor-pointer"
+                                className="group cursor-pointer transition-all duration-300 hover:shadow-lg"
                             >
                                 <div className="overflow-hidden rounded-2xl mb-4 aspect-video">
                                     <img
                                         src={pkg.cardImage}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                                         alt={pkg.title}
                                     />
                                 </div>

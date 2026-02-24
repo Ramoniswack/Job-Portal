@@ -3,14 +3,18 @@
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
 import { User } from './DashboardLayout';
+import ManageProfileModal from '@/app/components/ManageProfileModal';
 
 interface TopNavbarProps {
     currentUser: User | null;
     onLogout: () => void;
+    token: string;
+    onProfileUpdate: (updatedUser: User) => void;
 }
 
-export default function TopNavbar({ currentUser, onLogout }: TopNavbarProps) {
+export default function TopNavbar({ currentUser, onLogout, token, onProfileUpdate }: TopNavbarProps) {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -84,13 +88,12 @@ export default function TopNavbar({ currentUser, onLogout }: TopNavbarProps) {
                                         <button
                                             onClick={() => {
                                                 setIsDropdownOpen(false);
-                                                // Navigate to profile - you can implement this
-                                                alert('Profile view coming soon!');
+                                                setIsProfileModalOpen(true);
                                             }}
                                             className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                                         >
-                                            <span className="material-symbols-outlined text-[20px] text-[#FF6B35]">person</span>
-                                            <span className="font-medium">View Profile</span>
+                                            <span className="material-symbols-outlined text-[20px] text-[#FF6B35]">manage_accounts</span>
+                                            <span className="font-medium">Manage Profile</span>
                                         </button>
                                         <div className="border-t border-gray-100 my-1"></div>
                                         <button
@@ -125,6 +128,17 @@ export default function TopNavbar({ currentUser, onLogout }: TopNavbarProps) {
                     )}
                 </div>
             </div>
+
+            {/* Manage Profile Modal */}
+            {currentUser && (
+                <ManageProfileModal
+                    isOpen={isProfileModalOpen}
+                    onClose={() => setIsProfileModalOpen(false)}
+                    currentUser={currentUser}
+                    token={token}
+                    onProfileUpdate={onProfileUpdate}
+                />
+            )}
         </nav>
     );
 }

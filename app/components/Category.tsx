@@ -110,7 +110,7 @@ export default function Category() {
                                 <Link
                                     key={category._id}
                                     href={`/category/${category.slug}`}
-                                    className="flex flex-col items-center text-center min-w-[140px] transition-transform duration-200"
+                                    className="flex flex-col items-center text-center min-w-[140px] rounded-lg transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
                                 >
                                     <div className="h-32 w-32 mb-4 flex items-center justify-center">
                                         <img

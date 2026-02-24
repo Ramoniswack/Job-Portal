@@ -174,6 +174,10 @@ export default function DashboardLayout() {
         router.push('/login');
     };
 
+    const handleProfileUpdate = (updatedUser: User) => {
+        setCurrentUser(updatedUser);
+    };
+
     const refreshData = () => {
         if (token) {
             loadMyJobs(token);
@@ -194,7 +198,12 @@ export default function DashboardLayout() {
     return (
         <div className="min-h-screen bg-[#F8F9FA]">
             {/* Top Navbar */}
-            <TopNavbar currentUser={currentUser} onLogout={handleLogout} />
+            <TopNavbar
+                currentUser={currentUser}
+                onLogout={handleLogout}
+                token={token}
+                onProfileUpdate={handleProfileUpdate}
+            />
 
             {/* Main Layout with Sidebar */}
             <div className="flex pt-16">

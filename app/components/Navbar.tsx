@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { MapPin, Navigation } from 'lucide-react';
 
 interface NavbarProps {
@@ -8,17 +9,64 @@ interface NavbarProps {
     setLocation?: (location: string) => void;
 }
 
+// Helper function to get location from localStorage (runs synchronously)
+const getStoredLocation = (): string => {
+    if (typeof window === 'undefined') return 'Select Location';
+
+    try {
+        const storedUserData = localStorage.getItem('hamroSewaUserData');
+        if (storedUserData) {
+            const userData = JSON.parse(storedUserData);
+            if (userData.location) {
+                return userData.location;
+            }
+        }
+    } catch (error) {
+        console.error('Error loading location from localStorage:', error);
+    }
+    return 'Select Location';
+};
+
+// Helper function to update location in localStorage
+const updateLocationInStorage = (newLocation: string) => {
+    try {
+        const storedUserData = localStorage.getItem('hamroSewaUserData');
+        if (storedUserData) {
+            const userData = JSON.parse(storedUserData);
+            userData.location = newLocation;
+            localStorage.setItem('hamroSewaUserData', JSON.stringify(userData));
+        } else {
+            localStorage.setItem('hamroSewaUserData', JSON.stringify({ location: newLocation }));
+        }
+    } catch (error) {
+        console.error('Error updating location in localStorage:', error);
+    }
+};
+
 export default function Navbar({ location: propLocation, setLocation: propSetLocation }: NavbarProps) {
+    const pathname = usePathname();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [showLocationDropdown, setShowLocationDropdown] = useState(false);
-    const [internalLocation, setInternalLocation] = useState('Select Location');
+
+    // Initialize with stored location immediately (no flash)
+    const [internalLocation, setInternalLocation] = useState(() => getStoredLocation());
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [mounted, setMounted] = useState(false);
 
+    // Wrapper function that updates both state and localStorage
+    const updateLocation = (newLocation: string) => {
+        if (propSetLocation) {
+            propSetLocation(newLocation);
+        } else {
+            setInternalLocation(newLocation);
+        }
+        updateLocationInStorage(newLocation);
+    };
+
     // Use internal state if props not provided
     const location = propLocation !== undefined ? propLocation : internalLocation;
-    const setLocation = propSetLocation || setInternalLocation;
+    const setLocation = updateLocation;
 
     // Set mounted to true after first render
     useEffect(() => {
@@ -44,91 +92,49 @@ export default function Navbar({ location: propLocation, setLocation: propSetLoc
         };
 
         checkAuth();
-        // Listen for storage changes (login/logout in other tabs)
         window.addEventListener('storage', checkAuth);
         return () => window.removeEventListener('storage', checkAuth);
     }, [mounted]);
-
-    // Load location from localStorage on mount
-    useEffect(() => {
-        if (!mounted) return;
-
-        const storedUserData = localStorage.getItem('hamroSewaUserData');
-        if (storedUserData) {
-            try {
-                const userData = JSON.parse(storedUserData);
-                if (userData.location) {
-                    setLocation(userData.location);
-                }
-            } catch (error) {
-                console.error('Error loading location from localStorage:', error);
-            }
-        }
-    }, [setLocation, mounted]);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
 
     const detectLocation = () => {
-        if (navigator.geolocation) {
-            setShowLocationDropdown(false);
-            navigator.geolocation.getCurrentPosition(
-                async (position) => {
-                    const { latitude, longitude } = position.coords;
+        setShowLocationDropdown(false);
 
-                    try {
-                        // Using OpenStreetMap Nominatim API for reverse geocoding (free, no API key needed)
-                        const response = await fetch(
-                            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-                        );
-                        const data = await response.json();
-
-                        // Extract city name from the response
-                        const city = data.address.city || data.address.town || data.address.village || data.address.state || 'Unknown Location';
-                        setLocation(city);
-
-                        // Update location in localStorage
-                        updateLocationInStorage(city);
-                    } catch {
-                        console.error('Error fetching location');
-                        setLocation('Detected Location');
-                        updateLocationInStorage('Detected Location');
-                    }
-                },
-                () => {
-                    alert('Unable to detect location. Please select manually.');
-                    setShowLocationDropdown(true);
-                }
-            );
-        } else {
+        if (!navigator.geolocation) {
             alert('Geolocation is not supported by your browser.');
+            return;
         }
+
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                const { latitude, longitude } = position.coords;
+
+                try {
+                    const response = await fetch(
+                        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+                    );
+                    const data = await response.json();
+
+                    const city = data.address.city || data.address.town || data.address.village || data.address.state || 'Unknown Location';
+                    setLocation(city);
+                } catch (error) {
+                    console.error('Error fetching location:', error);
+                    setLocation('Detected Location');
+                }
+            },
+            () => {
+                alert('Unable to detect location. Please select manually.');
+                setShowLocationDropdown(true);
+            }
+        );
     };
 
     const selectLocation = (loc: string) => {
         setLocation(loc);
         setShowLocationDropdown(false);
-
-        // Update location in localStorage
-        updateLocationInStorage(loc);
-    };
-
-    // Helper function to update location in localStorage
-    const updateLocationInStorage = (newLocation: string) => {
-        try {
-            const storedUserData = localStorage.getItem('hamroSewaUserData');
-            if (storedUserData) {
-                const userData = JSON.parse(storedUserData);
-                userData.location = newLocation;
-                localStorage.setItem('hamroSewaUserData', JSON.stringify(userData));
-            } else {
-                // If no user data exists, create a minimal entry with just location
-                localStorage.setItem('hamroSewaUserData', JSON.stringify({ location: newLocation }));
-            }
-        } catch (error) {
-            console.error('Error updating location in localStorage:', error);
-        }
     };
 
     return (
@@ -160,9 +166,10 @@ export default function Navbar({ location: propLocation, setLocation: propSetLoc
                         <li>
                             <a
                                 href="/"
-                                className="text-[#333] font-medium no-underline relative transition-colors duration-300 hover:text-[#FF6B35] 
-                  after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#FF6B35] 
-                  after:transition-[width] after:duration-300 hover:after:w-full"
+                                className={`text-[#333] font-medium no-underline relative transition-colors duration-300 hover:text-[#FF6B35] 
+                  after:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:h-[2px] after:bg-[#FF6B35] 
+                  after:transition-[width] after:duration-300 hover:after:w-full ${pathname === '/' ? 'text-[#FF6B35] after:w-full' : 'after:w-0'
+                                    }`}
                             >
                                 Home
                             </a>
@@ -170,9 +177,10 @@ export default function Navbar({ location: propLocation, setLocation: propSetLoc
                         <li>
                             <a
                                 href="/services"
-                                className="text-[#333] font-medium no-underline relative transition-colors duration-300 hover:text-[#FF6B35] 
-                  after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#FF6B35] 
-                  after:transition-[width] after:duration-300 hover:after:w-full"
+                                className={`text-[#333] font-medium no-underline relative transition-colors duration-300 hover:text-[#FF6B35] 
+                  after:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:h-[2px] after:bg-[#FF6B35] 
+                  after:transition-[width] after:duration-300 hover:after:w-full ${pathname === '/services' ? 'text-[#FF6B35] after:w-full' : 'after:w-0'
+                                    }`}
                             >
                                 Services
                             </a>
@@ -180,9 +188,10 @@ export default function Navbar({ location: propLocation, setLocation: propSetLoc
                         <li>
                             <a
                                 href="/about"
-                                className="text-[#333] font-medium no-underline relative transition-colors duration-300 hover:text-[#FF6B35] 
-                  after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#FF6B35] 
-                  after:transition-[width] after:duration-300 hover:after:w-full"
+                                className={`text-[#333] font-medium no-underline relative transition-colors duration-300 hover:text-[#FF6B35] 
+                  after:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:h-[2px] after:bg-[#FF6B35] 
+                  after:transition-[width] after:duration-300 hover:after:w-full ${pathname === '/about' ? 'text-[#FF6B35] after:w-full' : 'after:w-0'
+                                    }`}
                             >
                                 About
                             </a>
@@ -190,9 +199,10 @@ export default function Navbar({ location: propLocation, setLocation: propSetLoc
                         <li>
                             <a
                                 href="/contact"
-                                className="text-[#333] font-medium no-underline relative transition-colors duration-300 hover:text-[#FF6B35] 
-                  after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#FF6B35] 
-                  after:transition-[width] after:duration-300 hover:after:w-full"
+                                className={`text-[#333] font-medium no-underline relative transition-colors duration-300 hover:text-[#FF6B35] 
+                  after:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:h-[2px] after:bg-[#FF6B35] 
+                  after:transition-[width] after:duration-300 hover:after:w-full ${pathname === '/contact' ? 'text-[#FF6B35] after:w-full' : 'after:w-0'
+                                    }`}
                             >
                                 Contact
                             </a>
@@ -200,9 +210,10 @@ export default function Navbar({ location: propLocation, setLocation: propSetLoc
                         <li>
                             <a
                                 href={mounted && isLoggedIn ? "/hamrosewa" : "/login"}
-                                className="text-[#333] font-medium no-underline relative transition-colors duration-300 hover:text-[#FF6B35] 
-                  after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#FF6B35] 
-                  after:transition-[width] after:duration-300 hover:after:w-full"
+                                className={`text-[#333] font-medium no-underline relative transition-colors duration-300 hover:text-[#FF6B35] 
+                  after:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:h-[2px] after:bg-[#FF6B35] 
+                  after:transition-[width] after:duration-300 hover:after:w-full ${pathname === '/hamrosewa' || pathname === '/dashboard' || pathname === '/login' ? 'text-[#FF6B35] after:w-full' : 'after:w-0'
+                                    }`}
                             >
                                 {mounted && isLoggedIn ? "Dashboard" : "Login"}
                             </a>
@@ -215,7 +226,7 @@ export default function Navbar({ location: propLocation, setLocation: propSetLoc
                             className="bg-white border border-gray-300 text-gray-700 py-3 px-4 rounded-lg font-medium cursor-pointer transition-all duration-300 hover:border-[#FF6B35] flex items-center gap-2 md:w-auto w-full justify-between"
                         >
                             <MapPin className="w-5 h-5 text-red-500" />
-                            <span>{location}</span>
+                            <span>{mounted ? location : 'Select Location'}</span>
                             <span className="text-xs">▼</span>
                         </button>
 

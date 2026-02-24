@@ -51,9 +51,9 @@ export default function PopularServices() {
                     image: service.images[0]?.url || 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=400',
                     location: service.location || 'Kathmandu'
                 }))
-                .sort((a: any, b: any) => b.rating - a.rating); // Sort by rating descending
+                .sort((a: any, b: any) => b.rating - a.rating);
 
-            setServices(transformedServices.slice(0, 12)); // Limit to 12 popular services
+            setServices(transformedServices.slice(0, 12));
         } catch (error) {
             console.error('Error fetching popular services:', error);
             setServices([]);
@@ -128,18 +128,20 @@ export default function PopularServices() {
     return (
         <div className="bg-white py-12 px-4">
             <div className="max-w-6xl mx-auto relative">
-                <h2 className="text-3xl font-bold text-[#1A2B3C] mb-8">Popular Services</h2>
+                <h2 className="text-3xl font-bold text-[#1A2B3C] mb-8">
+                    Popular Services
+                </h2>
 
                 <button
                     onClick={() => scroll('left')}
-                    className="absolute left-[-20px] top-1/2 -translate-y-1/2 z-10 bg-[#FF6B35] text-white p-2 rounded-full shadow-lg hover:bg-[#FF5722] transition hidden md:block"
+                    className="absolute left-[-20px] top-1/2 -translate-y-1/2 z-10 bg-[#FF6B35] text-white p-2 rounded-full shadow-lg hover:bg-[#FF5722] transition-colors hidden md:block"
                 >
                     <ChevronLeft className="h-6 w-6" />
                 </button>
 
                 <button
                     onClick={() => scroll('right')}
-                    className="absolute right-[-20px] top-1/2 -translate-y-1/2 z-10 bg-[#FF6B35] text-white p-2 rounded-full shadow-lg hover:bg-[#FF5722] transition hidden md:block"
+                    className="absolute right-[-20px] top-1/2 -translate-y-1/2 z-10 bg-[#FF6B35] text-white p-2 rounded-full shadow-lg hover:bg-[#FF5722] transition-colors hidden md:block"
                 >
                     <ChevronRight className="h-6 w-6" />
                 </button>
@@ -159,13 +161,13 @@ export default function PopularServices() {
                             <Link
                                 key={service.id}
                                 href={`/service/${service.slug}`}
-                                className="bg-transparent block"
+                                className="bg-transparent block transition-all duration-300 hover:shadow-lg"
                             >
                                 <div className="rounded-2xl overflow-hidden mb-4 aspect-[4/3]">
                                     <img
                                         src={service.image}
                                         alt={service.title}
-                                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                        className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                                         draggable="false"
                                     />
                                 </div>

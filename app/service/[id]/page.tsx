@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight, Check, MapPin } from 'lucide-react';
 import Link from 'next/link';
+import { toast } from 'sonner';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 
@@ -12,13 +13,13 @@ export default function ServiceDetails() {
     const router = useRouter();
     const serviceSlug = params.id as string;
 
-    const [location, setLocation] = useState('Location');
-    const [selectedDate, setSelectedDate] = useState(4);
+    const [selectedDate, setSelectedDate] = useState(0);
     const [selectedTime, setSelectedTime] = useState(0);
     const [selectedImage, setSelectedImage] = useState(0);
     const [service, setService] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [categories, setCategories] = useState<any[]>([]);
+    const [bookedSlots, setBookedSlots] = useState<string[]>([]);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
@@ -38,6 +39,29 @@ export default function ServiceDetails() {
         fetchService();
         fetchCategories();
     }, [serviceSlug]);
+
+    // Fetch booked slots when date changes
+    useEffect(() => {
+        if (service?._id && dates[selectedDate]) {
+            fetchBookedSlots();
+        }
+    }, [selectedDate, service]);
+
+    const fetchBookedSlots = async () => {
+        if (!service?._id || !dates[selectedDate]) return;
+
+        try {
+            const dateStr = dates[selectedDate].fullDate;
+            const response = await fetch(`http://localhost:5000/api/service-bookings/booked-slots?serviceId=${service._id}&date=${dateStr}`);
+            const data = await response.json();
+
+            if (data.success) {
+                setBookedSlots(data.data);
+            }
+        } catch (error) {
+            console.error('Error fetching booked slots:', error);
+        }
+    };
 
     const fetchService = async () => {
         try {
@@ -91,28 +115,99 @@ export default function ServiceDetails() {
     };
 
     const handleBookNow = () => {
+        // Check if selected time slot is booked
+        const selectedTimeSlot = timeSlots[selectedTime];
+        if (bookedSlots.includes(selectedTimeSlot)) {
+            toast.error('This time slot is already booked', {
+                description: 'Please choose another time slot.',
+                duration: 4000,
+            });
+            return;
+        }
         setShowBookingModal(true);
     };
 
     const handleBookingSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const bookingInfo = {
-            ...bookingData,
-            service: service?.title,
-            serviceId: service?._id,
-            date: dates[selectedDate],
-            timeSlot: timeSlots[selectedTime],
-            price: service?.priceLabel
-        };
+        const selectedTimeSlot = timeSlots[selectedTime];
+        const selectedDateStr = dates[selectedDate].fullDate;
 
-        console.log('Booking submitted:', bookingInfo);
-        // Here you can add API call to save booking
+        try {
+            const response = await fetch('http://localhost:5000/api/service-bookings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    serviceId: service?._id,
+                    serviceTitle: service?.title,
+                    customerName: bookingData.name,
+                    customerEmail: bookingData.email,
+                    customerPhone: bookingData.phone,
+                    customerAddress: bookingData.address,
+                    bookingDate: selectedDateStr,
+                    bookingTime: selectedTimeSlot,
+                    notes: bookingData.notes
+                })
+            });
 
-        alert('Booking request submitted successfully!');
-        setShowBookingModal(false);
-        setBookingData({ name: '', email: '', phone: '', address: '', notes: '' });
+            const data = await response.json();
+
+            if (data.success) {
+                toast.success('Booking Confirmed!', {
+                    description: `Your booking for ${selectedTimeSlot} on ${new Date(selectedDateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} has been confirmed. We will contact you soon.`,
+                    duration: 5000,
+                });
+                setShowBookingModal(false);
+                setBookingData({ name: '', email: '', phone: '', address: '', notes: '' });
+                fetchBookedSlots(); // Refresh booked slots
+            } else if (data.isBooked) {
+                toast.error('Time Slot Already Booked', {
+                    description: 'This time slot has just been booked by someone else. Please choose another time.',
+                    duration: 4000,
+                });
+                setShowBookingModal(false);
+                fetchBookedSlots(); // Refresh to show updated slots
+            } else {
+                toast.error('Booking Failed', {
+                    description: data.message || 'Failed to submit booking. Please try again.',
+                    duration: 4000,
+                });
+            }
+        } catch (error) {
+            console.error('Booking error:', error);
+            toast.error('Connection Error', {
+                description: 'Failed to submit booking. Please check your connection and try again.',
+                duration: 4000,
+            });
+        }
     };
+
+    // Generate next 7 days
+    const generateDates = () => {
+        const dates = [];
+        const today = new Date();
+
+        for (let i = 0; i < 7; i++) {
+            const date = new Date(today);
+            date.setDate(today.getDate() + i);
+
+            const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+            dates.push({
+                day: dayNames[date.getDay()],
+                date: date.getDate(),
+                month: monthNames[date.getMonth()],
+                fullDate: date.toISOString().split('T')[0] // YYYY-MM-DD format
+            });
+        }
+
+        return dates;
+    };
+
+    const dates = generateDates();
 
     const images = service?.images?.map((img: any) => img.url) || [
         'https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=800',
@@ -120,27 +215,27 @@ export default function ServiceDetails() {
         'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800',
     ];
 
-    const dates = [
-        { day: 'Tue', date: 17 },
-        { day: 'Wed', date: 18 },
-        { day: 'Thu', date: 19 },
-        { day: 'Fri', date: 20 },
-        { day: 'Sat', date: 21 },
-    ];
-
     const timeSlots = [
         '8AM - 9AM',
         '9AM - 10AM',
         '10AM - 11AM',
-        '11AM - 12AM',
+        '11AM - 12PM',
         '12PM - 1PM',
         '1PM - 2PM',
+        '2PM - 3PM',
+        '3PM - 4PM',
+        '4PM - 5PM',
+        '5PM - 6PM'
     ];
+
+    const isTimeSlotBooked = (timeSlot: string) => {
+        return bookedSlots.includes(timeSlot);
+    };
 
     if (loading) {
         return (
             <>
-                <Navbar location={location} setLocation={setLocation} />
+                <Navbar />
                 <div className="pt-24 pb-10 px-4 sm:px-6 bg-[#FFFFFF] min-h-screen">
                     <div className="max-w-6xl mx-auto">
                         <div className="animate-pulse">
@@ -168,7 +263,7 @@ export default function ServiceDetails() {
     if (!service) {
         return (
             <>
-                <Navbar location={location} setLocation={setLocation} />
+                <Navbar />
                 <div className="pt-24 pb-10 px-4 sm:px-6 bg-[#FFFFFF] min-h-screen">
                     <div className="max-w-6xl mx-auto text-center py-20">
                         <h1 className="text-2xl font-bold text-gray-900 mb-4">Service Not Found</h1>
@@ -188,7 +283,7 @@ export default function ServiceDetails() {
 
     return (
         <>
-            <Navbar location={location} setLocation={setLocation} />
+            <Navbar />
 
             <div className="pt-24 pb-10 px-4 sm:px-6 bg-[#FFFFFF]">
                 <div className="max-w-6xl mx-auto">
@@ -324,19 +419,25 @@ export default function ServiceDetails() {
                                 {/* Choose Time */}
                                 <label className="font-bold block mb-3">Choose a time period</label>
                                 <div className="grid grid-cols-3 gap-2 mb-5">
-                                    {timeSlots.map((time, index) => (
-                                        <div
-                                            key={index}
-                                            onClick={() => setSelectedTime(index)}
-                                            className={`border rounded-full py-2 px-2 text-xs text-center cursor-pointer transition ${selectedTime === index
-                                                ? 'bg-[#F8F9FA] border-[#FF6B35] text-[#FF6B35] font-semibold'
-                                                : 'border-gray-300'
-                                                }`}
-                                        >
-                                            {selectedTime === index && '✓ '}
-                                            {time}
-                                        </div>
-                                    ))}
+                                    {timeSlots.map((time, index) => {
+                                        const isBooked = isTimeSlotBooked(time);
+                                        return (
+                                            <div
+                                                key={index}
+                                                onClick={() => !isBooked && setSelectedTime(index)}
+                                                className={`border rounded-full py-2 px-2 text-xs text-center transition ${isBooked
+                                                    ? 'bg-red-50 border-red-300 text-red-500 cursor-not-allowed opacity-60'
+                                                    : selectedTime === index
+                                                        ? 'bg-[#F8F9FA] border-[#FF6B35] text-[#FF6B35] font-semibold cursor-pointer'
+                                                        : 'border-gray-300 cursor-pointer hover:border-[#FF6B35]'
+                                                    }`}
+                                            >
+                                                {isBooked ? '🔒 ' : selectedTime === index ? '✓ ' : ''}
+                                                {time}
+                                                {isBooked && <div className="text-[10px] mt-0.5">Booked</div>}
+                                            </div>
+                                        );
+                                    })}
                                 </div>
 
                                 {/* Book Now Button */}

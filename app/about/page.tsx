@@ -10,11 +10,9 @@ import JoinPlatform from './components/JoinPlatform';
 import Statistics from './components/Statistics';
 
 export default function AboutPage() {
-    const [location, setLocation] = useState('Location');
-
     return (
         <>
-            <Navbar location={location} setLocation={setLocation} />
+            <Navbar />
             <AboutMission />
             <Statistics />
             <HowItWorks />

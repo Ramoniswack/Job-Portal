@@ -1,5 +1,4 @@
 'use client';
-import { useState } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Category from './components/Category';
@@ -10,12 +9,11 @@ import Testimonials from './components/Testimonials';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
 import WelcomePopup from './components/WelcomePopup';
-export default function Home() {
-  const [location, setLocation] = useState('Location');
 
+export default function Home() {
   return (
     <>
-      <Navbar location={location} setLocation={setLocation} />
+      <Navbar />
       <Hero />
       <Category />
       <FeaturedServices />
@@ -24,7 +22,7 @@ export default function Home() {
       <Testimonials />
       <FAQ />
       <Footer />
-      <WelcomePopup onLocationSelect={setLocation} />
+      <WelcomePopup />
     </>
   );
 }

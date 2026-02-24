@@ -29,7 +29,6 @@ interface Category {
 export default function CategoryPage() {
     const params = useParams();
     const categorySlug = params.name as string;
-    const [location, setLocation] = useState('Location');
     const [selectedSubcategory, setSelectedSubcategory] = useState('All');
     const [category, setCategory] = useState<Category | null>(null);
     const [subcategories, setSubcategories] = useState<Category[]>([]);
@@ -93,7 +92,7 @@ export default function CategoryPage() {
     if (loading) {
         return (
             <>
-                <Navbar location={location} setLocation={setLocation} />
+                <Navbar />
                 <div className="pt-24 pb-10 px-4 sm:px-6 bg-[#F8F9FA] min-h-screen">
                     <div className="max-w-6xl mx-auto">
                         <div className="animate-pulse">
@@ -119,7 +118,7 @@ export default function CategoryPage() {
     if (!category) {
         return (
             <>
-                <Navbar location={location} setLocation={setLocation} />
+                <Navbar />
                 <div className="pt-24 pb-10 px-4 sm:px-6 bg-[#F8F9FA] min-h-screen">
                     <div className="max-w-6xl mx-auto text-center py-20">
                         <h1 className="text-2xl font-bold text-gray-900 mb-4">Category Not Found</h1>
@@ -139,7 +138,7 @@ export default function CategoryPage() {
 
     return (
         <>
-            <Navbar location={location} setLocation={setLocation} />
+            <Navbar />
 
             <div className="pt-24 pb-10 px-4 sm:px-6 bg-[#F8F9FA] min-h-screen">
                 <div className="max-w-6xl mx-auto">

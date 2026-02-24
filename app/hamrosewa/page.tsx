@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
+import ManageProfileModal from '../components/ManageProfileModal';
 import ServiceCategoriesSection from './sections/ServiceCategoriesSection';
 import ServicesSection from './sections/ServicesSection';
 import AddServiceSection from './sections/AddServiceSection';
@@ -11,6 +12,7 @@ import JobsSection from './sections/JobsSection';
 import DashboardSection from './sections/DashboardSection';
 import AMCPackagesSection from './sections/AMCPackagesSection';
 import ServicesHeroSection from './sections/ServicesHeroSection';
+import ServiceBookingsSection from './sections/ServiceBookingsSection';
 
 interface User {
     _id: string;
@@ -27,6 +29,7 @@ export default function AdminDashboard() {
     const [activeSection, setActiveSection] = useState('dashboard');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -67,6 +70,10 @@ export default function AdminDashboard() {
         router.push('/login');
     };
 
+    const handleProfileUpdate = (updatedUser: User) => {
+        setCurrentUser(updatedUser);
+    };
+
     const handleSectionChange = (section: string) => {
         setActiveSection(section);
         setIsMobileMenuOpen(false);
@@ -105,6 +112,17 @@ export default function AdminDashboard() {
             >
                 <span className="material-symbols-outlined text-[20px]">image</span>
                 <span>Services Hero</span>
+            </button>
+
+            <button
+                onClick={() => handleSectionChange('service-bookings')}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'service-bookings'
+                    ? 'bg-[#FF6B35] text-white'
+                    : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
+                    }`}
+            >
+                <span className="material-symbols-outlined text-[20px]">book_online</span>
+                <span>Service Bookings</span>
             </button>
 
             {/* Services Section */}
@@ -262,13 +280,12 @@ export default function AdminDashboard() {
                                     <button
                                         onClick={() => {
                                             setIsDropdownOpen(false);
-                                            // Navigate to profile - you can implement this
-                                            alert('Profile view coming soon!');
+                                            setIsProfileModalOpen(true);
                                         }}
                                         className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                                     >
-                                        <span className="material-symbols-outlined text-[20px] text-[#FF6B35]">person</span>
-                                        <span className="font-medium">View Profile</span>
+                                        <span className="material-symbols-outlined text-[20px] text-[#FF6B35]">manage_accounts</span>
+                                        <span className="font-medium">Manage Profile</span>
                                     </button>
                                     <div className="border-t border-gray-100 my-1"></div>
                                     <button
@@ -352,6 +369,10 @@ export default function AdminDashboard() {
                             <ServicesHeroSection token={token} />
                         )}
 
+                        {activeSection === 'service-bookings' && (
+                            <ServiceBookingsSection token={token} />
+                        )}
+
                         {activeSection === 'users' && (
                             <UsersSection token={token} />
                         )}
@@ -385,6 +406,17 @@ export default function AdminDashboard() {
                     </div>
                 </main>
             </div>
+
+            {/* Manage Profile Modal */}
+            {currentUser && (
+                <ManageProfileModal
+                    isOpen={isProfileModalOpen}
+                    onClose={() => setIsProfileModalOpen(false)}
+                    currentUser={currentUser}
+                    token={token}
+                    onProfileUpdate={handleProfileUpdate}
+                />
+            )}
         </div>
     );
 }
