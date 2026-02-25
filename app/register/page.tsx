@@ -1,41 +1,24 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, Suspense } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 function RegisterPageContent() {
     const router = useRouter();
-    const searchParams = useSearchParams();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [role, setRole] = useState('');
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState<'success' | 'error'>('error');
     const [loading, setLoading] = useState(false);
 
-    // Pre-select role from URL parameter
-    useEffect(() => {
-        const roleParam = searchParams.get('role');
-        if (roleParam === 'worker' || roleParam === 'client') {
-            setRole(roleParam);
-        }
-    }, [searchParams]);
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setMessage('');
-
-        // Validate role selection
-        if (!role) {
-            setMessageType('error');
-            setMessage('Please select your role (Worker or Client)');
-            return;
-        }
 
         // Validate password match
         if (password !== confirmPassword) {
@@ -50,7 +33,7 @@ function RegisterPageContent() {
             const res = await fetch('http://localhost:5000/api/users/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, email, password, role }),
+                body: JSON.stringify({ name, email, password }),
             });
 
             const data = await res.json();
@@ -153,26 +136,6 @@ function RegisterPageContent() {
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-all"
                                 required
                             />
-                        </div>
-
-                        <div>
-                            <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-1">
-                                I want to register as
-                            </label>
-                            <select
-                                id="role"
-                                value={role}
-                                onChange={(e) => setRole(e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-all bg-white"
-                                required
-                            >
-                                <option value="">Select your role</option>
-                                <option value="worker">Worker - Looking for jobs</option>
-                                <option value="client">Client - Posting jobs</option>
-                            </select>
-                            <p className="text-xs text-gray-500 mt-1">
-                                Choose "Worker" if you want to apply for jobs, or "Client" if you want to post jobs
-                            </p>
                         </div>
 
                         <button

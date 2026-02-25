@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { ChevronLeft, ChevronRight, Check, MapPin } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check, MapPin, User } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import Navbar from '../../components/Navbar';
@@ -52,7 +52,7 @@ export default function ServiceDetails() {
 
         try {
             const dateStr = dates[selectedDate].fullDate;
-            const response = await fetch(`http://localhost:5000/api/service-bookings/booked-slots?serviceId=${service._id}&date=${dateStr}`);
+            const response = await fetch(`http://localhost:5000/api/bookings/booked-slots?serviceId=${service._id}&date=${dateStr}`);
             const data = await response.json();
 
             if (data.success) {
@@ -115,6 +115,20 @@ export default function ServiceDetails() {
     };
 
     const handleBookNow = () => {
+        // Check if user is logged in
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            toast.error('Login Required', {
+                description: 'Please login or register to book this service.',
+                duration: 4000,
+            });
+            // Redirect to login page after 1 second
+            setTimeout(() => {
+                router.push('/login');
+            }, 1000);
+            return;
+        }
+
         // Check if selected time slot is booked
         const selectedTimeSlot = timeSlots[selectedTime];
         if (bookedSlots.includes(selectedTimeSlot)) {
@@ -132,12 +146,23 @@ export default function ServiceDetails() {
 
         const selectedTimeSlot = timeSlots[selectedTime];
         const selectedDateStr = dates[selectedDate].fullDate;
+        const token = localStorage.getItem('authToken');
+
+        if (!token) {
+            toast.error('Session Expired', {
+                description: 'Please login again to continue.',
+                duration: 4000,
+            });
+            router.push('/login');
+            return;
+        }
 
         try {
-            const response = await fetch('http://localhost:5000/api/service-bookings', {
+            const response = await fetch('http://localhost:5000/api/bookings', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     serviceId: service?._id,
@@ -162,6 +187,14 @@ export default function ServiceDetails() {
                 setShowBookingModal(false);
                 setBookingData({ name: '', email: '', phone: '', address: '', notes: '' });
                 fetchBookedSlots(); // Refresh booked slots
+            } else if (data.requiresAuth) {
+                toast.error('Login Required', {
+                    description: data.message || 'Please login to book a service.',
+                    duration: 4000,
+                });
+                setTimeout(() => {
+                    router.push('/login');
+                }, 1000);
             } else if (data.isBooked) {
                 toast.error('Time Slot Already Booked', {
                     description: 'This time slot has just been booked by someone else. Please choose another time.',
@@ -297,10 +330,11 @@ export default function ServiceDetails() {
                         {/* Left Side */}
                         <div>
                             <h1 className="text-3xl font-bold mb-2">{service.title}</h1>
-                            <div className="text-[#FF6B35] font-bold mb-2 flex items-center gap-2">
-                                by {service.provider.name}{' '}
+                            <div className="text-gray-700 font-medium mb-2 flex items-center gap-2">
+                                <User className="w-4 h-4 text-[#26cf71]" />
+                                <span className="text-sm">by {service.provider.name}</span>
                                 {service.provider.verified && (
-                                    <Check className="w-4 h-4 bg-orange-500 text-white rounded-full p-0.5" />
+                                    <Check className="w-4 h-4 bg-[#26cf71] text-white rounded-full p-0.5" />
                                 )}
                             </div>
                             {service.location && (

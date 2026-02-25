@@ -173,8 +173,8 @@ export default function FeaturedServices() {
                                     <h3 className="text-lg font-semibold text-gray-900 truncate cursor-pointer hover:text-[#FF6B35] transition-colors">{service.title}</h3>
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-1">
-                                            <span className="text-sm text-gray-600">{service.provider}</span>
-                                            {service.verified && (
+                                            <span className="text-sm text-gray-600">{service.provider.name}</span>
+                                            {service.provider.verified && (
                                                 <div className="bg-orange-500 rounded-full p-0.5">
                                                     <Check className="w-2 h-2 text-white" strokeWidth={4} />
                                                 </div>

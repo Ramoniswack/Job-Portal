@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { toast } from 'sonner';
 import { Plus, Edit2, Trash2, X } from 'lucide-react';
+import ImageUpload from '../../components/ImageUpload';
+import ConfirmDialog from '../../components/ConfirmDialog';
+import Notification from '../../components/Notification';
 
 interface PricingTier {
     name: string;
@@ -41,6 +43,20 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
     const [sectionHeading, setSectionHeading] = useState('AMC Packages');
     const [editingHeading, setEditingHeading] = useState(false);
     const [tempHeading, setTempHeading] = useState('AMC Packages');
+    const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; packageId: string | null }>({
+        isOpen: false,
+        packageId: null
+    });
+    const [notification, setNotification] = useState<{
+        isOpen: boolean;
+        title: string;
+        message?: string;
+        type: 'success' | 'error' | 'warning';
+    }>({
+        isOpen: false,
+        title: '',
+        type: 'success'
+    });
     const [formData, setFormData] = useState({
         title: '',
         category: 'Plumbing',
@@ -83,7 +99,12 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                 setPackages(data.data);
             }
         } catch (error) {
-            toast.error('Failed to fetch AMC packages');
+            setNotification({
+                isOpen: true,
+                title: 'Failed to Load',
+                message: 'Could not fetch AMC packages.',
+                type: 'error'
+            });
         } finally {
             setLoading(false);
         }
@@ -111,22 +132,41 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
             const data = await response.json();
 
             if (data.success) {
-                toast.success(editingPackage ? 'Package updated successfully' : 'Package created successfully');
+                setNotification({
+                    isOpen: true,
+                    title: editingPackage ? 'Package Updated!' : 'Package Created!',
+                    message: editingPackage ? 'The package has been updated successfully.' : 'The package has been created successfully.',
+                    type: 'success'
+                });
                 fetchPackages();
                 handleCloseModal();
             } else {
-                toast.error(data.message || 'Failed to save package');
+                setNotification({
+                    isOpen: true,
+                    title: 'Failed to Save',
+                    message: data.message || 'Could not save the package.',
+                    type: 'error'
+                });
             }
         } catch (error) {
-            toast.error('An error occurred');
+            setNotification({
+                isOpen: true,
+                title: 'Error',
+                message: 'An unexpected error occurred.',
+                type: 'error'
+            });
         }
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm('Are you sure you want to delete this package?')) return;
+        setDeleteConfirm({ isOpen: true, packageId: id });
+    };
+
+    const confirmDelete = async () => {
+        if (!deleteConfirm.packageId) return;
 
         try {
-            const response = await fetch(`http://localhost:5000/api/amc-packages/${id}`, {
+            const response = await fetch(`http://localhost:5000/api/amc-packages/${deleteConfirm.packageId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -136,13 +176,28 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
             const data = await response.json();
 
             if (data.success) {
-                toast.success('Package deleted successfully');
+                setNotification({
+                    isOpen: true,
+                    title: 'Package Deleted!',
+                    message: 'The package has been deleted successfully.',
+                    type: 'success'
+                });
                 fetchPackages();
             } else {
-                toast.error(data.message || 'Failed to delete package');
+                setNotification({
+                    isOpen: true,
+                    title: 'Failed to Delete',
+                    message: data.message || 'Could not delete the package.',
+                    type: 'error'
+                });
             }
         } catch (error) {
-            toast.error('An error occurred');
+            setNotification({
+                isOpen: true,
+                title: 'Error',
+                message: 'An unexpected error occurred.',
+                type: 'error'
+            });
         }
     };
 
@@ -252,12 +307,27 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
             if (data.success) {
                 setSectionHeading(tempHeading);
                 setEditingHeading(false);
-                toast.success('Section heading updated successfully');
+                setNotification({
+                    isOpen: true,
+                    title: 'Heading Updated!',
+                    message: 'Section heading has been updated successfully.',
+                    type: 'success'
+                });
             } else {
-                toast.error(data.message || 'Failed to update heading');
+                setNotification({
+                    isOpen: true,
+                    title: 'Failed to Update',
+                    message: data.message || 'Could not update heading.',
+                    type: 'error'
+                });
             }
         } catch (error) {
-            toast.error('An error occurred');
+            setNotification({
+                isOpen: true,
+                title: 'Error',
+                message: 'An unexpected error occurred.',
+                type: 'error'
+            });
         }
     };
 
@@ -427,29 +497,38 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                     />
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Card Image URL</label>
-                                        <input
-                                            type="url"
-                                            value={formData.cardImage}
-                                            onChange={(e) => setFormData({ ...formData, cardImage: e.target.value })}
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
-                                            placeholder="For homepage card"
-                                            required
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Hero Image URL</label>
-                                        <input
-                                            type="url"
-                                            value={formData.heroImage}
-                                            onChange={(e) => setFormData({ ...formData, heroImage: e.target.value })}
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
-                                            placeholder="For detail page banner"
-                                            required
-                                        />
-                                    </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Card Image</label>
+                                    <p className="text-xs text-gray-500 mb-2">For homepage card display</p>
+                                    <ImageUpload
+                                        token={token}
+                                        multiple={false}
+                                        onUploadComplete={(imageUrl) => {
+                                            setFormData({ ...formData, cardImage: imageUrl });
+                                        }}
+                                    />
+                                    {formData.cardImage && (
+                                        <div className="mt-2">
+                                            <img src={formData.cardImage} alt="Card preview" className="w-full h-32 object-cover rounded-lg border" />
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Hero Image</label>
+                                    <p className="text-xs text-gray-500 mb-2">For detail page banner</p>
+                                    <ImageUpload
+                                        token={token}
+                                        multiple={false}
+                                        onUploadComplete={(imageUrl) => {
+                                            setFormData({ ...formData, heroImage: imageUrl });
+                                        }}
+                                    />
+                                    {formData.heroImage && (
+                                        <div className="mt-2">
+                                            <img src={formData.heroImage} alt="Hero preview" className="w-full h-32 object-cover rounded-lg border" />
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 
@@ -653,6 +732,27 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                     </div>
                 </div>
             )}
+
+            {/* Delete Confirmation Dialog */}
+            <ConfirmDialog
+                isOpen={deleteConfirm.isOpen}
+                onClose={() => setDeleteConfirm({ isOpen: false, packageId: null })}
+                onConfirm={confirmDelete}
+                title="Delete Package"
+                message="Are you sure you want to delete this AMC package? This action cannot be undone."
+                confirmText="Delete"
+                cancelText="Cancel"
+                type="danger"
+            />
+
+            {/* Notification */}
+            <Notification
+                isOpen={notification.isOpen}
+                onClose={() => setNotification({ ...notification, isOpen: false })}
+                title={notification.title}
+                message={notification.message}
+                type={notification.type}
+            />
         </div>
     );
 }

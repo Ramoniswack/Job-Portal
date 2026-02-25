@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import ImageUpload from '@/app/components/ImageUpload';
 
 interface ServiceCategory {
     _id: string;
@@ -9,6 +10,11 @@ interface ServiceCategory {
     description: string;
     image: string;
     parent: any;
+    createdBy?: {
+        _id: string;
+        name: string;
+        email: string;
+    };
     createdAt: string;
 }
 
@@ -22,6 +28,7 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
     const [searchQuery, setSearchQuery] = useState('');
     const [editingCategory, setEditingCategory] = useState<ServiceCategory | null>(null);
     const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
+    const [currentUserId, setCurrentUserId] = useState<string>('');
     const [formData, setFormData] = useState({
         name: '',
         slug: '',
@@ -29,6 +36,33 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
         image: '',
         parent: ''
     });
+
+    // Get current user ID
+    useEffect(() => {
+        const storedUser = localStorage.getItem('currentUser');
+        if (storedUser) {
+            const user = JSON.parse(storedUser);
+            setCurrentUserId(user.id);
+        }
+    }, []);
+
+    // Check if user can edit/delete a category
+    const canModifyCategory = (category: ServiceCategory): boolean => {
+        // Get current user from localStorage
+        const storedUser = localStorage.getItem('currentUser');
+        if (!storedUser) return false;
+
+        const user = JSON.parse(storedUser);
+
+        // Admin can modify everything
+        if (user.role === 'admin') return true;
+
+        // If category has no creator, only admin can modify
+        if (!category.createdBy) return false;
+
+        // User can only modify their own categories
+        return category.createdBy._id === user.id;
+    };
 
     useEffect(() => {
         if (token) {
@@ -39,8 +73,10 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
     const loadCategories = async () => {
         setLoading(true);
         try {
-            console.log('Loading categories with token:', token ? 'Token exists' : 'No token');
+            console.log('=== LOADING CATEGORIES ===');
+            console.log('Token exists:', !!token);
             console.log('Token length:', token?.length);
+            console.log('API URL:', 'http://localhost:5000/api/categories');
 
             const response = await fetch('http://localhost:5000/api/categories', {
                 headers: {
@@ -50,15 +86,30 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
             });
 
             console.log('Response status:', response.status);
+            console.log('Response ok:', response.ok);
 
             if (!response.ok) {
+                const responseText = await response.text();
+                console.error('Error response text:', responseText);
+
                 let errorData;
                 try {
-                    errorData = await response.json();
+                    errorData = JSON.parse(responseText);
                 } catch (e) {
-                    errorData = { message: 'Failed to parse error response' };
+                    errorData = { message: responseText || 'Failed to parse error response' };
                 }
-                console.error('Error response:', errorData);
+
+                // If token is invalid, redirect to login
+                if (response.status === 401 || errorData.message?.includes('Token is not valid')) {
+                    console.error('Token is invalid, redirecting to login...');
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('currentUser');
+                    alert('Your session has expired. Please login again.');
+                    window.location.href = '/login';
+                    return;
+                }
+
+                console.error('Parsed error data:', errorData);
                 throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.message || 'Unknown error'}`);
             }
 
@@ -67,13 +118,16 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
 
             if (data.success) {
                 setCategories(data.data);
-                console.log('Categories loaded successfully:', data.data.length);
+                console.log('✅ Categories loaded successfully:', data.data.length);
             } else {
                 console.error('Failed to load categories:', data);
             }
         } catch (error) {
             console.error('Error loading categories:', error);
-            alert(`Failed to load categories: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            // Don't show alert if we're redirecting to login
+            if (!error.message?.includes('Token is not valid')) {
+                alert(`Failed to load categories: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            }
         } finally {
             setLoading(false);
         }
@@ -93,9 +147,12 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
                 parent: formData.parent || null
             };
 
+            console.log('=== SUBMITTING CATEGORY ===');
             console.log('Submitting to:', url);
             console.log('Method:', editingCategory ? 'PUT' : 'POST');
             console.log('Data:', submitData);
+            console.log('Token exists:', !!token);
+            console.log('Token length:', token?.length);
 
             const response = await fetch(url, {
                 method: editingCategory ? 'PUT' : 'POST',
@@ -107,10 +164,19 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
             });
 
             console.log('Response status:', response.status);
+            console.log('Response statusText:', response.statusText);
             console.log('Response ok:', response.ok);
+            console.log('Response headers:', Object.fromEntries(response.headers.entries()));
 
             const text = await response.text();
+            console.log('Response text length:', text.length);
             console.log('Response text:', text);
+
+            if (!text) {
+                console.error('❌ Empty response from server');
+                alert('Server error: Empty response. Please check if backend is running.');
+                return;
+            }
 
             let data;
             try {
@@ -231,7 +297,7 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
                                 required
                                 value={formData.name}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent text-sm"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent text-sm"
                                 placeholder="Category name"
                             />
                             <p className="text-xs text-gray-500 mt-1">The name is how it appears on your site.</p>
@@ -246,7 +312,7 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
                                 type="text"
                                 value={formData.slug}
                                 onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent text-sm"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent text-sm"
                                 placeholder="category-slug"
                             />
                             <p className="text-xs text-gray-500 mt-1">
@@ -262,7 +328,7 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
                             <select
                                 value={formData.parent}
                                 onChange={(e) => setFormData({ ...formData, parent: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent text-sm"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent text-sm"
                             >
                                 <option value="">None</option>
                                 {parentCategories.map((cat) => (
@@ -285,31 +351,44 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
                                 value={formData.description}
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                 rows={4}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent text-sm"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent text-sm"
                                 placeholder="Category description"
                             />
                         </div>
 
-                        {/* Image URL */}
+                        {/* Image Upload */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Image URL *
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Category Image *
                             </label>
-                            <input
-                                type="url"
-                                required
-                                value={formData.image}
-                                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent text-sm"
-                                placeholder="https://example.com/image.jpg"
+
+                            <ImageUpload
+                                token={token}
+                                multiple={false}
+                                onUploadComplete={(imageUrl) => {
+                                    setFormData({ ...formData, image: imageUrl });
+                                }}
                             />
+
+                            {/* Image Preview */}
+                            {formData.image && (
+                                <div className="mt-3">
+                                    <p className="text-xs text-gray-500 mb-2">Preview:</p>
+                                    <img
+                                        src={formData.image}
+                                        alt="Category preview"
+                                        className="w-full h-40 object-cover rounded-lg border-2 border-gray-200"
+                                    />
+                                </div>
+                            )}
                         </div>
 
                         {/* Buttons */}
                         <div className="flex gap-2 pt-2">
                             <button
                                 type="submit"
-                                className="flex-1 px-4 py-2 bg-[#FF6B35] text-white rounded-md hover:bg-[#FF5722] transition text-sm font-medium"
+                                disabled={!formData.image}
+                                className="flex-1 px-4 py-2 bg-[#26cf71] text-white rounded-md hover:bg-[#1fb35f] transition text-sm font-medium disabled:bg-gray-300 disabled:cursor-not-allowed"
                             >
                                 {editingCategory ? 'Update' : 'Add New Category'}
                             </button>
@@ -340,7 +419,7 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
                                 placeholder="Search Categories"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                className="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
                             />
                         </div>
                     </div>
@@ -348,7 +427,7 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
                     {/* Table */}
                     {loading ? (
                         <div className="p-12 text-center">
-                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35] mx-auto"></div>
+                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#26cf71] mx-auto"></div>
                             <p className="mt-4 text-gray-600">Loading categories...</p>
                         </div>
                     ) : filteredCategories.length === 0 ? (
@@ -402,37 +481,43 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
                                                                     </span>
                                                                 </button>
                                                             )}
-                                                            <a
-                                                                href="#"
-                                                                onClick={(e) => {
-                                                                    e.preventDefault();
-                                                                    handleEdit(category);
-                                                                }}
-                                                                className="text-blue-600 hover:text-blue-800 font-medium"
-                                                            >
-                                                                {category.name}
-                                                            </a>
+                                                            {canModifyCategory(category) ? (
+                                                                <a
+                                                                    href="#"
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault();
+                                                                        handleEdit(category);
+                                                                    }}
+                                                                    className="text-blue-600 hover:text-blue-800 font-medium"
+                                                                >
+                                                                    {category.name}
+                                                                </a>
+                                                            ) : (
+                                                                <span className="font-medium text-gray-700">{category.name}</span>
+                                                            )}
                                                             {hasSubcategories && (
                                                                 <span className="text-xs text-gray-500 bg-[#F1F3F5] px-2 py-0.5 rounded-full">
                                                                     {subcats.length}
                                                                 </span>
                                                             )}
                                                         </div>
-                                                        <div className="flex items-center gap-2 mt-1">
-                                                            <button
-                                                                onClick={() => handleEdit(category)}
-                                                                className="text-xs text-blue-600 hover:text-blue-800"
-                                                            >
-                                                                Edit
-                                                            </button>
-                                                            <span className="text-gray-300">|</span>
-                                                            <button
-                                                                onClick={() => handleDelete(category._id)}
-                                                                className="text-xs text-red-600 hover:text-red-800"
-                                                            >
-                                                                Delete
-                                                            </button>
-                                                        </div>
+                                                        {canModifyCategory(category) && (
+                                                            <div className="flex items-center gap-2 mt-1">
+                                                                <button
+                                                                    onClick={() => handleEdit(category)}
+                                                                    className="text-xs text-blue-600 hover:text-blue-800"
+                                                                >
+                                                                    Edit
+                                                                </button>
+                                                                <span className="text-gray-300">|</span>
+                                                                <button
+                                                                    onClick={() => handleDelete(category._id)}
+                                                                    className="text-xs text-red-600 hover:text-red-800"
+                                                                >
+                                                                    Delete
+                                                                </button>
+                                                            </div>
+                                                        )}
                                                     </td>
                                                     <td className="px-4 py-3 text-sm text-gray-600">
                                                         {category.description || '—'}
@@ -453,32 +538,38 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
                                                         <td className="px-4 py-3">
                                                             <div className="flex items-center gap-2 pl-8">
                                                                 <span className="text-gray-400">└─</span>
-                                                                <a
-                                                                    href="#"
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        handleEdit(subcat);
-                                                                    }}
-                                                                    className="text-blue-600 hover:text-blue-800 font-medium"
-                                                                >
-                                                                    {subcat.name}
-                                                                </a>
+                                                                {canModifyCategory(subcat) ? (
+                                                                    <a
+                                                                        href="#"
+                                                                        onClick={(e) => {
+                                                                            e.preventDefault();
+                                                                            handleEdit(subcat);
+                                                                        }}
+                                                                        className="text-blue-600 hover:text-blue-800 font-medium"
+                                                                    >
+                                                                        {subcat.name}
+                                                                    </a>
+                                                                ) : (
+                                                                    <span className="font-medium text-gray-700">{subcat.name}</span>
+                                                                )}
                                                             </div>
-                                                            <div className="flex items-center gap-2 mt-1 pl-8">
-                                                                <button
-                                                                    onClick={() => handleEdit(subcat)}
-                                                                    className="text-xs text-blue-600 hover:text-blue-800"
-                                                                >
-                                                                    Edit
-                                                                </button>
-                                                                <span className="text-gray-300">|</span>
-                                                                <button
-                                                                    onClick={() => handleDelete(subcat._id)}
-                                                                    className="text-xs text-red-600 hover:text-red-800"
-                                                                >
-                                                                    Delete
-                                                                </button>
-                                                            </div>
+                                                            {canModifyCategory(subcat) && (
+                                                                <div className="flex items-center gap-2 mt-1 pl-8">
+                                                                    <button
+                                                                        onClick={() => handleEdit(subcat)}
+                                                                        className="text-xs text-blue-600 hover:text-blue-800"
+                                                                    >
+                                                                        Edit
+                                                                    </button>
+                                                                    <span className="text-gray-300">|</span>
+                                                                    <button
+                                                                        onClick={() => handleDelete(subcat._id)}
+                                                                        className="text-xs text-red-600 hover:text-red-800"
+                                                                    >
+                                                                        Delete
+                                                                    </button>
+                                                                </div>
+                                                            )}
                                                         </td>
                                                         <td className="px-4 py-3 text-sm text-gray-600">
                                                             {subcat.description || '—'}
@@ -503,3 +594,4 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
         </div>
     );
 }
+

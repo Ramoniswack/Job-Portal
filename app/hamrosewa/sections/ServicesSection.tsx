@@ -1,6 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import ImageUpload from '../../components/ImageUpload';
+import ConfirmDialog from '../../components/ConfirmDialog';
+import Notification from '../../components/Notification';
 
 interface Category {
     _id: string;
@@ -51,6 +54,20 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState<string>('all');
     const [filterCategory, setFilterCategory] = useState<string>('all');
+    const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; serviceId: string | null }>({
+        isOpen: false,
+        serviceId: null
+    });
+    const [notification, setNotification] = useState<{
+        isOpen: boolean;
+        title: string;
+        message?: string;
+        type: 'success' | 'error' | 'warning';
+    }>({
+        isOpen: false,
+        title: '',
+        type: 'success'
+    });
 
     const [formData, setFormData] = useState({
         title: '',
@@ -64,7 +81,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
         discount: '0',
         priceUnit: 'fixed' as 'fixed' | 'hourly' | 'daily',
         rating: '0',
-        images: ['', '', '', ''],
+        images: [] as string[],
         features: [''],
         status: 'draft' as 'active' | 'inactive' | 'draft',
         featured: false,
@@ -180,16 +197,31 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
             });
 
             if (response.ok) {
-                alert(editingService ? 'Service updated!' : 'Service created!');
+                setNotification({
+                    isOpen: true,
+                    title: editingService ? 'Service Updated!' : 'Service Created!',
+                    message: editingService ? 'The service has been updated successfully.' : 'The service has been created successfully.',
+                    type: 'success'
+                });
                 resetForm();
                 loadServices();
             } else {
                 const error = await response.json();
-                alert(error.message || 'Failed to save service');
+                setNotification({
+                    isOpen: true,
+                    title: 'Failed to Save Service',
+                    message: error.message || 'An error occurred while saving the service.',
+                    type: 'error'
+                });
             }
         } catch (error) {
             console.error('Error saving service:', error);
-            alert('Failed to save service');
+            setNotification({
+                isOpen: true,
+                title: 'Failed to Save Service',
+                message: 'An unexpected error occurred. Please try again.',
+                type: 'error'
+            });
         }
     };
 
@@ -224,12 +256,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
             discount: service.discount.toString(),
             priceUnit: service.priceUnit,
             rating: service.rating?.toString() || '0',
-            images: [
-                service.images[0]?.url || '',
-                service.images[1]?.url || '',
-                service.images[2]?.url || '',
-                service.images[3]?.url || ''
-            ],
+            images: service.images.map(img => img.url).filter(url => url),
             features: service.features.length > 0 ? service.features : [''],
             status: service.status,
             featured: service.featured,
@@ -239,22 +266,42 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
     };
 
     const handleDelete = async (serviceId: string) => {
-        if (!confirm('Are you sure you want to delete this service?')) return;
+        setDeleteConfirm({ isOpen: true, serviceId });
+    };
+
+    const confirmDelete = async () => {
+        if (!deleteConfirm.serviceId) return;
 
         try {
-            const response = await fetch(`http://localhost:5000/api/services/${serviceId}`, {
+            const response = await fetch(`http://localhost:5000/api/services/${deleteConfirm.serviceId}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
             if (response.ok) {
+                setNotification({
+                    isOpen: true,
+                    title: 'Service Deleted!',
+                    message: 'The service has been deleted successfully.',
+                    type: 'success'
+                });
                 loadServices();
             } else {
-                alert('Failed to delete service');
+                setNotification({
+                    isOpen: true,
+                    title: 'Failed to Delete Service',
+                    message: 'An error occurred while deleting the service.',
+                    type: 'error'
+                });
             }
         } catch (error) {
             console.error('Error deleting service:', error);
-            alert('Failed to delete service');
+            setNotification({
+                isOpen: true,
+                title: 'Failed to Delete Service',
+                message: 'An unexpected error occurred. Please try again.',
+                type: 'error'
+            });
         }
     };
 
@@ -547,24 +594,57 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
 
                     {/* Images */}
                     <div className="space-y-4 pt-6 border-t">
-                        <h3 className="text-lg font-semibold text-gray-900">Images (4 required)</h3>
-                        <p className="text-sm text-gray-500">First image will be the primary image</p>
+                        <h3 className="text-lg font-semibold text-gray-900">Service Images</h3>
+                        <p className="text-sm text-gray-500">Upload up to 5 images. First image will be the primary/thumbnail image.</p>
 
-                        {formData.images.map((image, index) => (
-                            <div key={index}>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Image {index + 1} URL {index === 0 && '*'}
-                                </label>
-                                <input
-                                    type="url"
-                                    required={index === 0}
-                                    value={image}
-                                    onChange={(e) => updateImage(index, e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
-                                    placeholder="https://example.com/image.jpg"
-                                />
+                        <ImageUpload
+                            onUploadComplete={(imageUrl) => {
+                                setFormData(prev => ({
+                                    ...prev,
+                                    images: [...prev.images, imageUrl]
+                                }));
+                            }}
+                            multiple={true}
+                            maxFiles={5}
+                            token={token}
+                        />
+
+                        {/* Display uploaded images */}
+                        {formData.images.length > 0 && (
+                            <div className="mt-4">
+                                <p className="text-sm font-medium text-gray-700 mb-2">
+                                    Uploaded Images ({formData.images.length})
+                                </p>
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    {formData.images.map((imageUrl, index) => (
+                                        <div key={index} className="relative group">
+                                            <img
+                                                src={imageUrl}
+                                                alt={`Service ${index + 1}`}
+                                                className="w-full h-32 object-cover rounded-lg border-2 border-gray-200"
+                                            />
+                                            {index === 0 && (
+                                                <div className="absolute top-2 left-2 bg-[#FF6B35] text-white text-xs px-2 py-1 rounded">
+                                                    Primary
+                                                </div>
+                                            )}
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setFormData(prev => ({
+                                                        ...prev,
+                                                        images: prev.images.filter((_, i) => i !== index)
+                                                    }));
+                                                }}
+                                                className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                            >
+                                                <span className="material-symbols-outlined text-[16px]">close</span>
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
-                        ))}
+                        )}
                     </div>
 
                     {/* Features */}
@@ -829,6 +909,27 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                     ))}
                 </div>
             )}
+
+            {/* Delete Confirmation Dialog */}
+            <ConfirmDialog
+                isOpen={deleteConfirm.isOpen}
+                onClose={() => setDeleteConfirm({ isOpen: false, serviceId: null })}
+                onConfirm={confirmDelete}
+                title="Delete Service"
+                message="Are you sure you want to delete this service? This action cannot be undone."
+                confirmText="Delete"
+                cancelText="Cancel"
+                type="danger"
+            />
+
+            {/* Notification */}
+            <Notification
+                isOpen={notification.isOpen}
+                onClose={() => setNotification({ ...notification, isOpen: false })}
+                title={notification.title}
+                message={notification.message}
+                type={notification.type}
+            />
         </div>
     );
 }

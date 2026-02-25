@@ -39,7 +39,7 @@ export default function ServiceBookingsSection({ token }: ServiceBookingsSection
 
     const fetchBookings = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/service-bookings', {
+            const response = await fetch('http://localhost:5000/api/bookings/all', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -49,6 +49,8 @@ export default function ServiceBookingsSection({ token }: ServiceBookingsSection
 
             if (data.success) {
                 setBookings(data.data);
+            } else {
+                toast.error(data.message || 'Failed to load bookings');
             }
         } catch (error) {
             console.error('Error fetching bookings:', error);
@@ -60,7 +62,7 @@ export default function ServiceBookingsSection({ token }: ServiceBookingsSection
 
     const updateBookingStatus = async (bookingId: string, newStatus: string) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/service-bookings/${bookingId}/status`, {
+            const response = await fetch(`http://localhost:5000/api/bookings/${bookingId}/status`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -87,7 +89,7 @@ export default function ServiceBookingsSection({ token }: ServiceBookingsSection
         if (!confirm('Are you sure you want to delete this booking?')) return;
 
         try {
-            const response = await fetch(`http://localhost:5000/api/service-bookings/${bookingId}`, {
+            const response = await fetch(`http://localhost:5000/api/bookings/${bookingId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`

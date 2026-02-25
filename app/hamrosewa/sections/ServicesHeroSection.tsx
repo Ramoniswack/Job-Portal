@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { toast } from 'sonner';
 import { Save, Image as ImageIcon } from 'lucide-react';
+import ImageUpload from '../../components/ImageUpload';
+import Notification from '../../components/Notification';
 
 interface ServicesHero {
     _id: string;
@@ -30,6 +31,16 @@ export default function ServicesHeroSection({ token }: ServicesHeroSectionProps)
     });
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [notification, setNotification] = useState<{
+        isOpen: boolean;
+        title: string;
+        message?: string;
+        type: 'success' | 'error' | 'warning';
+    }>({
+        isOpen: false,
+        title: '',
+        type: 'success'
+    });
 
     useEffect(() => {
         fetchHeroData();
@@ -38,12 +49,23 @@ export default function ServicesHeroSection({ token }: ServicesHeroSectionProps)
     const fetchHeroData = async () => {
         try {
             const response = await fetch('http://localhost:5000/api/services-hero');
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
             const data = await response.json();
             if (data.success) {
                 setHeroData(data.data);
             }
-        } catch (error) {
-            toast.error('Failed to fetch hero section data');
+        } catch (error: any) {
+            console.error('Failed to fetch hero data:', error);
+            setNotification({
+                isOpen: true,
+                title: 'Failed to Load Data',
+                message: 'Could not load hero section data. Make sure the backend server is running.',
+                type: 'error'
+            });
         } finally {
             setLoading(false);
         }
@@ -61,16 +83,36 @@ export default function ServicesHeroSection({ token }: ServicesHeroSectionProps)
                 body: JSON.stringify(heroData)
             });
 
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
             const data = await response.json();
 
             if (data.success) {
-                toast.success('Services hero section updated successfully');
+                setNotification({
+                    isOpen: true,
+                    title: 'Success!',
+                    message: 'Services hero section updated successfully.',
+                    type: 'success'
+                });
                 fetchHeroData();
             } else {
-                toast.error(data.message || 'Failed to update hero section');
+                setNotification({
+                    isOpen: true,
+                    title: 'Update Failed',
+                    message: data.message || 'Failed to update hero section.',
+                    type: 'error'
+                });
             }
-        } catch (error) {
-            toast.error('An error occurred');
+        } catch (error: any) {
+            console.error('Save error:', error);
+            setNotification({
+                isOpen: true,
+                title: 'Error',
+                message: 'An error occurred while saving. Make sure the backend server is running.',
+                type: 'error'
+            });
         } finally {
             setSaving(false);
         }
@@ -186,16 +228,31 @@ export default function ServicesHeroSection({ token }: ServicesHeroSectionProps)
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                             <ImageIcon className="w-4 h-4 inline mr-1" />
-                            Background Image URL
+                            Background Image
                         </label>
-                        <input
-                            type="url"
-                            value={heroData.backgroundImage}
-                            onChange={(e) => setHeroData({ ...heroData, backgroundImage: e.target.value })}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
-                            placeholder="https://example.com/image.jpg"
+
+                        {/* Image Upload Component */}
+                        <ImageUpload
+                            token={token}
+                            multiple={false}
+                            onUploadComplete={(imageUrl) => {
+                                setHeroData({ ...heroData, backgroundImage: imageUrl });
+                            }}
                         />
-                        <p className="text-xs text-gray-500 mt-1">Recommended size: 1920x600px</p>
+
+                        {/* Current Image Preview */}
+                        {heroData.backgroundImage && (
+                            <div className="mt-3">
+                                <p className="text-xs text-gray-600 mb-2">Current Image:</p>
+                                <img
+                                    src={heroData.backgroundImage}
+                                    alt="Current hero background"
+                                    className="w-full h-32 object-cover rounded-lg border border-gray-200"
+                                />
+                            </div>
+                        )}
+
+                        <p className="text-xs text-gray-500 mt-2">Recommended size: 1920x600px</p>
                     </div>
 
                     <div>
@@ -227,6 +284,15 @@ export default function ServicesHeroSection({ token }: ServicesHeroSectionProps)
                     </button>
                 </div>
             </div>
+
+            {/* Notification */}
+            <Notification
+                isOpen={notification.isOpen}
+                onClose={() => setNotification({ ...notification, isOpen: false })}
+                title={notification.title}
+                message={notification.message}
+                type={notification.type}
+            />
         </div>
     );
 }

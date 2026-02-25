@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import ImageUpload from '../../components/ImageUpload';
 
 interface Category {
     _id: string;
@@ -33,7 +34,7 @@ export default function AddServiceSection({ token }: AddServiceSectionProps) {
         discount: '0',
         priceUnit: 'fixed' as 'fixed' | 'hourly' | 'daily',
         rating: '0',
-        images: ['', '', '', ''],
+        images: [] as string[],
         features: [''],
         status: 'draft' as 'active' | 'inactive' | 'draft',
         featured: false,
@@ -157,12 +158,26 @@ export default function AddServiceSection({ token }: AddServiceSectionProps) {
             discount: '0',
             priceUnit: 'fixed',
             rating: '0',
-            images: ['', '', '', ''],
+            images: [],
             features: [''],
             status: 'draft',
             featured: false,
             popular: false
         });
+    };
+
+    const handleImageUpload = (imageUrl: string, publicId: string) => {
+        setFormData(prev => ({
+            ...prev,
+            images: [...prev.images, imageUrl]
+        }));
+    };
+
+    const handleRemoveImage = (index: number) => {
+        setFormData(prev => ({
+            ...prev,
+            images: prev.images.filter((_, i) => i !== index)
+        }));
     };
 
     const addFeature = () => {
@@ -405,37 +420,55 @@ export default function AddServiceSection({ token }: AddServiceSectionProps) {
                 <div className="space-y-4 pt-6 border-t">
                     <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
                         <span className="material-symbols-outlined text-[#FF6B35]">image</span>
-                        Images (4 required)
+                        Service Images
                     </h3>
-                    <p className="text-sm text-gray-500">First image will be the primary/thumbnail image</p>
+                    <p className="text-sm text-gray-500">Upload up to 5 images. First image will be the primary/thumbnail image.</p>
 
-                    {formData.images.map((image, index) => (
-                        <div key={index}>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Image {index + 1} URL {index === 0 && <span className="text-red-500">*</span>}
-                            </label>
-                            <input
-                                type="url"
-                                required={index === 0}
-                                value={image}
-                                onChange={(e) => updateImage(index, e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
-                                placeholder="https://images.unsplash.com/photo-xxxxx?w=800"
-                            />
-                            {index === 0 && (
-                                <p className="text-xs text-gray-500 mt-1">
-                                    Primary image - shown in cards and listings
-                                </p>
-                            )}
+                    <ImageUpload
+                        onUploadComplete={handleImageUpload}
+                        multiple={true}
+                        maxFiles={5}
+                        token={token}
+                    />
+
+                    {/* Display uploaded images */}
+                    {formData.images.length > 0 && (
+                        <div className="mt-4">
+                            <p className="text-sm font-medium text-gray-700 mb-2">
+                                Uploaded Images ({formData.images.length})
+                            </p>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                {formData.images.map((imageUrl, index) => (
+                                    <div key={index} className="relative group">
+                                        <img
+                                            src={imageUrl}
+                                            alt={`Service ${index + 1}`}
+                                            className="w-full h-32 object-cover rounded-lg border-2 border-gray-200"
+                                        />
+                                        {index === 0 && (
+                                            <div className="absolute top-2 left-2 bg-[#FF6B35] text-white text-xs px-2 py-1 rounded">
+                                                Primary
+                                            </div>
+                                        )}
+                                        <button
+                                            type="button"
+                                            onClick={() => handleRemoveImage(index)}
+                                            className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                        >
+                                            <span className="material-symbols-outlined text-[16px]">close</span>
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    ))}
+                    )}
 
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                         <p className="text-sm text-blue-800 font-medium mb-2">💡 Image Tips:</p>
                         <ul className="text-xs text-blue-700 space-y-1">
                             <li>• Use high-quality images (800x600px or larger)</li>
-                            <li>• Recommended: Unsplash, Pexels, or your own hosted images</li>
-                            <li>• Example: https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800</li>
+                            <li>• Supported formats: JPG, PNG, GIF, WebP</li>
+                            <li>• First image will be used as the thumbnail</li>
                         </ul>
                     </div>
                 </div>

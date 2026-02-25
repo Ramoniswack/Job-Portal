@@ -1,26 +1,29 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import TopNavbar from './TopNavbar';
 import Sidebar from './Sidebar';
 import Header from './Header';
 import DashboardSection from './sections/DashboardSection';
 import BrowseJobsSection from './sections/BrowseJobsSection';
-import ImprovedMyJobsSection from './sections/ImprovedMyJobsSection';
 import MyApplicationsSection from './sections/MyApplicationsSection';
 import MessagesSection from './sections/MessagesSection';
 import ViewPostsSection from './sections/ViewPostsSection';
 import AddPostSection from './sections/AddPostSection';
 import PostCategoriesSection from './sections/PostCategoriesSection';
-import CreateJobModal from './CreateJobModal';
+import ServicesSection from './sections/ServicesSection';
+import AddServiceSection from './sections/AddServiceSection';
+import ServiceCategoriesSection from './sections/ServiceCategoriesSection';
+import MyServicesSection from './sections/MyServicesSection';
+import MyBookingsSection from './sections/MyBookingsSection';
 import { useFCMNotifications } from '@/lib/useFCMNotifications';
 
 export interface User {
     id: string;
     name: string;
     email: string;
-    role: 'worker' | 'client' | 'admin';
+    role: 'user' | 'admin';
 }
 
 export interface Job {
@@ -55,6 +58,7 @@ export interface Application {
 
 export default function DashboardLayout() {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const [activeSection, setActiveSection] = useState('dashboard');
     const [currentUser, setCurrentUser] = useState<User | null>(null);
     const [token, setToken] = useState('');
@@ -62,7 +66,6 @@ export default function DashboardLayout() {
     const [allJobs, setAllJobs] = useState<Job[]>([]);
     const [myApplications, setMyApplications] = useState<Application[]>([]);
     const [jobApplications, setJobApplications] = useState<Application[]>([]);
-    const [showCreateJobModal, setShowCreateJobModal] = useState(false);
     const [loadingJobs, setLoadingJobs] = useState(false);
     const [loadingAllJobs, setLoadingAllJobs] = useState(false);
     const [loadingApplications, setLoadingApplications] = useState(false);
@@ -70,6 +73,14 @@ export default function DashboardLayout() {
 
     // Initialize FCM notifications
     const { notification } = useFCMNotifications(token);
+
+    // Handle URL parameters for navigation
+    useEffect(() => {
+        const section = searchParams.get('section');
+        if (section) {
+            setActiveSection(section);
+        }
+    }, [searchParams]);
 
     useEffect(() => {
         const storedToken = localStorage.getItem('authToken') || '';
@@ -95,6 +106,19 @@ export default function DashboardLayout() {
             if (user.role === 'worker') {
                 loadMyApplications(storedToken);
             }
+        }
+
+        // Handle URL parameters for navigation from notifications
+        const urlParams = new URLSearchParams(window.location.search);
+        const section = urlParams.get('section');
+        const jobId = urlParams.get('jobId');
+
+        if (section) {
+            console.log('Navigating to section from notification:', section);
+            setActiveSection(section);
+
+            // Clear URL parameters after navigation
+            window.history.replaceState({}, '', '/dashboard');
         }
     }, [router]);
 
@@ -221,7 +245,6 @@ export default function DashboardLayout() {
                 <main className="flex-1 lg:ml-64 min-h-screen w-full">
                     <Header
                         currentUser={currentUser}
-                        onCreateJob={() => setShowCreateJobModal(true)}
                     />
 
                     {activeSection === 'dashboard' && (
@@ -243,15 +266,6 @@ export default function DashboardLayout() {
                             loadingAllJobs={loadingAllJobs}
                             onLoadAllJobs={loadAllJobs}
                             myApplications={myApplications}
-                            onRefresh={refreshData}
-                        />
-                    )}
-
-                    {activeSection === 'my-jobs' && (
-                        <ImprovedMyJobsSection
-                            myJobs={myJobs}
-                            jobApplications={jobApplications}
-                            token={token}
                             onRefresh={refreshData}
                         />
                     )}
@@ -304,16 +318,28 @@ export default function DashboardLayout() {
                     {activeSection === 'post-categories' && currentUser?.role === 'admin' && (
                         <PostCategoriesSection token={token} />
                     )}
+
+                    {activeSection === 'services' && (
+                        <ServicesSection token={token} />
+                    )}
+
+                    {activeSection === 'add-service' && (
+                        <AddServiceSection token={token} />
+                    )}
+
+                    {activeSection === 'service-categories' && (
+                        <ServiceCategoriesSection token={token} />
+                    )}
+
+                    {activeSection === 'my-services' && (
+                        <MyServicesSection token={token} />
+                    )}
+
+                    {activeSection === 'my-bookings' && (
+                        <MyBookingsSection token={token} />
+                    )}
                 </main>
             </div>
-
-            {showCreateJobModal && (
-                <CreateJobModal
-                    token={token}
-                    onClose={() => setShowCreateJobModal(false)}
-                    onSuccess={refreshData}
-                />
-            )}
         </div>
     );
 }

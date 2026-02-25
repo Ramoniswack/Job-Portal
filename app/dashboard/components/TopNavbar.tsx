@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
 import { User } from './DashboardLayout';
 import ManageProfileModal from '@/app/components/ManageProfileModal';
+import NotificationBellWithFCM from '@/app/components/NotificationBellWithFCM';
 
 interface TopNavbarProps {
     currentUser: User | null;
@@ -54,17 +55,20 @@ export default function TopNavbar({ currentUser, onLogout, token, onProfileUpdat
                         <>
                             {/* User Role Badge */}
                             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-[#F8F9FA] rounded-lg">
-                                <span className="material-symbols-outlined text-[#FF6B35] text-[18px]">
+                                <span className="material-symbols-outlined text-gray-900 text-[18px]">
                                     {currentUser.role === 'worker' ? 'person' : 'business'}
                                 </span>
-                                <span className="text-sm font-medium text-[#FF6B35] capitalize">
+                                <span className="text-sm font-medium text-gray-900 capitalize">
                                     {currentUser.role}
                                 </span>
                             </div>
 
+                            {/* Notification Bell */}
+                            <NotificationBellWithFCM userId={currentUser.id} />
+
                             {/* User Menu */}
                             <div className="flex items-center gap-3 px-3 py-2 bg-[#F8F9FA] rounded-lg">
-                                <div className="w-8 h-8 rounded-full bg-[#FF6B35] flex items-center justify-center text-white font-semibold text-sm">
+                                <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold text-sm">
                                     {currentUser.name.charAt(0).toUpperCase()}
                                 </div>
                                 <div className="hidden sm:block">
@@ -92,7 +96,7 @@ export default function TopNavbar({ currentUser, onLogout, token, onProfileUpdat
                                             }}
                                             className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                                         >
-                                            <span className="material-symbols-outlined text-[20px] text-[#FF6B35]">manage_accounts</span>
+                                            <span className="material-symbols-outlined text-[20px] text-gray-900">manage_accounts</span>
                                             <span className="font-medium">Manage Profile</span>
                                         </button>
                                         <div className="border-t border-gray-100 my-1"></div>

@@ -1,6 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import ConfirmDialog from '@/app/components/ConfirmDialog';
+import ImageUpload from '@/app/components/ImageUpload';
+import { Star } from 'lucide-react';
 
 interface Category {
     _id: string;
@@ -32,6 +35,11 @@ interface Service {
     features: string[];
     status: 'active' | 'inactive' | 'draft';
     featured: boolean;
+    createdBy?: {
+        _id: string;
+        name: string;
+        email: string;
+    };
     createdAt: string;
 }
 
@@ -51,6 +59,10 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState<string>('all');
     const [filterCategory, setFilterCategory] = useState<string>('all');
+    const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; serviceId: string | null }>({
+        isOpen: false,
+        serviceId: null
+    });
 
     const [formData, setFormData] = useState({
         title: '',
@@ -75,6 +87,24 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
         loadServices();
         loadCategories();
     }, []);
+
+    // Check if user can edit/delete a service
+    const canModifyService = (service: Service): boolean => {
+        // Get current user from localStorage
+        const storedUser = localStorage.getItem('currentUser');
+        if (!storedUser) return false;
+
+        const user = JSON.parse(storedUser);
+
+        // Admin can modify everything
+        if (user.role === 'admin') return true;
+
+        // If service has no creator, only admin can modify
+        if (!service.createdBy) return false;
+
+        // User can only modify their own services
+        return service.createdBy._id === user.id;
+    };
 
     useEffect(() => {
         // When parent category changes, update subcategories
@@ -239,10 +269,14 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
     };
 
     const handleDelete = async (serviceId: string) => {
-        if (!confirm('Are you sure you want to delete this service?')) return;
+        setDeleteConfirm({ isOpen: true, serviceId });
+    };
+
+    const confirmDelete = async () => {
+        if (!deleteConfirm.serviceId) return;
 
         try {
-            const response = await fetch(`http://localhost:5000/api/services/${serviceId}`, {
+            const response = await fetch(`http://localhost:5000/api/services/${deleteConfirm.serviceId}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -300,6 +334,19 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
     const updateImage = (index: number, value: string) => {
         const newImages = [...formData.images];
         newImages[index] = value;
+        setFormData({ ...formData, images: newImages });
+    };
+
+    const handleImageUpload = (imageUrl: string, publicId: string) => {
+        setFormData(prev => ({
+            ...prev,
+            images: [...prev.images.filter(img => img), imageUrl]
+        }));
+    };
+
+    const removeImage = (index: number) => {
+        const newImages = [...formData.images];
+        newImages.splice(index, 1);
         setFormData({ ...formData, images: newImages });
     };
 
@@ -370,7 +417,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                 required
                                 value={formData.title}
                                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
                                 placeholder="e.g., Professional Home Cleaning"
                             />
                         </div>
@@ -383,7 +430,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                 type="text"
                                 value={formData.shortDescription}
                                 onChange={(e) => setFormData({ ...formData, shortDescription: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
                                 placeholder="Brief one-line description"
                             />
                         </div>
@@ -397,7 +444,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                 value={formData.description}
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                 rows={4}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
                                 placeholder="Detailed description of the service"
                             />
                         </div>
@@ -411,7 +458,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                     required
                                     value={selectedParent}
                                     onChange={(e) => setSelectedParent(e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
                                 >
                                     <option value="">Select Parent Category</option>
                                     {parentCategories.map((cat) => (
@@ -431,7 +478,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                     value={formData.category}
                                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                                     disabled={!selectedParent}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent disabled:bg-[#F1F3F5] disabled:cursor-not-allowed"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent disabled:bg-[#F1F3F5] disabled:cursor-not-allowed"
                                 >
                                     <option value="">
                                         {selectedParent ? 'Select Sub Category' : 'Select parent first'}
@@ -454,7 +501,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                 required
                                 value={formData.location}
                                 onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
                                 placeholder="e.g., Kathmandu, Pokhara, Lalitpur"
                             />
                             <p className="text-xs text-gray-500 mt-1">Enter the city where this service is available</p>
@@ -477,7 +524,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                     step="0.01"
                                     value={formData.price}
                                     onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
                                     placeholder="0.00"
                                 />
                             </div>
@@ -492,7 +539,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                     step="0.01"
                                     value={formData.originalPrice}
                                     onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
                                     placeholder="0.00"
                                 />
                             </div>
@@ -507,7 +554,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                     max="100"
                                     value={formData.discount}
                                     onChange={(e) => setFormData({ ...formData, discount: e.target.value })}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
                                     placeholder="0"
                                 />
                             </div>
@@ -520,7 +567,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                             <select
                                 value={formData.priceUnit}
                                 onChange={(e) => setFormData({ ...formData, priceUnit: e.target.value as any })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
                             >
                                 <option value="fixed">Fixed Price</option>
                                 <option value="hourly">Per Hour</option>
@@ -539,7 +586,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                 step="0.1"
                                 value={formData.rating}
                                 onChange={(e) => setFormData({ ...formData, rating: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
                                 placeholder="4.5"
                             />
                         </div>
@@ -547,24 +594,47 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
 
                     {/* Images */}
                     <div className="space-y-4 pt-6 border-t">
-                        <h3 className="text-lg font-semibold text-gray-900">Images (4 required)</h3>
-                        <p className="text-sm text-gray-500">First image will be the primary image</p>
+                        <h3 className="text-lg font-semibold text-gray-900">Service Images</h3>
+                        <p className="text-sm text-gray-500">Upload up to 5 images. First image will be the primary/thumbnail image.</p>
 
-                        {formData.images.map((image, index) => (
-                            <div key={index}>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Image {index + 1} URL {index === 0 && '*'}
-                                </label>
-                                <input
-                                    type="url"
-                                    required={index === 0}
-                                    value={image}
-                                    onChange={(e) => updateImage(index, e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
-                                    placeholder="https://example.com/image.jpg"
-                                />
+                        <ImageUpload
+                            onUploadComplete={handleImageUpload}
+                            multiple={true}
+                            maxFiles={5}
+                            token={token}
+                        />
+
+                        {/* Display uploaded images */}
+                        {formData.images.filter(img => img).length > 0 && (
+                            <div className="mt-4">
+                                <p className="text-sm font-medium text-gray-700 mb-2">
+                                    Uploaded Images ({formData.images.filter(img => img).length})
+                                </p>
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    {formData.images.filter(img => img).map((imageUrl, index) => (
+                                        <div key={index} className="relative group">
+                                            <img
+                                                src={imageUrl}
+                                                alt={`Service ${index + 1}`}
+                                                className="w-full h-32 object-cover rounded-lg border-2 border-gray-200"
+                                            />
+                                            {index === 0 && (
+                                                <div className="absolute top-2 left-2 bg-[#26cf71] text-white text-xs px-2 py-1 rounded">
+                                                    Primary
+                                                </div>
+                                            )}
+                                            <button
+                                                type="button"
+                                                onClick={() => removeImage(index)}
+                                                className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                            >
+                                                <span className="material-symbols-outlined text-[16px]">close</span>
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
-                        ))}
+                        )}
                     </div>
 
                     {/* Features */}
@@ -574,7 +644,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                             <button
                                 type="button"
                                 onClick={addFeature}
-                                className="flex items-center gap-1 text-sm text-[#FF6B35] hover:text-[#FF5722]"
+                                className="flex items-center gap-1 text-sm text-[#26cf71] hover:text-[#1fb35f]"
                             >
                                 <span className="material-symbols-outlined text-[18px]">add</span>
                                 Add Feature
@@ -587,7 +657,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                     type="text"
                                     value={feature}
                                     onChange={(e) => updateFeature(index, e.target.value)}
-                                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
                                     placeholder="Feature description"
                                 />
                                 {formData.features.length > 1 && (
@@ -615,7 +685,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                 <select
                                     value={formData.status}
                                     onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
                                 >
                                     <option value="draft">Draft</option>
                                     <option value="active">Active</option>
@@ -629,7 +699,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                         type="checkbox"
                                         checked={formData.featured}
                                         onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                                        className="w-4 h-4 text-[#FF6B35] border-gray-300 rounded focus:ring-[#FF6B35]"
+                                        className="w-4 h-4 text-[#26cf71] border-gray-300 rounded focus:ring-[#26cf71]"
                                     />
                                     <span className="text-sm font-medium text-gray-700">Featured</span>
                                 </label>
@@ -638,7 +708,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                         type="checkbox"
                                         checked={formData.popular}
                                         onChange={(e) => setFormData({ ...formData, popular: e.target.checked })}
-                                        className="w-4 h-4 text-[#FF6B35] border-gray-300 rounded focus:ring-[#FF6B35]"
+                                        className="w-4 h-4 text-[#26cf71] border-gray-300 rounded focus:ring-[#26cf71]"
                                     />
                                     <span className="text-sm font-medium text-gray-700">Popular</span>
                                 </label>
@@ -650,7 +720,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                     <div className="flex gap-3 pt-6 border-t">
                         <button
                             type="submit"
-                            className="flex-1 px-6 py-3 bg-[#FF6B35] text-white rounded-lg hover:bg-[#FF5722] transition font-medium"
+                            className="flex-1 px-6 py-3 bg-[#f97316] text-white rounded-lg hover:bg-[#ea580c] transition font-medium"
                         >
                             {editingService ? 'Update Service' : 'Create Service'}
                         </button>
@@ -677,7 +747,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                 </div>
                 <button
                     onClick={() => setShowForm(true)}
-                    className="flex items-center gap-2 px-4 py-2 bg-[#FF6B35] text-white rounded-lg hover:bg-[#FF5722] transition font-medium"
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-900 rounded-lg hover:bg-gray-200 transition font-medium"
                 >
                     <span className="material-symbols-outlined">add</span>
                     Add Service
@@ -693,14 +763,14 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                             placeholder="Search services..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
                         />
                     </div>
                     <div>
                         <select
                             value={filterStatus}
                             onChange={(e) => setFilterStatus(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
                         >
                             <option value="all">All Status</option>
                             <option value="active">Active</option>
@@ -715,7 +785,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                 console.log('Filter category changed to:', e.target.value);
                                 setFilterCategory(e.target.value);
                             }}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#26cf71] focus:border-transparent"
                         >
                             <option value="all">All Categories</option>
                             {allCategories
@@ -733,7 +803,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
             {/* Services List */}
             {loading ? (
                 <div className="bg-white rounded-lg shadow-sm p-12 text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35] mx-auto"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#26cf71] mx-auto"></div>
                     <p className="mt-4 text-gray-600">Loading services...</p>
                 </div>
             ) : filteredServices.length === 0 ? (
@@ -742,7 +812,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                     <p className="mt-4 text-gray-600">No services found</p>
                     <button
                         onClick={() => setShowForm(true)}
-                        className="mt-4 text-[#FF6B35] hover:text-[#FF5722] font-medium"
+                        className="mt-4 text-[#26cf71] hover:text-[#1fb35f] font-medium"
                     >
                         Add your first service
                     </button>
@@ -791,13 +861,13 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                 {/* Rating */}
                                 {service.rating > 0 && (
                                     <div className="flex items-center gap-1 mb-2">
-                                        <span className="material-symbols-outlined text-yellow-500 text-[18px]">star</span>
+                                        <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
                                         <span className="text-sm font-medium text-gray-700">{service.rating.toFixed(1)}</span>
                                     </div>
                                 )}
 
                                 <div className="flex items-center justify-between mb-3">
-                                    <span className="text-lg font-bold text-[#FF6B35]">
+                                    <span className="text-lg font-bold text-[#f97316]">
                                         {service.priceLabel}
                                     </span>
                                     {service.discount > 0 && (
@@ -808,27 +878,42 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                 </div>
 
                                 {/* Actions */}
-                                <div className="flex gap-2 pt-3 border-t">
-                                    <button
-                                        onClick={() => handleEdit(service)}
-                                        className="flex-1 flex items-center justify-center gap-1 px-3 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded transition"
-                                    >
-                                        <span className="material-symbols-outlined text-[18px]">edit</span>
-                                        Edit
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(service._id)}
-                                        className="flex-1 flex items-center justify-center gap-1 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded transition"
-                                    >
-                                        <span className="material-symbols-outlined text-[18px]">delete</span>
-                                        Delete
-                                    </button>
-                                </div>
+                                {canModifyService(service) && (
+                                    <div className="flex gap-2 pt-3 border-t">
+                                        <button
+                                            onClick={() => handleEdit(service)}
+                                            className="flex-1 flex items-center justify-center gap-1 px-3 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded transition"
+                                        >
+                                            <span className="material-symbols-outlined text-[18px]">edit</span>
+                                            Edit
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(service._id)}
+                                            className="flex-1 flex items-center justify-center gap-1 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded transition"
+                                        >
+                                            <span className="material-symbols-outlined text-[18px]">delete</span>
+                                            Delete
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ))}
                 </div>
             )}
+
+            {/* Delete Confirmation Dialog */}
+            <ConfirmDialog
+                isOpen={deleteConfirm.isOpen}
+                onClose={() => setDeleteConfirm({ isOpen: false, serviceId: null })}
+                onConfirm={confirmDelete}
+                title="Delete Service"
+                message="Are you sure you want to delete this service? This action cannot be undone."
+                confirmText="Delete"
+                cancelText="Cancel"
+                type="danger"
+            />
         </div>
     );
 }
+

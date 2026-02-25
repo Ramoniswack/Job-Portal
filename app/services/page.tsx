@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, useMemo, Suspense } from 'react';
-import { Search, SlidersHorizontal, X, Star, Check, ChevronDown, MapPin, ChevronRight } from 'lucide-react';
+import { Search, SlidersHorizontal, X, Star, Check, ChevronDown, MapPin, ChevronRight, User } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Link from 'next/link';
@@ -621,9 +621,10 @@ function ServicesPageContent() {
                                                         {service.title}
                                                     </h3>
                                                     <div className="flex items-center gap-2 mb-2">
+                                                        <User className="w-3.5 h-3.5 text-[#26cf71]" />
                                                         <span className="text-sm text-gray-600">{service.provider.name}</span>
                                                         {service.provider.verified && (
-                                                            <div className="bg-[#FF6B35] rounded-full p-0.5">
+                                                            <div className="bg-[#26cf71] rounded-full p-0.5">
                                                                 <Check className="w-3 h-3 text-white" strokeWidth={3} />
                                                             </div>
                                                         )}

@@ -173,11 +173,17 @@ export default function CategoryPage() {
                             {services.map((service) => (
                                 <Link key={service.id} href={`/service/${service.slug}`} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300">
                                     <div className="rounded-2xl overflow-hidden aspect-[4/3] relative bg-gradient-to-br from-gray-100 to-gray-200">
-                                        <img
-                                            src={service.image}
-                                            alt={service.title}
-                                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                                        />
+                                        {service.image ? (
+                                            <img
+                                                src={service.image}
+                                                alt={service.title}
+                                                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center">
+                                                <span className="material-symbols-outlined text-gray-400 text-6xl">image</span>
+                                            </div>
+                                        )}
                                     </div>
                                     <div className="p-4 space-y-1">
                                         <h3 className="text-lg font-semibold text-gray-900 truncate cursor-pointer hover:text-[#FF6B35] transition-colors">
@@ -185,8 +191,8 @@ export default function CategoryPage() {
                                         </h3>
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-1">
-                                                <span className="text-sm text-gray-600">{service.provider}</span>
-                                                {service.verified && (
+                                                <span className="text-sm text-gray-600">{service.provider.name}</span>
+                                                {service.provider.verified && (
                                                     <div className="bg-orange-500 rounded-full p-0.5">
                                                         <Check className="w-2 h-2 text-white" strokeWidth={4} />
                                                     </div>
