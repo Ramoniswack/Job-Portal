@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Calendar, Mail, Phone, MapPin, FileText, RefreshCw, CheckCircle, Clock, XCircle, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
+import ConfirmDialog from '../../components/ConfirmDialog';
 
 interface ServiceBooking {
     _id: string;
@@ -11,6 +12,11 @@ interface ServiceBooking {
         title: string;
         slug: string;
         images: Array<{ url: string }>;
+        createdBy?: {
+            _id: string;
+            name: string;
+            email: string;
+        };
     };
     serviceTitle: string;
     customerName: string;
@@ -20,8 +26,13 @@ interface ServiceBooking {
     bookingDate: string;
     bookingTime: string;
     notes: string;
-    status: 'pending' | 'confirmed' | 'in-progress' | 'completed' | 'cancelled';
+    status: 'pending' | 'approved' | 'rejected' | 'confirmed' | 'in-progress' | 'completed' | 'cancelled';
     createdAt: string;
+    customer?: {
+        _id: string;
+        name: string;
+        email: string;
+    };
 }
 
 interface ServiceBookingsSectionProps {
@@ -32,8 +43,23 @@ export default function ServiceBookingsSection({ token }: ServiceBookingsSection
     const [bookings, setBookings] = useState<ServiceBooking[]>([]);
     const [loading, setLoading] = useState(true);
     const [filterStatus, setFilterStatus] = useState<string>('all');
+    const [currentUserId, setCurrentUserId] = useState<string>('');
+    const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; bookingId: string | null }>({
+        isOpen: false,
+        bookingId: null
+    });
 
     useEffect(() => {
+        // Get current user ID from localStorage
+        const currentUserStr = localStorage.getItem('currentUser');
+        if (currentUserStr) {
+            try {
+                const currentUser = JSON.parse(currentUserStr);
+                setCurrentUserId(currentUser.id || currentUser._id);
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+            }
+        }
         fetchBookings();
     }, []);
 
@@ -74,7 +100,7 @@ export default function ServiceBookingsSection({ token }: ServiceBookingsSection
             const data = await response.json();
 
             if (data.success) {
-                toast.success('Booking status updated successfully');
+                toast.success(`Booking ${newStatus === 'approved' ? 'accepted' : newStatus} successfully`);
                 fetchBookings();
             } else {
                 toast.error(data.message || 'Failed to update status');
@@ -85,9 +111,19 @@ export default function ServiceBookingsSection({ token }: ServiceBookingsSection
         }
     };
 
-    const deleteBooking = async (bookingId: string) => {
-        if (!confirm('Are you sure you want to delete this booking?')) return;
+    const acceptBooking = async (bookingId: string) => {
+        await updateBookingStatus(bookingId, 'approved');
+    };
 
+    const rejectBooking = async (bookingId: string) => {
+        await updateBookingStatus(bookingId, 'rejected');
+    };
+
+    const isServiceOwner = (booking: ServiceBooking) => {
+        return booking.service?.createdBy?._id === currentUserId;
+    };
+
+    const deleteBooking = async (bookingId: string) => {
         try {
             const response = await fetch(`http://localhost:5000/api/bookings/${bookingId}`, {
                 method: 'DELETE',
@@ -110,10 +146,20 @@ export default function ServiceBookingsSection({ token }: ServiceBookingsSection
         }
     };
 
+    const confirmDelete = async () => {
+        if (!deleteConfirm.bookingId) return;
+        await deleteBooking(deleteConfirm.bookingId);
+        setDeleteConfirm({ isOpen: false, bookingId: null });
+    };
+
     const getStatusColor = (status: string) => {
         switch (status) {
             case 'pending':
                 return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+            case 'approved':
+                return 'bg-green-100 text-green-800 border-green-300';
+            case 'rejected':
+                return 'bg-red-100 text-red-800 border-red-300';
             case 'confirmed':
                 return 'bg-blue-100 text-blue-800 border-blue-300';
             case 'in-progress':
@@ -131,6 +177,10 @@ export default function ServiceBookingsSection({ token }: ServiceBookingsSection
         switch (status) {
             case 'pending':
                 return <Clock className="w-4 h-4" />;
+            case 'approved':
+                return <CheckCircle className="w-4 h-4" />;
+            case 'rejected':
+                return <XCircle className="w-4 h-4" />;
             case 'confirmed':
                 return <CheckCircle className="w-4 h-4" />;
             case 'in-progress':
@@ -174,12 +224,12 @@ export default function ServiceBookingsSection({ token }: ServiceBookingsSection
 
             {/* Filter Tabs */}
             <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-                {['all', 'pending', 'confirmed', 'in-progress', 'completed', 'cancelled'].map((status) => (
+                {['all', 'pending', 'approved', 'rejected', 'completed', 'cancelled'].map((status) => (
                     <button
                         key={status}
                         onClick={() => setFilterStatus(status)}
                         className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${filterStatus === status
-                            ? 'bg-[#FF6B35] text-white'
+                            ? 'bg-gray-800 text-white'
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                             }`}
                     >
@@ -275,20 +325,51 @@ export default function ServiceBookingsSection({ token }: ServiceBookingsSection
 
                                     {/* Action Buttons */}
                                     <div className="flex flex-wrap gap-2">
-                                        <select
-                                            value={booking.status}
-                                            onChange={(e) => updateBookingStatus(booking._id, e.target.value)}
-                                            className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent outline-none"
-                                        >
-                                            <option value="pending">Pending</option>
-                                            <option value="confirmed">Confirmed</option>
-                                            <option value="in-progress">In Progress</option>
-                                            <option value="completed">Completed</option>
-                                            <option value="cancelled">Cancelled</option>
-                                        </select>
+                                        {isServiceOwner(booking) ? (
+                                            // Service owner can accept/reject or change status
+                                            <>
+                                                {booking.status === 'pending' ? (
+                                                    <>
+                                                        <button
+                                                            onClick={() => acceptBooking(booking._id)}
+                                                            className="flex items-center gap-1 px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors font-medium"
+                                                        >
+                                                            <CheckCircle className="w-4 h-4" />
+                                                            Accept
+                                                        </button>
+                                                        <button
+                                                            onClick={() => rejectBooking(booking._id)}
+                                                            className="flex items-center gap-1 px-4 py-2 text-sm bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors font-medium"
+                                                        >
+                                                            <XCircle className="w-4 h-4" />
+                                                            Reject
+                                                        </button>
+                                                    </>
+                                                ) : (
+                                                    <select
+                                                        value={booking.status}
+                                                        onChange={(e) => updateBookingStatus(booking._id, e.target.value)}
+                                                        className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent outline-none"
+                                                    >
+                                                        <option value="pending">Pending</option>
+                                                        <option value="approved">Approved</option>
+                                                        <option value="rejected">Rejected</option>
+                                                        <option value="completed">Completed</option>
+                                                        <option value="cancelled">Cancelled</option>
+                                                    </select>
+                                                )}
+                                            </>
+                                        ) : (
+                                            // Non-owner (admin viewing other's services) can only see status
+                                            <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 rounded-lg">
+                                                <span className="text-sm text-gray-600">
+                                                    Service by: <span className="font-semibold">{booking.service?.createdBy?.name || 'Unknown'}</span>
+                                                </span>
+                                            </div>
+                                        )}
 
                                         <button
-                                            onClick={() => deleteBooking(booking._id)}
+                                            onClick={() => setDeleteConfirm({ isOpen: true, bookingId: booking._id })}
                                             className="flex items-center gap-1 px-3 py-1.5 text-sm bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
                                         >
                                             <Trash2 className="w-4 h-4" />
@@ -301,6 +382,18 @@ export default function ServiceBookingsSection({ token }: ServiceBookingsSection
                     ))}
                 </div>
             )}
+
+            {/* Delete Confirmation Dialog */}
+            <ConfirmDialog
+                isOpen={deleteConfirm.isOpen}
+                onClose={() => setDeleteConfirm({ isOpen: false, bookingId: null })}
+                onConfirm={confirmDelete}
+                title="Delete Booking"
+                message="Are you sure you want to delete this booking? This action cannot be undone."
+                confirmText="Delete"
+                cancelText="Cancel"
+                type="danger"
+            />
         </div>
     );
 }

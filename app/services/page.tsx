@@ -23,6 +23,11 @@ interface Service {
     images: Array<{ url: string; isPrimary: boolean }>;
     featured: boolean;
     popular: boolean;
+    createdBy?: {
+        _id: string;
+        name: string;
+        email: string;
+    };
     provider: {
         name: string;
         verified: boolean;
@@ -621,10 +626,12 @@ function ServicesPageContent() {
                                                         {service.title}
                                                     </h3>
                                                     <div className="flex items-center gap-2 mb-2">
-                                                        <User className="w-3.5 h-3.5 text-[#26cf71]" />
-                                                        <span className="text-sm text-gray-600">{service.provider.name}</span>
-                                                        {service.provider.verified && (
-                                                            <div className="bg-[#26cf71] rounded-full p-0.5">
+                                                        <User className="w-7 h-7 text-gray-600" />
+                                                        <span className="text-sm text-gray-600">
+                                                            {service.createdBy?.name || service.provider.name}
+                                                        </span>
+                                                        {(service.createdBy || service.provider.verified) && (
+                                                            <div className="bg-blue-500 rounded-full p-0.5">
                                                                 <Check className="w-3 h-3 text-white" strokeWidth={3} />
                                                             </div>
                                                         )}

@@ -13,6 +13,7 @@ import DashboardSection from './sections/DashboardSection';
 import AMCPackagesSection from './sections/AMCPackagesSection';
 import ServicesHeroSection from './sections/ServicesHeroSection';
 import ServiceBookingsSection from './sections/ServiceBookingsSection';
+import MessagesSection from '../dashboard/components/sections/MessagesSection';
 
 interface User {
     _id: string;
@@ -95,8 +96,8 @@ export default function AdminDashboard() {
             <button
                 onClick={() => handleSectionChange('dashboard')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'dashboard'
-                    ? 'bg-[#FF6B35] text-white'
-                    : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
+                    ? 'bg-gray-800 text-white'
+                    : 'text-gray-900 hover:bg-gray-100'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">dashboard</span>
@@ -106,8 +107,8 @@ export default function AdminDashboard() {
             <button
                 onClick={() => handleSectionChange('services-hero')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'services-hero'
-                    ? 'bg-[#FF6B35] text-white'
-                    : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
+                    ? 'bg-gray-800 text-white'
+                    : 'text-gray-900 hover:bg-gray-100'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">image</span>
@@ -117,12 +118,23 @@ export default function AdminDashboard() {
             <button
                 onClick={() => handleSectionChange('service-bookings')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'service-bookings'
-                    ? 'bg-[#FF6B35] text-white'
-                    : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
+                    ? 'bg-gray-800 text-white'
+                    : 'text-gray-900 hover:bg-gray-100'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">book_online</span>
                 <span>Service Bookings</span>
+            </button>
+
+            <button
+                onClick={() => handleSectionChange('messages')}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'messages'
+                    ? 'bg-gray-800 text-white'
+                    : 'text-gray-900 hover:bg-gray-100'
+                    }`}
+            >
+                <span className="material-symbols-outlined text-[20px]">chat</span>
+                <span>Messages</span>
             </button>
 
             {/* Services Section */}
@@ -133,8 +145,8 @@ export default function AdminDashboard() {
             <button
                 onClick={() => handleSectionChange('add-service')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'add-service'
-                    ? 'bg-[#FF6B35] text-white'
-                    : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
+                    ? 'bg-gray-800 text-white'
+                    : 'text-gray-900 hover:bg-gray-100'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">add_circle</span>
@@ -144,8 +156,8 @@ export default function AdminDashboard() {
             <button
                 onClick={() => handleSectionChange('services')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'services'
-                    ? 'bg-[#FF6B35] text-white'
-                    : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
+                    ? 'bg-gray-800 text-white'
+                    : 'text-gray-900 hover:bg-gray-100'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">inventory_2</span>
@@ -155,8 +167,8 @@ export default function AdminDashboard() {
             <button
                 onClick={() => handleSectionChange('service-categories')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'service-categories'
-                    ? 'bg-[#FF6B35] text-white'
-                    : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
+                    ? 'bg-gray-800 text-white'
+                    : 'text-gray-900 hover:bg-gray-100'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">category</span>
@@ -169,8 +181,8 @@ export default function AdminDashboard() {
             <button
                 onClick={() => handleSectionChange('users')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'users'
-                    ? 'bg-[#FF6B35] text-white'
-                    : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
+                    ? 'bg-gray-800 text-white'
+                    : 'text-gray-900 hover:bg-gray-100'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">group</span>
@@ -180,8 +192,8 @@ export default function AdminDashboard() {
             <button
                 onClick={() => handleSectionChange('jobs')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'jobs'
-                    ? 'bg-[#FF6B35] text-white'
-                    : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
+                    ? 'bg-gray-800 text-white'
+                    : 'text-gray-900 hover:bg-gray-100'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">work_outline</span>
@@ -191,8 +203,8 @@ export default function AdminDashboard() {
             <button
                 onClick={() => handleSectionChange('amc-packages')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'amc-packages'
-                    ? 'bg-[#FF6B35] text-white'
-                    : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
+                    ? 'bg-gray-800 text-white'
+                    : 'text-gray-900 hover:bg-gray-100'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">inventory</span>
@@ -202,8 +214,8 @@ export default function AdminDashboard() {
             <button
                 onClick={() => handleSectionChange('settings')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'settings'
-                    ? 'bg-[#FF6B35] text-white'
-                    : 'text-gray-600 hover:bg-[#F8F9FA] hover:text-[#FF6B35]'
+                    ? 'bg-gray-800 text-white'
+                    : 'text-gray-900 hover:bg-gray-100'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">settings</span>
@@ -245,18 +257,18 @@ export default function AdminDashboard() {
                     {/* Right: User Info and Actions */}
                     <div className="flex items-center gap-2 lg:gap-4">
                         {/* User Role Badge */}
-                        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-purple-50 rounded-lg">
-                            <span className="material-symbols-outlined text-purple-600 text-[18px]">
+                        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-[#F8F9FA] rounded-lg">
+                            <span className="material-symbols-outlined text-gray-900 text-[18px]">
                                 admin_panel_settings
                             </span>
-                            <span className="text-sm font-medium text-purple-600 capitalize">
+                            <span className="text-sm font-medium text-gray-900 capitalize">
                                 Admin
                             </span>
                         </div>
 
                         {/* User Menu */}
                         <div className="flex items-center gap-2 lg:gap-3 px-2 lg:px-3 py-2 bg-[#F8F9FA] rounded-lg">
-                            <div className="w-8 h-8 rounded-full bg-[#FF6B35] flex items-center justify-center text-white font-semibold text-sm">
+                            <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold text-sm">
                                 {currentUser.name.charAt(0).toUpperCase()}
                             </div>
                             <div className="hidden md:block">
@@ -284,7 +296,7 @@ export default function AdminDashboard() {
                                         }}
                                         className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                                     >
-                                        <span className="material-symbols-outlined text-[20px] text-[#FF6B35]">manage_accounts</span>
+                                        <span className="material-symbols-outlined text-[20px] text-gray-900">manage_accounts</span>
                                         <span className="font-medium">Manage Profile</span>
                                     </button>
                                     <div className="border-t border-gray-100 my-1"></div>
@@ -318,8 +330,8 @@ export default function AdminDashboard() {
                 {/* Desktop Sidebar */}
                 <aside className="hidden lg:flex w-64 bg-white border-r border-gray-200 flex-col fixed h-[calc(100vh-4rem)] top-16 z-40">
                     <div className="p-6 flex items-center gap-3 border-b border-gray-200">
-                        <span className="material-symbols-outlined text-[#FF6B35] text-[24px]">dashboard</span>
-                        <h2 className="text-[#FF6B35] text-lg font-bold tracking-tight">Navigation</h2>
+                        <span className="material-symbols-outlined text-gray-800 text-[24px]">dashboard</span>
+                        <h2 className="text-gray-800 text-lg font-bold tracking-tight">Navigation</h2>
                     </div>
 
                     <div className="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
@@ -333,8 +345,8 @@ export default function AdminDashboard() {
                         }`}
                 >
                     <div className="p-6 flex items-center gap-3 border-b border-gray-200">
-                        <span className="material-symbols-outlined text-[#FF6B35] text-[24px]">dashboard</span>
-                        <h2 className="text-[#FF6B35] text-lg font-bold tracking-tight">Navigation</h2>
+                        <span className="material-symbols-outlined text-gray-800 text-[24px]">dashboard</span>
+                        <h2 className="text-gray-800 text-lg font-bold tracking-tight">Navigation</h2>
                     </div>
 
                     <div className="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
@@ -371,6 +383,20 @@ export default function AdminDashboard() {
 
                         {activeSection === 'service-bookings' && (
                             <ServiceBookingsSection token={token} />
+                        )}
+
+                        {activeSection === 'messages' && currentUser && (
+                            <MessagesSection
+                                currentUser={{
+                                    id: (currentUser as any).id || currentUser._id || '',
+                                    name: currentUser.name || '',
+                                    email: currentUser.email || '',
+                                    role: 'admin'
+                                }}
+                                token={token}
+                                myApplications={[]}
+                                onLoadApplications={() => { }}
+                            />
                         )}
 
                         {activeSection === 'users' && (

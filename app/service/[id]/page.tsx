@@ -118,6 +118,8 @@ export default function ServiceDetails() {
         // Check if user is logged in
         const token = localStorage.getItem('authToken');
         if (!token) {
+            // Save current URL to return after login
+            localStorage.setItem('returnUrl', window.location.pathname);
             toast.error('Login Required', {
                 description: 'Please login or register to book this service.',
                 duration: 4000,
@@ -129,6 +131,26 @@ export default function ServiceDetails() {
             return;
         }
 
+        // Check if user is the service owner
+        const currentUserStr = localStorage.getItem('currentUser');
+        if (currentUserStr) {
+            try {
+                const currentUser = JSON.parse(currentUserStr);
+                const userId = currentUser.id || currentUser._id;
+                const serviceOwnerId = service.createdBy?._id;
+
+                if (userId === serviceOwnerId) {
+                    toast.error('Cannot Book Your Own Service', {
+                        description: 'You cannot book your own service. Customers can book this service and you will receive notifications.',
+                        duration: 4000,
+                    });
+                    return;
+                }
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+            }
+        }
+
         // Check if selected time slot is booked
         const selectedTimeSlot = timeSlots[selectedTime];
         if (bookedSlots.includes(selectedTimeSlot)) {
@@ -138,6 +160,23 @@ export default function ServiceDetails() {
             });
             return;
         }
+
+        // Prefill user data from localStorage
+        if (currentUserStr) {
+            try {
+                const currentUser = JSON.parse(currentUserStr);
+                setBookingData({
+                    name: currentUser.name || '',
+                    email: currentUser.email || '',
+                    phone: currentUser.phone || '',
+                    address: '',
+                    notes: ''
+                });
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+            }
+        }
+
         setShowBookingModal(true);
     };
 
@@ -153,7 +192,11 @@ export default function ServiceDetails() {
                 description: 'Please login again to continue.',
                 duration: 4000,
             });
-            router.push('/login');
+            // Save current URL to return after login
+            localStorage.setItem('returnUrl', window.location.pathname);
+            setTimeout(() => {
+                router.push('/login');
+            }, 1000);
             return;
         }
 
@@ -187,9 +230,13 @@ export default function ServiceDetails() {
                 setShowBookingModal(false);
                 setBookingData({ name: '', email: '', phone: '', address: '', notes: '' });
                 fetchBookedSlots(); // Refresh booked slots
-            } else if (data.requiresAuth) {
-                toast.error('Login Required', {
-                    description: data.message || 'Please login to book a service.',
+            } else if (response.status === 401 || data.requiresAuth) {
+                // Token is invalid or expired
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('currentUser');
+                localStorage.setItem('returnUrl', window.location.pathname);
+                toast.error('Session Expired', {
+                    description: 'Please login again to continue booking.',
                     duration: 4000,
                 });
                 setTimeout(() => {
@@ -331,10 +378,10 @@ export default function ServiceDetails() {
                         <div>
                             <h1 className="text-3xl font-bold mb-2">{service.title}</h1>
                             <div className="text-gray-700 font-medium mb-2 flex items-center gap-2">
-                                <User className="w-4 h-4 text-[#26cf71]" />
-                                <span className="text-sm">by {service.provider.name}</span>
+                                <User className="w-8 h-8 text-gray-600" />
+                                <span className="text-sm">by {service.createdBy?.name || service.provider.name}</span>
                                 {service.provider.verified && (
-                                    <Check className="w-4 h-4 bg-[#26cf71] text-white rounded-full p-0.5" />
+                                    <Check className="w-4 h-4 bg-blue-500 text-white rounded-full p-0.5" />
                                 )}
                             </div>
                             {service.location && (
@@ -581,8 +628,8 @@ export default function ServiceDetails() {
                                         type="text"
                                         required
                                         value={bookingData.name}
-                                        onChange={(e) => setBookingData({ ...bookingData, name: e.target.value })}
-                                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent outline-none transition"
+                                        disabled
+                                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg bg-gray-100 text-gray-700 cursor-not-allowed"
                                         placeholder="Enter your full name"
                                     />
                                 </div>
@@ -595,8 +642,8 @@ export default function ServiceDetails() {
                                         type="email"
                                         required
                                         value={bookingData.email}
-                                        onChange={(e) => setBookingData({ ...bookingData, email: e.target.value })}
-                                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent outline-none transition"
+                                        disabled
+                                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg bg-gray-100 text-gray-700 cursor-not-allowed"
                                         placeholder="your.email@example.com"
                                     />
                                 </div>

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { User, Calendar, Clock, CheckCircle, XCircle, MessageSquare } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface ServiceBooking {
     _id: string;
@@ -57,6 +58,18 @@ export default function MyServicesSection({ token }: MyServicesSectionProps) {
             });
 
             console.log('Response status:', response.status);
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    toast.error('Session Expired', {
+                        description: 'Please log out and log back in.',
+                        duration: 4000,
+                    });
+                    return;
+                }
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
             const data = await response.json();
             console.log('Response data:', data);
 
@@ -65,11 +78,17 @@ export default function MyServicesSection({ token }: MyServicesSectionProps) {
                 setServices(data.data);
             } else {
                 console.error('Failed to load services:', data.message);
-                alert('Failed to load services: ' + (data.message || 'Unknown error'));
+                toast.error('Failed to Load Services', {
+                    description: data.message || 'Unable to load your services.',
+                    duration: 4000,
+                });
             }
         } catch (error) {
             console.error('Error loading services:', error);
-            alert('Error loading services. Check console for details.');
+            toast.error('Connection Error', {
+                description: 'Failed to load services. Please check your connection and try again.',
+                duration: 4000,
+            });
         } finally {
             setLoading(false);
         }
@@ -77,24 +96,39 @@ export default function MyServicesSection({ token }: MyServicesSectionProps) {
 
     const handleBookingAction = async (bookingId: string, action: 'approve' | 'reject') => {
         try {
-            const response = await fetch(`http://localhost:5000/api/bookings/${bookingId}/${action}`, {
+            const response = await fetch(`http://localhost:5000/api/bookings/${bookingId}/status`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify({
+                    status: action === 'approve' ? 'approved' : 'rejected'
+                })
             });
 
             const data = await response.json();
             if (data.success) {
-                alert(`Booking ${action}d successfully!`);
+                toast.success(
+                    action === 'approve' ? 'Booking Approved!' : 'Booking Rejected',
+                    {
+                        description: `The booking has been ${action}d successfully.`,
+                        duration: 4000,
+                    }
+                );
                 loadMyServices();
             } else {
-                alert(data.message || `Failed to ${action} booking`);
+                toast.error('Action Failed', {
+                    description: data.message || `Failed to ${action} booking.`,
+                    duration: 4000,
+                });
             }
         } catch (error) {
             console.error(`Error ${action}ing booking:`, error);
-            alert(`Failed to ${action} booking`);
+            toast.error('Connection Error', {
+                description: `Failed to ${action} booking. Please try again.`,
+                duration: 4000,
+            });
         }
     };
 

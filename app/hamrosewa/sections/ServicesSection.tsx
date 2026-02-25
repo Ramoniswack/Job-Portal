@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { Star } from 'lucide-react';
 import ImageUpload from '../../components/ImageUpload';
 import ConfirmDialog from '../../components/ConfirmDialog';
 import Notification from '../../components/Notification';
@@ -857,6 +858,11 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                 <h3 className="font-semibold text-gray-900 mb-1 line-clamp-1">
                                     {service.title}
                                 </h3>
+                                {service.createdBy && (
+                                    <p className="text-xs text-gray-500 mb-2">
+                                        Posted by <span className="font-medium text-gray-700">{service.createdBy.name}</span>
+                                    </p>
+                                )}
                                 <p className="text-sm text-gray-500 mb-2">
                                     {service.category && typeof service.category === 'object'
                                         ? service.category.name
@@ -871,7 +877,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                 {/* Rating */}
                                 {service.rating > 0 && (
                                     <div className="flex items-center gap-1 mb-2">
-                                        <span className="material-symbols-outlined text-yellow-500 text-[18px]">star</span>
+                                        <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
                                         <span className="text-sm font-medium text-gray-700">{service.rating.toFixed(1)}</span>
                                     </div>
                                 )}

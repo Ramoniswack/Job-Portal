@@ -36,9 +36,15 @@ export default function LoginPage() {
                 setMessageType('success');
                 setMessage('Login successful! Redirecting...');
 
-                // Redirect based on role
+                // Check if there's a return URL
+                const returnUrl = localStorage.getItem('returnUrl');
+
+                // Redirect based on return URL or role
                 setTimeout(() => {
-                    if (data.user.role === 'admin') {
+                    if (returnUrl) {
+                        localStorage.removeItem('returnUrl');
+                        router.push(returnUrl);
+                    } else if (data.user.role === 'admin') {
                         router.push('/hamrosewa');
                     } else {
                         router.push('/dashboard');

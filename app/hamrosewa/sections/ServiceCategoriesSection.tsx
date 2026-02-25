@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { toast } from 'sonner';
+import ImageUpload from '../../components/ImageUpload';
 
 interface ServiceCategory {
     _id: string;
@@ -54,7 +56,10 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
             if (!response.ok) {
                 // Handle authentication errors
                 if (response.status === 401) {
-                    alert('Your session has expired. Please log out and log back in.');
+                    toast.error('Session Expired', {
+                        description: 'Your session has expired. Please log out and log back in.',
+                        duration: 4000,
+                    });
                     setCategories([]);
                     setLoading(false);
                     return;
@@ -82,14 +87,47 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
             }
         } catch (error) {
             console.error('Error loading categories:', error);
-            alert(`Failed to load categories: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            toast.error('Failed to Load Categories', {
+                description: error instanceof Error ? error.message : 'Unknown error occurred.',
+                duration: 4000,
+            });
         } finally {
             setLoading(false);
         }
     };
 
+    const handleImageUpload = (imageUrl: string, publicId: string) => {
+        console.log('=== IMAGE UPLOAD CALLBACK ===');
+        console.log('Image URL:', imageUrl);
+        console.log('Public ID:', publicId);
+
+        setFormData(prev => {
+            const updated = {
+                ...prev,
+                image: imageUrl
+            };
+            console.log('Updated formData:', updated);
+            return updated;
+        });
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        console.log('=== FORM SUBMIT ===');
+        console.log('Current formData:', formData);
+        console.log('formData.image:', formData.image);
+        console.log('formData.image type:', typeof formData.image);
+        console.log('formData.image length:', formData.image?.length);
+
+        // Validate image is uploaded - commented out for debugging
+        // if (!formData.image || formData.image.trim() === '') {
+        //     toast.error('Image Required', {
+        //         description: 'Please upload a category image before submitting.',
+        //         duration: 4000,
+        //     });
+        //     return;
+        // }
 
         try {
             const url = editingCategory
@@ -126,23 +164,37 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
                 data = JSON.parse(text);
             } catch (e) {
                 console.error('Failed to parse JSON:', text);
-                alert('Server error: Invalid response format');
+                toast.error('Server Error', {
+                    description: 'Invalid response format from server.',
+                    duration: 4000,
+                });
                 return;
             }
 
             console.log('Parsed data:', data);
 
             if (data.success) {
-                alert(editingCategory ? 'Category updated!' : 'Category created!');
+                toast.success(editingCategory ? 'Category Updated!' : 'Category Created!', {
+                    description: editingCategory
+                        ? 'The category has been updated successfully.'
+                        : 'The new category has been created successfully.',
+                    duration: 4000,
+                });
                 resetForm();
                 loadCategories();
             } else {
-                alert(data.message || 'Failed to save category');
+                toast.error('Failed to Save Category', {
+                    description: data.message || 'Please check your input and try again.',
+                    duration: 4000,
+                });
                 console.error('Error response:', data);
             }
         } catch (error) {
             console.error('Error saving category:', error);
-            alert('Failed to save category: ' + error);
+            toast.error('Connection Error', {
+                description: 'Failed to save category. Please check your connection and try again.',
+                duration: 4000,
+            });
         }
     };
 
@@ -168,13 +220,23 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
 
             const data = await response.json();
             if (data.success) {
+                toast.success('Category Deleted', {
+                    description: 'The category has been deleted successfully.',
+                    duration: 4000,
+                });
                 loadCategories();
             } else {
-                alert(data.message || 'Failed to delete category');
+                toast.error('Failed to Delete', {
+                    description: data.message || 'Unable to delete the category.',
+                    duration: 4000,
+                });
             }
         } catch (error) {
             console.error('Error deleting category:', error);
-            alert('Failed to delete category');
+            toast.error('Connection Error', {
+                description: 'Failed to delete category. Please try again.',
+                duration: 4000,
+            });
         }
     };
 
@@ -299,19 +361,26 @@ export default function ServiceCategoriesSection({ token }: ServiceCategoriesSec
                             />
                         </div>
 
-                        {/* Image URL */}
+                        {/* Image Upload */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Image URL *
+                                Category Image *
                             </label>
-                            <input
-                                type="url"
-                                required
-                                value={formData.image}
-                                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent text-sm"
-                                placeholder="https://example.com/image.jpg"
+                            <ImageUpload
+                                onUploadComplete={handleImageUpload}
+                                multiple={false}
+                                maxFiles={1}
+                                token={token}
                             />
+                            {formData.image && (
+                                <div className="mt-2">
+                                    <img
+                                        src={formData.image}
+                                        alt="Category preview"
+                                        className="w-full h-32 object-cover rounded-md border border-gray-200"
+                                    />
+                                </div>
+                            )}
                         </div>
 
                         {/* Buttons */}

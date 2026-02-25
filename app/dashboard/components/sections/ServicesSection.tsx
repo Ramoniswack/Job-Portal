@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import ConfirmDialog from '@/app/components/ConfirmDialog';
 import ImageUpload from '@/app/components/ImageUpload';
 import { Star } from 'lucide-react';
@@ -141,7 +142,10 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
             setServices(data);
         } catch (error) {
             console.error('Error loading services:', error);
-            alert('Failed to load services. Make sure backend server is running on port 5000.');
+            toast.error('Failed to Load Services', {
+                description: 'Make sure backend server is running on port 5000.',
+                duration: 4000,
+            });
         } finally {
             setLoading(false);
         }
@@ -172,6 +176,25 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
         e.preventDefault();
 
         try {
+            // Validate required fields
+            if (!formData.title || !formData.description || !formData.price) {
+                toast.error('Missing Required Fields', {
+                    description: 'Please fill in title, description, and price.',
+                    duration: 4000,
+                });
+                return;
+            }
+
+            // Validate at least one image
+            const validImages = formData.images.filter(url => url.trim());
+            if (validImages.length === 0) {
+                toast.error('Image Required', {
+                    description: 'Please upload at least one service image.',
+                    duration: 4000,
+                });
+                return;
+            }
+
             const submitData = {
                 title: formData.title,
                 description: formData.description,
@@ -184,17 +207,17 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                 discount: parseFloat(formData.discount),
                 priceUnit: formData.priceUnit,
                 rating: parseFloat(formData.rating),
-                images: formData.images
-                    .filter(url => url.trim())
-                    .map((url, index) => ({
-                        url: url.trim(),
-                        isPrimary: index === 0
-                    })),
+                images: validImages.map((url, index) => ({
+                    url: url.trim(),
+                    isPrimary: index === 0
+                })),
                 features: formData.features.filter(f => f.trim()),
                 status: formData.status,
                 featured: formData.featured,
                 popular: formData.popular
             };
+
+            console.log('Submitting service data:', submitData);
 
             const url = editingService
                 ? `http://localhost:5000/api/services/${editingService._id}`
@@ -209,17 +232,48 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                 body: JSON.stringify(submitData)
             });
 
+            console.log('Response status:', response.status);
+
             if (response.ok) {
-                alert(editingService ? 'Service updated!' : 'Service created!');
+                const result = await response.json();
+                console.log('Success response:', result);
+
+                toast.success(
+                    editingService ? 'Service Updated!' : 'Service Created!',
+                    {
+                        description: editingService
+                            ? 'Your service has been updated successfully.'
+                            : 'Your service has been created successfully and is now live.',
+                        duration: 4000,
+                    }
+                );
                 resetForm();
                 loadServices();
             } else {
-                const error = await response.json();
-                alert(error.message || 'Failed to save service');
+                // Log the raw response text first
+                const responseText = await response.text();
+                console.error('Error response status:', response.status);
+                console.error('Error response text:', responseText);
+
+                let error;
+                try {
+                    error = JSON.parse(responseText);
+                } catch (e) {
+                    error = { message: `Server error (${response.status})` };
+                }
+
+                console.error('Parsed error response:', error);
+                toast.error('Failed to Save Service', {
+                    description: error.message || `Server error (${response.status}). Please check your input and try again.`,
+                    duration: 4000,
+                });
             }
         } catch (error) {
             console.error('Error saving service:', error);
-            alert('Failed to save service');
+            toast.error('Connection Error', {
+                description: 'Failed to save service. Please check your connection and try again.',
+                duration: 4000,
+            });
         }
     };
 
@@ -282,13 +336,26 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
             });
 
             if (response.ok) {
+                toast.success('Service Deleted', {
+                    description: 'The service has been deleted successfully.',
+                    duration: 4000,
+                });
                 loadServices();
             } else {
-                alert('Failed to delete service');
+                const error = await response.json();
+                toast.error('Failed to Delete', {
+                    description: error.message || 'Unable to delete the service.',
+                    duration: 4000,
+                });
             }
         } catch (error) {
             console.error('Error deleting service:', error);
-            alert('Failed to delete service');
+            toast.error('Connection Error', {
+                description: 'Failed to delete service. Please try again.',
+                duration: 4000,
+            });
+        } finally {
+            setDeleteConfirm({ isOpen: false, serviceId: null });
         }
     };
 
@@ -847,6 +914,11 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                 <h3 className="font-semibold text-gray-900 mb-1 line-clamp-1">
                                     {service.title}
                                 </h3>
+                                {service.createdBy && (
+                                    <p className="text-xs text-gray-500 mb-2">
+                                        Posted by <span className="font-medium text-gray-700">{service.createdBy.name}</span>
+                                    </p>
+                                )}
                                 <p className="text-sm text-gray-500 mb-2">
                                     {service.category && typeof service.category === 'object'
                                         ? service.category.name

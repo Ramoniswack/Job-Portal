@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import ImageUpload from '../../components/ImageUpload';
 
 interface Category {
@@ -82,7 +83,10 @@ export default function AddServiceSection({ token }: AddServiceSectionProps) {
             setParentCategories(parents);
         } catch (error) {
             console.error('Error loading categories:', error);
-            alert('Failed to load categories. Make sure backend is running.');
+            toast.error('Failed to Load Categories', {
+                description: 'Make sure the backend server is running.',
+                duration: 4000,
+            });
         }
     };
 
@@ -129,16 +133,25 @@ export default function AddServiceSection({ token }: AddServiceSectionProps) {
             const result = await response.json();
 
             if (response.ok && result.success) {
-                alert('✓ Service created successfully!');
+                toast.success('Service Created!', {
+                    description: 'Your service has been created successfully and is now live.',
+                    duration: 4000,
+                });
                 resetForm();
                 // Optionally redirect to all services
                 // router.push('/hamrosewa?section=services');
             } else {
-                alert(result.message || 'Failed to create service');
+                toast.error('Failed to Create Service', {
+                    description: result.message || 'Please check your input and try again.',
+                    duration: 4000,
+                });
             }
         } catch (error) {
             console.error('Error creating service:', error);
-            alert('Failed to create service. Check console for details.');
+            toast.error('Connection Error', {
+                description: 'Failed to create service. Please check your connection and try again.',
+                duration: 4000,
+            });
         } finally {
             setLoading(false);
         }

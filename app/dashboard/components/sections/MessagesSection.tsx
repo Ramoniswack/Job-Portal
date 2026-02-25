@@ -167,50 +167,56 @@ export default function MessagesSection({
             }
 
             // Load approved service bookings
+            // Load approved service bookings (where user is the service provider)
             try {
                 console.log('=== LOADING SERVICE BOOKINGS FOR MESSAGES (PROVIDER) ===');
-                const bookingsResponse = await fetch('http://localhost:5000/api/services/my-services', {
+                const bookingsResponse = await fetch('http://localhost:5000/api/bookings/my-service-bookings', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const bookingsData = await bookingsResponse.json();
 
                 console.log('Service bookings response:', bookingsData);
 
-                if (bookingsData.success) {
-                    // Extract approved bookings from all services
-                    bookingsData.data.forEach((service: any) => {
-                        console.log('Service:', service.title, 'Bookings:', service.bookings?.length);
-                        const approvedBookings = service.bookings?.filter((b: any) => b.status === 'approved') || [];
-                        console.log('Approved bookings for', service.title, ':', approvedBookings.length);
+                if (bookingsData.success && bookingsData.data) {
+                    console.log('Processing', bookingsData.data.length, 'service provider bookings');
 
-                        approvedBookings.forEach((booking: any) => {
-                            console.log('Processing booking:', booking);
+                    bookingsData.data.forEach((booking: any, index: number) => {
+                        console.log(`\n--- Provider Booking ${index + 1} ---`);
+                        console.log('Booking ID:', booking._id);
+                        console.log('Service:', booking.service?.title);
+                        console.log('Customer:', booking.customer);
+                        console.log('Customer name:', booking.customer?.name);
+                        console.log('Customer ID:', booking.customer?._id);
+                        console.log('Status:', booking.status);
 
-                            const customerData = {
-                                _id: booking.customer?._id || '',
-                                name: booking.customer?.name || booking.customerName || 'Unknown Customer',
-                                email: booking.customer?.email || booking.customerEmail || ''
-                            };
+                        const customerData = {
+                            _id: booking.customer?._id || '',
+                            name: booking.customer?.name || booking.customerName || 'Unknown Customer',
+                            email: booking.customer?.email || booking.customerEmail || ''
+                        };
 
-                            console.log('Customer data:', customerData);
+                        console.log('Customer data to add:', customerData);
 
-                            allConnections.push({
-                                _id: booking._id,
-                                type: 'service' as const,
-                                service: {
-                                    _id: service._id,
-                                    title: service.title,
-                                    images: service.images
-                                },
-                                customer: customerData,
-                                status: booking.status,
-                                createdAt: booking.createdAt,
-                                bookingDate: booking.bookingDate,
-                                bookingTime: booking.bookingTime
-                            });
+                        allConnections.push({
+                            _id: booking._id,
+                            type: 'service' as const,
+                            service: {
+                                _id: booking.service?._id || '',
+                                title: booking.service?.title || 'Service',
+                                images: booking.service?.images || []
+                            },
+                            customer: customerData,
+                            status: booking.status,
+                            createdAt: booking.createdAt,
+                            bookingDate: booking.bookingDate,
+                            bookingTime: booking.bookingTime
                         });
+
+                        console.log('Connection added. Total now:', allConnections.length);
                     });
-                    console.log('Total connections after adding provider bookings:', allConnections.length);
+                    console.log('\n✅ Total connections after adding provider bookings:', allConnections.length);
+                } else {
+                    console.log('❌ No provider bookings data or request failed');
                 }
             } catch (error) {
                 console.error('Error loading service bookings:', error);
@@ -321,7 +327,12 @@ export default function MessagesSection({
     };
 
     const handleSendMessage = async () => {
-        if (!messageText.trim() || !selectedConnection || !currentUser || !socket) return;
+        if (!messageText.trim() || !selectedConnection || !currentUser) return;
+
+        console.log('=== HANDLE SEND MESSAGE DEBUG ===');
+        console.log('currentUser:', currentUser);
+        console.log('currentUser.id:', (currentUser as any).id);
+        console.log('currentUser._id:', (currentUser as any)._id);
 
         let receiverId: string;
 
@@ -347,8 +358,20 @@ export default function MessagesSection({
             return;
         }
 
+        // Handle both id and _id fields (user dashboard vs admin dashboard)
+        const senderId = (currentUser as any).id || (currentUser as any)._id;
+
+        console.log('Extracted senderId:', senderId);
+        console.log('Extracted receiverId:', receiverId);
+
+        if (!senderId) {
+            console.error('No sender ID found');
+            console.error('currentUser object:', JSON.stringify(currentUser, null, 2));
+            return;
+        }
+
         const messageData: any = {
-            senderId: currentUser.id,
+            senderId: senderId,
             receiverId: receiverId,
             content: messageText.trim(),
             conversationType: selectedConnection.type
@@ -356,16 +379,54 @@ export default function MessagesSection({
 
         if (selectedConnection.type === 'service') {
             messageData.bookingId = selectedConnection._id;
+            messageData.type = 'service';
         } else {
             messageData.applicationId = selectedConnection._id;
+            messageData.type = 'job';
         }
 
         console.log('=== SENDING MESSAGE ===');
+        console.log('Sender ID:', senderId);
+        console.log('Receiver ID:', receiverId);
         console.log('Message data:', messageData);
+        console.log('Socket connected:', socket?.connected);
 
-        socket.emit('send_message', messageData);
-
+        // Clear input immediately for better UX
         setMessageText('');
+
+        // Try Socket.IO first
+        if (socket && socket.connected) {
+            socket.emit('send_message', messageData);
+            console.log('Message sent via Socket.IO');
+            // Socket.IO will handle adding the message via receive_message event
+        } else {
+            console.log('Socket not connected, using HTTP fallback');
+
+            // Only use HTTP if socket is not connected
+            try {
+                const response = await fetch('http://localhost:5000/api/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(messageData)
+                });
+
+                const data = await response.json();
+                console.log('HTTP response:', data);
+
+                if (data.success) {
+                    // Add message to local state only when using HTTP fallback
+                    setMessages(prev => [...prev, data.data]);
+                    console.log('Message sent via HTTP successfully');
+                } else {
+                    console.error('HTTP send failed:', data.message);
+                }
+            } catch (error) {
+                console.error('Error sending message via HTTP:', error);
+            }
+        }
     };
 
     if (acceptedConnections.length === 0) {

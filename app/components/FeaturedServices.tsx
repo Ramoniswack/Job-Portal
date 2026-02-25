@@ -1,20 +1,25 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Star, Check, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
+import { Star, Check, ChevronLeft, ChevronRight, MapPin, User } from 'lucide-react';
 import Link from 'next/link';
 
 interface Service {
     id: string;
     slug: string;
     title: string;
-    provider: string;
-    verified: boolean;
+    provider: {
+        name: string;
+        verified: boolean;
+    };
     rating: number;
     price: string;
     description: string;
     image: string;
     location: string;
+    createdBy?: {
+        name: string;
+    };
 }
 
 export default function FeaturedServices() {
@@ -42,8 +47,11 @@ export default function FeaturedServices() {
                 id: service._id,
                 slug: service.slug,
                 title: service.title,
-                provider: service.provider?.name || 'Hamro Sewa',
-                verified: service.provider?.verified || true,
+                provider: {
+                    name: service.provider?.name || 'Hamro Sewa',
+                    verified: service.provider?.verified || true
+                },
+                createdBy: service.createdBy ? { name: service.createdBy.name } : undefined,
                 rating: service.rating || 0,
                 price: service.priceLabel,
                 description: service.shortDescription || service.description,
@@ -171,32 +179,32 @@ export default function FeaturedServices() {
                                 </div>
                                 <div className="space-y-1">
                                     <h3 className="text-lg font-semibold text-gray-900 truncate cursor-pointer hover:text-[#FF6B35] transition-colors">{service.title}</h3>
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-1">
-                                            <span className="text-sm text-gray-600">{service.provider.name}</span>
-                                            {service.provider.verified && (
-                                                <div className="bg-orange-500 rounded-full p-0.5">
-                                                    <Check className="w-2 h-2 text-white" strokeWidth={4} />
-                                                </div>
-                                            )}
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <User className="w-7 h-7 text-gray-600" />
+                                        <span className="text-sm text-gray-600">
+                                            {service.createdBy?.name || service.provider.name}
+                                        </span>
+                                        {(service.createdBy || service.provider.verified) && (
+                                            <div className="bg-blue-500 rounded-full p-0.5">
+                                                <Check className="w-3 h-3 text-white" strokeWidth={3} />
+                                            </div>
+                                        )}
+                                    </div>
+                                    {service.location && (
+                                        <div className="flex items-center gap-1 text-xs text-gray-500 mb-2">
+                                            <MapPin className="w-3 h-3" />
+                                            <span>{service.location}</span>
                                         </div>
+                                    )}
+                                    <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-1">
                                             <Star className="w-4 h-4 text-yellow-400 fill-current" />
                                             <span className="text-sm font-semibold text-gray-800">
                                                 {service.rating > 0 ? service.rating.toFixed(1) : 'New'}
                                             </span>
                                         </div>
+                                        <div className="text-[#FF6B35] font-bold text-lg">{service.price}</div>
                                     </div>
-                                    {service.location && (
-                                        <div className="flex items-center gap-1 text-xs text-gray-500">
-                                            <MapPin className="w-3 h-3" />
-                                            <span>{service.location}</span>
-                                        </div>
-                                    )}
-                                    <div className="text-[#FF6B35] font-bold text-lg pt-1">{service.price}</div>
-                                    <p className="text-sm text-gray-500 line-clamp-2 leading-relaxed">
-                                        {service.description}
-                                    </p>
                                 </div>
                             </Link>
                         ))}
