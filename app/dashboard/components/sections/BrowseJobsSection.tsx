@@ -155,13 +155,13 @@ export default function BrowseJobsSection({
 
     return (
         <>
-            <div className="p-6 md:p-8 bg-[#F8F9FA] min-h-screen">
+            <div className="p-6 md:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
                 {/* Header Section */}
                 <div className="mb-8">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-900 mb-2">Browse Jobs</h1>
-                            <p className="text-gray-600">Find your next opportunity from available job listings</p>
+                            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Browse Jobs</h1>
+                            <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500">Find your next opportunity from available job listings</p>
                         </div>
                         <button
                             onClick={onLoadAllJobs}
@@ -176,18 +176,18 @@ export default function BrowseJobsSection({
                     {/* Search Bar */}
                     <div className="mt-6">
                         <div className="relative">
-                            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
                             <input
                                 type="text"
                                 placeholder="Search jobs by title, description, category, or location..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-all"
+                                className="w-full pl-12 pr-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-all"
                             />
                             {searchQuery && (
                                 <button
                                     onClick={() => setSearchQuery('')}
-                                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:text-gray-500"
                                 >
                                     <X className="w-5 h-5" />
                                 </button>
@@ -197,38 +197,38 @@ export default function BrowseJobsSection({
 
                     {/* Stats Bar */}
                     <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                        <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
                             <div className="flex items-center gap-3">
                                 <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center">
                                     <Briefcase className="w-6 h-6 text-blue-600" />
                                 </div>
                                 <div>
-                                    <p className="text-2xl font-bold text-gray-900">{filteredJobs.length}</p>
-                                    <p className="text-sm text-gray-600">{debouncedSearch ? 'Matching Jobs' : 'Available Jobs'}</p>
+                                    <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{filteredJobs.length}</p>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">{debouncedSearch ? 'Matching Jobs' : 'Available Jobs'}</p>
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                        <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
                             <div className="flex items-center gap-3">
-                                <div className="w-12 h-12 bg-[#F8F9FA] rounded-lg flex items-center justify-center">
+                                <div className="w-12 h-12 bg-gray-50 dark:bg-gray-900 rounded-lg flex items-center justify-center">
                                     <CheckCircle className="w-6 h-6 text-green-600" />
                                 </div>
                                 <div>
-                                    <p className="text-2xl font-bold text-gray-900">{myApplications.length}</p>
-                                    <p className="text-sm text-gray-600">My Applications</p>
+                                    <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{myApplications.length}</p>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">My Applications</p>
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                        <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
                             <div className="flex items-center gap-3">
                                 <div className="w-12 h-12 bg-yellow-50 rounded-lg flex items-center justify-center">
                                     <Clock className="w-6 h-6 text-yellow-600" />
                                 </div>
                                 <div>
-                                    <p className="text-2xl font-bold text-gray-900">
+                                    <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                                         {myApplications.filter(app => app.status === 'requested').length}
                                     </p>
-                                    <p className="text-sm text-gray-600">Pending Review</p>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">Pending Review</p>
                                 </div>
                             </div>
                         </div>
@@ -249,7 +249,7 @@ export default function BrowseJobsSection({
                             return (
                                 <div
                                     key={job._id}
-                                    className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 group"
+                                    className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700 group"
                                 >
                                     {/* Card Header */}
                                     <div className="p-6 pb-4">
@@ -259,12 +259,12 @@ export default function BrowseJobsSection({
                                                     <Briefcase className="w-6 h-6 text-white" />
                                                 </div>
                                                 <div>
-                                                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#FF6B35] transition-colors line-clamp-1">
+                                                    <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 group-hover:text-[#FF6B35] transition-colors line-clamp-1">
                                                         {job.title}
                                                     </h3>
-                                                    <p className="text-sm text-gray-500">{clientName}</p>
+                                                    <p className="text-sm text-gray-500 dark:text-gray-500">{clientName}</p>
                                                     {clientEmail && (
-                                                        <div className="flex items-center gap-1 text-xs text-gray-400 mt-0.5">
+                                                        <div className="flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500 mt-0.5">
                                                             <Mail className="w-3 h-3" />
                                                             {clientEmail}
                                                         </div>
@@ -273,34 +273,34 @@ export default function BrowseJobsSection({
                                             </div>
                                             <span className={`px-3 py-1 rounded-full text-xs font-semibold ${job.status === 'pending' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
                                                 job.status === 'accepted' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
-                                                    job.status === 'confirmed' ? 'bg-[#F8F9FA] text-green-700 border border-green-200' :
+                                                    job.status === 'confirmed' ? 'bg-gray-50 dark:bg-gray-900 text-green-700 border border-green-200' :
                                                         job.status === 'completed' ? 'bg-red-50 text-red-700 border border-red-200' :
-                                                            'bg-[#F8F9FA] text-gray-700 border border-gray-200'
+                                                            'bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700'
                                                 }`}>
                                                 {job.status.charAt(0).toUpperCase() + job.status.slice(1)}
                                             </span>
                                         </div>
 
-                                        <p className="text-sm text-gray-600 line-clamp-2 mb-4 leading-relaxed">
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 line-clamp-2 mb-4 leading-relaxed">
                                             {job.description}
                                         </p>
 
                                         <div className="flex flex-wrap gap-2 mb-4">
-                                            <div className="flex items-center gap-1 px-3 py-1.5 bg-[#F8F9FA] rounded-lg text-xs text-gray-700 border border-gray-200">
+                                            <div className="flex items-center gap-1 px-3 py-1.5 bg-gray-50 dark:bg-gray-900 rounded-lg text-xs text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
                                                 <Tag className="w-3.5 h-3.5" />
                                                 {job.category}
                                             </div>
-                                            <div className="flex items-center gap-1 px-3 py-1.5 bg-[#F8F9FA] rounded-lg text-xs text-gray-700 border border-gray-200">
+                                            <div className="flex items-center gap-1 px-3 py-1.5 bg-gray-50 dark:bg-gray-900 rounded-lg text-xs text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
                                                 <MapPin className="w-3.5 h-3.5" />
                                                 {job.location}
                                             </div>
-                                            <div className="flex items-center gap-1 px-3 py-1.5 bg-[#F8F9FA] rounded-lg text-xs font-bold text-[#FF6B35] border border-green-200">
+                                            <div className="flex items-center gap-1 px-3 py-1.5 bg-gray-50 dark:bg-gray-900 rounded-lg text-xs font-bold text-[#FF6B35] border border-green-200">
                                                 <DollarSign className="w-3.5 h-3.5" />
                                                 {job.budget}
                                             </div>
                                         </div>
 
-                                        <div className="flex items-center justify-between text-xs text-gray-500 pt-3 border-t border-gray-100">
+                                        <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-500 pt-3 border-t border-gray-100 dark:border-gray-700">
                                             <div className="flex items-center gap-1">
                                                 <Calendar className="w-3.5 h-3.5" />
                                                 {new Date(job.createdAt).toLocaleDateString()}
@@ -350,7 +350,7 @@ export default function BrowseJobsSection({
                                                 </button>
                                             )
                                         ) : (
-                                            <div className="w-full py-3 bg-[#F8F9FA] text-gray-600 rounded-xl text-sm font-semibold text-center border border-gray-200 flex items-center justify-center gap-1">
+                                            <div className="w-full py-3 bg-gray-50 dark:bg-gray-900 text-gray-600 dark:text-gray-400 dark:text-gray-500 rounded-xl text-sm font-semibold text-center border border-gray-200 dark:border-gray-700 flex items-center justify-center gap-1">
                                                 <Lock className="w-4 h-4" />
                                                 Workers Only
                                             </div>
@@ -361,12 +361,12 @@ export default function BrowseJobsSection({
                         })}
                     </div>
                 ) : (
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center">
-                        <div className="w-24 h-24 bg-[#F8F9FA] rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-12 text-center">
+                        <div className="w-24 h-24 bg-gray-50 dark:bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-4">
                             <Briefcase className="w-16 h-16 text-gray-300" />
                         </div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-2">No Jobs Available</h3>
-                        <p className="text-gray-600">Check back later for new opportunities</p>
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">No Jobs Available</h3>
+                        <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500">Check back later for new opportunities</p>
                     </div>
                 )}
             </div>

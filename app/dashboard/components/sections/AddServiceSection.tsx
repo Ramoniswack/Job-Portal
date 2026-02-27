@@ -216,20 +216,20 @@ export default function AddServiceSection({ token }: AddServiceSectionProps) {
     return (
         <div className="p-8">
             <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">Add New Service</h2>
-                <p className="text-gray-500 mt-1">Create a new service offering for your platform</p>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Add New Service</h2>
+                <p className="text-gray-500 dark:text-gray-500 mt-1">Create a new service offering for your platform</p>
             </div>
 
-            <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-sm p-6 space-y-6">
+            <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-lg shadow-sm p-6 space-y-6">
                 {/* Basic Information */}
                 <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
                         <span className="material-symbols-outlined text-[#f97316]">info</span>
                         Basic Information
                     </h3>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Service Title <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -237,29 +237,29 @@ export default function AddServiceSection({ token }: AddServiceSectionProps) {
                             required
                             value={formData.title}
                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-gray-900 focus:outline-none"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:border-gray-900 focus:outline-none"
                             placeholder="e.g., Professional Home Cleaning Service"
                         />
-                        <p className="text-xs text-gray-500 mt-1">A clear, descriptive title for your service</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">A clear, descriptive title for your service</p>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Short Description
                         </label>
                         <input
                             type="text"
                             value={formData.shortDescription}
                             onChange={(e) => setFormData({ ...formData, shortDescription: e.target.value })}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-gray-900 focus:outline-none"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:border-gray-900 focus:outline-none"
                             placeholder="Brief one-line description"
                             maxLength={100}
                         />
-                        <p className="text-xs text-gray-500 mt-1">Short summary shown in service cards (max 100 characters)</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">Short summary shown in service cards (max 100 characters)</p>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Full Description <span className="text-red-500">*</span>
                         </label>
                         <textarea
@@ -267,22 +267,22 @@ export default function AddServiceSection({ token }: AddServiceSectionProps) {
                             value={formData.description}
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                             rows={5}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-gray-900 focus:outline-none"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:border-gray-900 focus:outline-none"
                             placeholder="Detailed description of the service, what's included, benefits, etc."
                         />
-                        <p className="text-xs text-gray-500 mt-1">Comprehensive details about the service</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">Comprehensive details about the service</p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Parent Category <span className="text-red-500">*</span>
                             </label>
                             <select
                                 required
                                 value={selectedParent}
                                 onChange={(e) => setSelectedParent(e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-gray-900 focus:outline-none"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:border-gray-900 focus:outline-none"
                             >
                                 <option value="">Select Parent Category</option>
                                 {parentCategories.map((cat) => (
@@ -291,11 +291,11 @@ export default function AddServiceSection({ token }: AddServiceSectionProps) {
                                     </option>
                                 ))}
                             </select>
-                            <p className="text-xs text-gray-500 mt-1">Select the main category first</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">Select the main category first</p>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Sub Category <span className="text-red-500">*</span>
                             </label>
                             <select
@@ -303,7 +303,7 @@ export default function AddServiceSection({ token }: AddServiceSectionProps) {
                                 value={formData.category}
                                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                                 disabled={!selectedParent}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-gray-900 focus:outline-none disabled:bg-[#F1F3F5] disabled:cursor-not-allowed"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:border-gray-900 focus:outline-none disabled:bg-[#F1F3F5] disabled:cursor-not-allowed"
                             >
                                 <option value="">
                                     {selectedParent ? 'Select Sub Category' : 'Select parent first'}
@@ -314,7 +314,7 @@ export default function AddServiceSection({ token }: AddServiceSectionProps) {
                                     </option>
                                 ))}
                             </select>
-                            <p className="text-xs text-gray-500 mt-1">
+                            <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
                                 {selectedParent
                                     ? 'Select the specific subcategory'
                                     : 'Choose a parent category first'}
@@ -323,7 +323,7 @@ export default function AddServiceSection({ token }: AddServiceSectionProps) {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Location <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -331,23 +331,23 @@ export default function AddServiceSection({ token }: AddServiceSectionProps) {
                             required
                             value={formData.location}
                             onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-gray-900 focus:outline-none"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:border-gray-900 focus:outline-none"
                             placeholder="e.g., Kathmandu, Pokhara, Lalitpur"
                         />
-                        <p className="text-xs text-gray-500 mt-1">Enter the city where this service is available</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">Enter the city where this service is available</p>
                     </div>
                 </div>
 
                 {/* Pricing */}
                 <div className="space-y-4 pt-6 border-t">
-                    <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
                         <span className="material-symbols-outlined text-[#f97316]">payments</span>
                         Pricing
                     </h3>
 
                     <div className="grid grid-cols-3 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Price (NPR) <span className="text-red-500">*</span>
                             </label>
                             <input
@@ -357,13 +357,13 @@ export default function AddServiceSection({ token }: AddServiceSectionProps) {
                                 step="0.01"
                                 value={formData.price}
                                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-gray-900 focus:outline-none"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:border-gray-900 focus:outline-none"
                                 placeholder="0.00"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Original Price (NPR)
                             </label>
                             <input
@@ -372,14 +372,14 @@ export default function AddServiceSection({ token }: AddServiceSectionProps) {
                                 step="0.01"
                                 value={formData.originalPrice}
                                 onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-gray-900 focus:outline-none"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:border-gray-900 focus:outline-none"
                                 placeholder="0.00"
                             />
-                            <p className="text-xs text-gray-500 mt-1">For showing discounts</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">For showing discounts</p>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Discount (%)
                             </label>
                             <input
@@ -388,30 +388,30 @@ export default function AddServiceSection({ token }: AddServiceSectionProps) {
                                 max="100"
                                 value={formData.discount}
                                 onChange={(e) => setFormData({ ...formData, discount: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-gray-900 focus:outline-none"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:border-gray-900 focus:outline-none"
                                 placeholder="0"
                             />
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Price Unit
                         </label>
                         <select
                             value={formData.priceUnit}
                             onChange={(e) => setFormData({ ...formData, priceUnit: e.target.value as any })}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-gray-900 focus:outline-none"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:border-gray-900 focus:outline-none"
                         >
                             <option value="fixed">Fixed Price</option>
                             <option value="hourly">Per Hour</option>
                             <option value="daily">Per Day</option>
                         </select>
-                        <p className="text-xs text-gray-500 mt-1">How the price is calculated</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">How the price is calculated</p>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Rating (0-5)
                         </label>
                         <input
@@ -421,20 +421,20 @@ export default function AddServiceSection({ token }: AddServiceSectionProps) {
                             step="0.1"
                             value={formData.rating}
                             onChange={(e) => setFormData({ ...formData, rating: e.target.value })}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-gray-900 focus:outline-none"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:border-gray-900 focus:outline-none"
                             placeholder="4.5"
                         />
-                        <p className="text-xs text-gray-500 mt-1">Service rating (0 to 5 stars)</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">Service rating (0 to 5 stars)</p>
                     </div>
                 </div>
 
                 {/* Images */}
                 <div className="space-y-4 pt-6 border-t">
-                    <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
                         <span className="material-symbols-outlined text-[#f97316]">image</span>
                         Service Images
                     </h3>
-                    <p className="text-sm text-gray-500">Upload up to 5 images. First image will be the primary/thumbnail image.</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-500">Upload up to 5 images. First image will be the primary/thumbnail image.</p>
 
                     <ImageUpload
                         onUploadComplete={handleImageUpload}
@@ -446,7 +446,7 @@ export default function AddServiceSection({ token }: AddServiceSectionProps) {
                     {/* Display uploaded images */}
                     {formData.images.filter(img => img).length > 0 && (
                         <div className="mt-4">
-                            <p className="text-sm font-medium text-gray-700 mb-2">
+                            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Uploaded Images ({formData.images.filter(img => img).length})
                             </p>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -455,7 +455,7 @@ export default function AddServiceSection({ token }: AddServiceSectionProps) {
                                         <img
                                             src={imageUrl}
                                             alt={`Service ${index + 1}`}
-                                            className="w-full h-32 object-cover rounded-lg border-2 border-gray-200"
+                                            className="w-full h-32 object-cover rounded-lg border-2 border-gray-200 dark:border-gray-700"
                                         />
                                         {index === 0 && (
                                             <div className="absolute top-2 left-2 bg-[#f97316] text-white text-xs px-2 py-1 rounded">
@@ -479,7 +479,7 @@ export default function AddServiceSection({ token }: AddServiceSectionProps) {
                 {/* Features */}
                 <div className="space-y-4 pt-6 border-t">
                     <div className="flex items-center justify-between">
-                        <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
                             <span className="material-symbols-outlined text-[#f97316]">check_circle</span>
                             Features & Highlights
                         </h3>
@@ -499,7 +499,7 @@ export default function AddServiceSection({ token }: AddServiceSectionProps) {
                                 type="text"
                                 value={feature}
                                 onChange={(e) => updateFeature(index, e.target.value)}
-                                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:border-gray-900 focus:outline-none"
+                                className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:border-gray-900 focus:outline-none"
                                 placeholder="e.g., Professional equipment included"
                             />
                             {formData.features.length > 1 && (
@@ -517,20 +517,20 @@ export default function AddServiceSection({ token }: AddServiceSectionProps) {
 
                 {/* Status & Settings */}
                 <div className="space-y-4 pt-6 border-t">
-                    <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
                         <span className="material-symbols-outlined text-[#f97316]">settings</span>
                         Status & Settings
                     </h3>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Status
                             </label>
                             <select
                                 value={formData.status}
                                 onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-gray-900 focus:outline-none"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:border-gray-900 focus:outline-none"
                             >
                                 <option value="draft">Draft (Not visible to public)</option>
                                 <option value="active">Active (Live and visible)</option>
@@ -544,20 +544,20 @@ export default function AddServiceSection({ token }: AddServiceSectionProps) {
                                     type="checkbox"
                                     checked={formData.featured}
                                     onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                                    className="w-4 h-4 text-[#f97316] border-gray-300 rounded focus:ring-gray-900"
+                                    className="w-4 h-4 text-[#f97316] border-gray-300 dark:border-gray-600 rounded focus:ring-gray-900"
                                 />
-                                <span className="text-sm font-medium text-gray-700">Featured Service</span>
-                                <span className="text-xs text-gray-500">(Shows in Featured section)</span>
+                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Featured Service</span>
+                                <span className="text-xs text-gray-500 dark:text-gray-500">(Shows in Featured section)</span>
                             </label>
                             <label className="flex items-center gap-2 cursor-pointer">
                                 <input
                                     type="checkbox"
                                     checked={formData.popular}
                                     onChange={(e) => setFormData({ ...formData, popular: e.target.checked })}
-                                    className="w-4 h-4 text-[#f97316] border-gray-300 rounded focus:ring-gray-900"
+                                    className="w-4 h-4 text-[#f97316] border-gray-300 dark:border-gray-600 rounded focus:ring-gray-900"
                                 />
-                                <span className="text-sm font-medium text-gray-700">Popular Service</span>
-                                <span className="text-xs text-gray-500">(Shows in Popular section)</span>
+                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Popular Service</span>
+                                <span className="text-xs text-gray-500 dark:text-gray-500">(Shows in Popular section)</span>
                             </label>
                         </div>
                     </div>
@@ -586,7 +586,7 @@ export default function AddServiceSection({ token }: AddServiceSectionProps) {
                         type="button"
                         onClick={resetForm}
                         disabled={loading}
-                        className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-gray-300 bg-white hover:bg-gray-50 h-10 px-6 py-3"
+                        className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:bg-gray-900 h-10 px-6 py-3"
                     >
                         Reset Form
                     </button>

@@ -379,7 +379,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
     const getStatusBadge = (status: string) => {
         const styles = {
             active: 'bg-[#F1F3F5] text-green-800',
-            inactive: 'bg-[#F1F3F5] text-gray-800',
+            inactive: 'bg-[#F1F3F5] text-gray-800 dark:text-gray-100',
             draft: 'bg-yellow-100 text-yellow-800'
         };
         return styles[status as keyof typeof styles] || styles.draft;
@@ -390,27 +390,27 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
             <div className="p-8">
                 <div className="mb-6 flex items-center justify-between">
                     <div>
-                        <h2 className="text-2xl font-bold text-gray-900">
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300 ">
                             {editingService ? 'Edit Service' : 'Add New Service'}
                         </h2>
-                        <p className="text-gray-500 mt-1">Fill in the service details below</p>
+                        <p className="text-gray-500 dark:text-gray-500 mt-1 transition-colors duration-300 ">Fill in the service details below</p>
                     </div>
                     <button
                         onClick={resetForm}
-                        className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900"
+                        className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-gray-100 transition-colors duration-300 "
                     >
                         <span className="material-symbols-outlined">close</span>
                         Cancel
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-sm p-6 space-y-6">
+                <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-lg shadow-sm p-6 space-y-6 transition-colors duration-300 ">
                     {/* Basic Information */}
                     <div className="space-y-4">
-                        <h3 className="text-lg font-semibold text-gray-900">Basic Information</h3>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 transition-colors duration-300 ">Basic Information</h3>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-300 ">
                                 Service Title *
                             </label>
                             <input
@@ -418,26 +418,26 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                 required
                                 value={formData.title}
                                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                                 placeholder="e.g., Professional Home Cleaning"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-300 ">
                                 Short Description
                             </label>
                             <input
                                 type="text"
                                 value={formData.shortDescription}
                                 onChange={(e) => setFormData({ ...formData, shortDescription: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                                 placeholder="Brief one-line description"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-300 ">
                                 Full Description *
                             </label>
                             <textarea
@@ -445,21 +445,21 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                 value={formData.description}
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                 rows={4}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                                 placeholder="Detailed description of the service"
                             />
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-300 ">
                                     Parent Category *
                                 </label>
                                 <select
                                     required
                                     value={selectedParent}
                                     onChange={(e) => setSelectedParent(e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                                 >
                                     <option value="">Select Parent Category</option>
                                     {parentCategories.map((cat) => (
@@ -471,7 +471,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-300 ">
                                     Sub Category *
                                 </label>
                                 <select
@@ -479,7 +479,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                     value={formData.category}
                                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                                     disabled={!selectedParent}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent disabled:bg-[#F1F3F5] disabled:cursor-not-allowed"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent disabled:bg-[#F1F3F5] disabled:cursor-not-allowed transition-colors duration-300 "
                                 >
                                     <option value="">
                                         {selectedParent ? 'Select Sub Category' : 'Select parent first'}
@@ -494,7 +494,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-300 ">
                                 Location *
                             </label>
                             <input
@@ -502,20 +502,20 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                 required
                                 value={formData.location}
                                 onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                                 placeholder="e.g., Kathmandu, Pokhara, Lalitpur"
                             />
-                            <p className="text-xs text-gray-500 mt-1">Enter the city where this service is available</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-500 mt-1 transition-colors duration-300 ">Enter the city where this service is available</p>
                         </div>
                     </div>
 
                     {/* Pricing */}
                     <div className="space-y-4 pt-6 border-t">
-                        <h3 className="text-lg font-semibold text-gray-900">Pricing</h3>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 transition-colors duration-300 ">Pricing</h3>
 
                         <div className="grid grid-cols-3 gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-300 ">
                                     Price (NPR) *
                                 </label>
                                 <input
@@ -525,13 +525,13 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                     step="0.01"
                                     value={formData.price}
                                     onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                                     placeholder="0.00"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-300 ">
                                     Original Price (NPR)
                                 </label>
                                 <input
@@ -540,13 +540,13 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                     step="0.01"
                                     value={formData.originalPrice}
                                     onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                                     placeholder="0.00"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-300 ">
                                     Discount (%)
                                 </label>
                                 <input
@@ -555,20 +555,20 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                     max="100"
                                     value={formData.discount}
                                     onChange={(e) => setFormData({ ...formData, discount: e.target.value })}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                                     placeholder="0"
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-300 ">
                                 Price Unit
                             </label>
                             <select
                                 value={formData.priceUnit}
                                 onChange={(e) => setFormData({ ...formData, priceUnit: e.target.value as any })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                             >
                                 <option value="fixed">Fixed Price</option>
                                 <option value="hourly">Per Hour</option>
@@ -577,7 +577,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-300 ">
                                 Rating (0-5)
                             </label>
                             <input
@@ -587,7 +587,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                 step="0.1"
                                 value={formData.rating}
                                 onChange={(e) => setFormData({ ...formData, rating: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                                 placeholder="4.5"
                             />
                         </div>
@@ -595,8 +595,8 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
 
                     {/* Images */}
                     <div className="space-y-4 pt-6 border-t">
-                        <h3 className="text-lg font-semibold text-gray-900">Service Images</h3>
-                        <p className="text-sm text-gray-500">Upload up to 5 images. First image will be the primary/thumbnail image.</p>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 transition-colors duration-300 ">Service Images</h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-500 transition-colors duration-300 ">Upload up to 5 images. First image will be the primary/thumbnail image.</p>
 
                         <ImageUpload
                             onUploadComplete={(imageUrl) => {
@@ -613,7 +613,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                         {/* Display uploaded images */}
                         {formData.images.length > 0 && (
                             <div className="mt-4">
-                                <p className="text-sm font-medium text-gray-700 mb-2">
+                                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300 ">
                                     Uploaded Images ({formData.images.length})
                                 </p>
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -622,7 +622,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                             <img
                                                 src={imageUrl}
                                                 alt={`Service ${index + 1}`}
-                                                className="w-full h-32 object-cover rounded-lg border-2 border-gray-200"
+                                                className="w-full h-32 object-cover rounded-lg border-2 border-gray-200 dark:border-gray-700 transition-colors duration-300 "
                                             />
                                             {index === 0 && (
                                                 <div className="absolute top-2 left-2 bg-[#FF6B35] text-white text-xs px-2 py-1 rounded">
@@ -651,7 +651,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                     {/* Features */}
                     <div className="space-y-4 pt-6 border-t">
                         <div className="flex items-center justify-between">
-                            <h3 className="text-lg font-semibold text-gray-900">Features</h3>
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 transition-colors duration-300 ">Features</h3>
                             <button
                                 type="button"
                                 onClick={addFeature}
@@ -668,7 +668,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                     type="text"
                                     value={feature}
                                     onChange={(e) => updateFeature(index, e.target.value)}
-                                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                                     placeholder="Feature description"
                                 />
                                 {formData.features.length > 1 && (
@@ -686,17 +686,17 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
 
                     {/* Status & Settings */}
                     <div className="space-y-4 pt-6 border-t">
-                        <h3 className="text-lg font-semibold text-gray-900">Status & Settings</h3>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 transition-colors duration-300 ">Status & Settings</h3>
 
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-300 ">
                                     Status
                                 </label>
                                 <select
                                     value={formData.status}
                                     onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                                 >
                                     <option value="draft">Draft</option>
                                     <option value="active">Active</option>
@@ -710,18 +710,18 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                         type="checkbox"
                                         checked={formData.featured}
                                         onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                                        className="w-4 h-4 text-[#FF6B35] border-gray-300 rounded focus:ring-[#FF6B35]"
+                                        className="w-4 h-4 text-[#FF6B35] border-gray-300 dark:border-gray-600 rounded focus:ring-[#FF6B35] transition-colors duration-300 "
                                     />
-                                    <span className="text-sm font-medium text-gray-700">Featured</span>
+                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300 ">Featured</span>
                                 </label>
                                 <label className="flex items-center gap-2 cursor-pointer">
                                     <input
                                         type="checkbox"
                                         checked={formData.popular}
                                         onChange={(e) => setFormData({ ...formData, popular: e.target.checked })}
-                                        className="w-4 h-4 text-[#FF6B35] border-gray-300 rounded focus:ring-[#FF6B35]"
+                                        className="w-4 h-4 text-[#FF6B35] border-gray-300 dark:border-gray-600 rounded focus:ring-[#FF6B35] transition-colors duration-300 "
                                     />
-                                    <span className="text-sm font-medium text-gray-700">Popular</span>
+                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300 ">Popular</span>
                                 </label>
                             </div>
                         </div>
@@ -738,7 +738,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                         <button
                             type="button"
                             onClick={resetForm}
-                            className="px-6 py-3 bg-[#F1F3F5] text-gray-700 rounded-lg hover:bg-[#E9ECEF] transition font-medium"
+                            className="px-6 py-3 bg-[#F1F3F5] text-gray-700 dark:text-gray-300 rounded-lg hover:bg-[#E9ECEF] transition font-medium transition-colors duration-300 "
                         >
                             Cancel
                         </button>
@@ -753,8 +753,8 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
             {/* Header */}
             <div className="mb-6 flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900">Services</h2>
-                    <p className="text-gray-500 mt-1">Manage all services offered on the platform</p>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300 ">Services</h2>
+                    <p className="text-gray-500 dark:text-gray-500 mt-1 transition-colors duration-300 ">Manage all services offered on the platform</p>
                 </div>
                 <button
                     onClick={() => setShowForm(true)}
@@ -766,7 +766,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
             </div>
 
             {/* Filters */}
-            <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
+            <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-lg shadow-sm p-4 mb-6 transition-colors duration-300 ">
                 <div className="grid grid-cols-3 gap-4">
                     <div>
                         <input
@@ -774,14 +774,14 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                             placeholder="Search services..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                         />
                     </div>
                     <div>
                         <select
                             value={filterStatus}
                             onChange={(e) => setFilterStatus(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                         >
                             <option value="all">All Status</option>
                             <option value="active">Active</option>
@@ -796,7 +796,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                 console.log('Filter category changed to:', e.target.value);
                                 setFilterCategory(e.target.value);
                             }}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                         >
                             <option value="all">All Categories</option>
                             {allCategories
@@ -813,14 +813,14 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
 
             {/* Services List */}
             {loading ? (
-                <div className="bg-white rounded-lg shadow-sm p-12 text-center">
+                <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-lg shadow-sm p-12 text-center transition-colors duration-300 ">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35] mx-auto"></div>
-                    <p className="mt-4 text-gray-600">Loading services...</p>
+                    <p className="mt-4 text-gray-600 dark:text-gray-400 transition-colors duration-300 ">Loading services...</p>
                 </div>
             ) : filteredServices.length === 0 ? (
-                <div className="bg-white rounded-lg shadow-sm p-12 text-center">
+                <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-lg shadow-sm p-12 text-center transition-colors duration-300 ">
                     <span className="material-symbols-outlined text-gray-300 text-6xl">inventory_2</span>
-                    <p className="mt-4 text-gray-600">No services found</p>
+                    <p className="mt-4 text-gray-600 dark:text-gray-400 transition-colors duration-300 ">No services found</p>
                     <button
                         onClick={() => setShowForm(true)}
                         className="mt-4 text-[#FF6B35] hover:text-[#FF5722] font-medium"
@@ -831,7 +831,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredServices.map((service) => (
-                        <div key={service._id} className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition">
+                        <div key={service._id} className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition transition-colors duration-300 ">
                             {/* Image */}
                             <div className="relative h-48 bg-[#E9ECEF]">
                                 {service.images[0]?.url && (
@@ -855,22 +855,27 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
 
                             {/* Content */}
                             <div className="p-4">
-                                <h3 className="font-semibold text-gray-900 mb-1 line-clamp-1">
+                                <a
+                                    href={`/service/${service.slug}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="font-semibold text-gray-900 dark:text-gray-100 mb-1 line-clamp-1 transition-colors duration-300 hover:text-[#FF6B35] cursor-pointer block"
+                                >
                                     {service.title}
-                                </h3>
+                                </a>
                                 {service.createdBy && (
-                                    <p className="text-xs text-gray-500 mb-2">
-                                        Posted by <span className="font-medium text-gray-700">{service.createdBy.name}</span>
+                                    <p className="text-xs text-gray-500 dark:text-gray-500 mb-2 transition-colors duration-300 ">
+                                        Posted by <span className="font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300 ">{service.createdBy.name}</span>
                                     </p>
                                 )}
-                                <p className="text-sm text-gray-500 mb-2">
+                                <p className="text-sm text-gray-500 dark:text-gray-500 mb-2 transition-colors duration-300 ">
                                     {service.category && typeof service.category === 'object'
                                         ? service.category.name
                                         : service.category
                                             ? 'Category'
                                             : 'No Category'}
                                 </p>
-                                <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+                                <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-3 transition-colors duration-300 ">
                                     {service.shortDescription || service.description}
                                 </p>
 
@@ -878,7 +883,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                 {service.rating > 0 && (
                                     <div className="flex items-center gap-1 mb-2">
                                         <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                                        <span className="text-sm font-medium text-gray-700">{service.rating.toFixed(1)}</span>
+                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300 ">{service.rating.toFixed(1)}</span>
                                     </div>
                                 )}
 

@@ -154,7 +154,7 @@ export default function HomeHeroSection({ token }: HomeHeroSectionProps) {
 
     if (loading) {
         return (
-            <div className="bg-white rounded-xl border border-gray-200 p-8">
+            <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-8">
                 <div className="flex items-center justify-center py-12">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35]"></div>
                 </div>
@@ -165,16 +165,16 @@ export default function HomeHeroSection({ token }: HomeHeroSectionProps) {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
+            <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h2 className="text-2xl font-bold text-gray-900">Home Hero Section</h2>
-                        <p className="text-gray-600 mt-1">Manage the main hero section on the homepage</p>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Home Hero Section</h2>
+                        <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 mt-1">Manage the main hero section on the homepage</p>
                     </div>
                     <div className="flex items-center gap-3">
                         <button
                             onClick={handleReset}
-                            className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
+                            className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg transition-colors"
                         >
                             <RefreshCw className="w-4 h-4" />
                             Reset
@@ -184,81 +184,81 @@ export default function HomeHeroSection({ token }: HomeHeroSectionProps) {
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-gray-200 p-6">
+            <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                 <div className="space-y-6">
                     {/* Title */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                             Main Title
                         </label>
                         <input
                             type="text"
                             value={formData.title}
                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                             placeholder="Find Your Dream Job Today"
                             required
                         />
-                        <p className="text-xs text-gray-500 mt-1">The main heading text displayed on the hero section</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">The main heading text displayed on the hero section</p>
                     </div>
 
                     {/* Highlighted Text */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                             Highlighted Text
                         </label>
                         <input
                             type="text"
                             value={formData.highlightedText}
                             onChange={(e) => setFormData({ ...formData, highlightedText: e.target.value })}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                             placeholder="Dream Job"
                             required
                         />
-                        <p className="text-xs text-gray-500 mt-1">The text that will be highlighted in white within the title</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">The text that will be highlighted in white within the title</p>
                     </div>
 
                     {/* Subtitle */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                             Subtitle
                         </label>
                         <input
                             type="text"
                             value={formData.subtitle}
                             onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                             placeholder="Search 27 live opportunities across Nepal • 100% Free"
                             required
                         />
-                        <p className="text-xs text-gray-500 mt-1">The subtitle text below the main title</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">The subtitle text below the main title</p>
                     </div>
 
                     {/* Search Placeholders */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                 Search Placeholder
                             </label>
                             <input
                                 type="text"
                                 value={formData.searchPlaceholder}
                                 onChange={(e) => setFormData({ ...formData, searchPlaceholder: e.target.value })}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                                 placeholder="Search by Job Title"
                                 required
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                 Location Placeholder
                             </label>
                             <input
                                 type="text"
                                 value={formData.locationPlaceholder}
                                 onChange={(e) => setFormData({ ...formData, locationPlaceholder: e.target.value })}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                                 placeholder="Location"
                                 required
                             />
@@ -267,14 +267,14 @@ export default function HomeHeroSection({ token }: HomeHeroSectionProps) {
 
                     {/* Button Text */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                             Button Text
                         </label>
                         <input
                             type="text"
                             value={formData.buttonText}
                             onChange={(e) => setFormData({ ...formData, buttonText: e.target.value })}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
                             placeholder="Search"
                             required
                         />
@@ -282,7 +282,7 @@ export default function HomeHeroSection({ token }: HomeHeroSectionProps) {
 
                     {/* Background Image */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                             <ImageIcon className="w-4 h-4 inline mr-2" />
                             Background Image
                         </label>
@@ -293,7 +293,7 @@ export default function HomeHeroSection({ token }: HomeHeroSectionProps) {
                                 <img
                                     src={formData.backgroundImage}
                                     alt="Background preview"
-                                    className="w-full h-48 object-cover rounded-lg border border-gray-300"
+                                    className="w-full h-48 object-cover rounded-lg border border-gray-300 dark:border-gray-600"
                                 />
                             </div>
                         )}
@@ -308,16 +308,16 @@ export default function HomeHeroSection({ token }: HomeHeroSectionProps) {
                                     className="hidden"
                                     disabled={uploading}
                                 />
-                                <div className={`flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed ${formData.backgroundImage ? 'border-green-300 bg-green-50' : 'border-gray-300'} rounded-lg cursor-pointer hover:border-[#FF6B35] hover:bg-[#FFF5F0] transition-colors ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                                <div className={`flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed ${formData.backgroundImage ? 'border-green-300 bg-green-50' : 'border-gray-300 dark:border-gray-600'} rounded-lg cursor-pointer hover:border-[#FF6B35] hover:bg-[#FFF5F0] transition-colors ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
                                     {uploading ? (
                                         <>
                                             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-[#FF6B35]"></div>
-                                            <span className="text-sm text-gray-600">Uploading...</span>
+                                            <span className="text-sm text-gray-600 dark:text-gray-400">Uploading...</span>
                                         </>
                                     ) : (
                                         <>
                                             <ImageIcon className="w-5 h-5 text-[#FF6B35]" />
-                                            <span className="text-sm font-medium text-gray-700">
+                                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                                                 {formData.backgroundImage ? 'Change Image' : 'Click to Upload Image'}
                                             </span>
                                         </>
@@ -333,12 +333,12 @@ export default function HomeHeroSection({ token }: HomeHeroSectionProps) {
                             required
                         />
 
-                        <p className="text-xs text-gray-500 mt-2">Upload an image (max 5MB, JPG, PNG, GIF)</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">Upload an image (max 5MB, JPG, PNG, GIF)</p>
                     </div>
 
                     {/* Overlay Opacity */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                             Overlay Opacity: {formData.overlayOpacity}
                         </label>
                         <input
@@ -350,15 +350,15 @@ export default function HomeHeroSection({ token }: HomeHeroSectionProps) {
                             onChange={(e) => setFormData({ ...formData, overlayOpacity: parseFloat(e.target.value) })}
                             className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                         />
-                        <div className="flex justify-between text-xs text-gray-500 mt-1">
+                        <div className="flex justify-between text-xs text-gray-500 dark:text-gray-500 mt-1">
                             <span>Transparent (0)</span>
                             <span>Dark (1)</span>
                         </div>
                     </div>
 
                     {/* Preview */}
-                    <div className="border-t border-gray-200 pt-6">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Preview</h3>
+                    <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Preview</h3>
                         <div
                             className="relative h-64 rounded-lg overflow-hidden"
                             style={{
@@ -373,7 +373,7 @@ export default function HomeHeroSection({ token }: HomeHeroSectionProps) {
                                     <span className="text-white">{formData.highlightedText}</span>
                                 </h1>
                                 <p className="text-sm mb-4 text-center">{formData.subtitle}</p>
-                                <div className="bg-white rounded-full px-4 py-2 text-xs text-gray-600 flex items-center gap-2">
+                                <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-full px-4 py-2 text-xs text-gray-600 dark:text-gray-400 flex items-center gap-2">
                                     <span>{formData.searchPlaceholder}</span>
                                     <span>|</span>
                                     <span>{formData.locationPlaceholder}</span>
@@ -386,7 +386,7 @@ export default function HomeHeroSection({ token }: HomeHeroSectionProps) {
                     </div>
 
                     {/* Submit Button */}
-                    <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                    <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
                         <button
                             type="submit"
                             disabled={saving}

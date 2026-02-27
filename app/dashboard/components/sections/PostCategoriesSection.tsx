@@ -129,8 +129,8 @@ export default function PostCategoriesSection({ token }: PostCategoriesSectionPr
         <div className="p-8">
             <div className="mb-6 flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 mb-2">Post Categories</h1>
-                    <p className="text-gray-600">Manage blog post categories (not service categories)</p>
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2 transition-colors duration-300 ">Post Categories</h1>
+                    <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 transition-colors duration-300 ">Manage blog post categories (not service categories)</p>
                 </div>
                 <button
                     onClick={() => setShowModal(true)}
@@ -144,12 +144,12 @@ export default function PostCategoriesSection({ token }: PostCategoriesSectionPr
             {loading ? (
                 <div className="text-center py-12">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35] mx-auto"></div>
-                    <p className="mt-4 text-gray-600">Loading categories...</p>
+                    <p className="mt-4 text-gray-600 dark:text-gray-400 dark:text-gray-500 transition-colors duration-300 ">Loading categories...</p>
                 </div>
             ) : (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {categories.map((category) => (
-                        <div key={category._id} className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition">
+                        <div key={category._id} className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-lg shadow-sm p-6 hover:shadow-md transition transition-colors duration-300 ">
                             <div className="flex items-start justify-between mb-4">
                                 <div className="flex items-center gap-3">
                                     <span
@@ -159,16 +159,16 @@ export default function PostCategoriesSection({ token }: PostCategoriesSectionPr
                                         {category.icon}
                                     </span>
                                     <div>
-                                        <h3 className="font-bold text-gray-900">{category.name}</h3>
-                                        <p className="text-sm text-gray-500">{category.slug}</p>
+                                        <h3 className="font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300 ">{category.name}</h3>
+                                        <p className="text-sm text-gray-500 dark:text-gray-500 transition-colors duration-300 ">{category.slug}</p>
                                     </div>
                                 </div>
-                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${category.status === 'active' ? 'bg-[#F1F3F5] text-green-700' : 'bg-[#F1F3F5] text-gray-700'
+                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${category.status === 'active' ? 'bg-[#F1F3F5] text-green-700' : 'bg-[#F1F3F5] text-gray-700 dark:text-gray-300'
                                     }`}>
                                     {category.status}
                                 </span>
                             </div>
-                            <p className="text-gray-600 text-sm mb-4">{category.description || 'No description'}</p>
+                            <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 text-sm mb-4 transition-colors duration-300 ">{category.description || 'No description'}</p>
                             <div className="flex gap-2">
                                 <button
                                     onClick={() => handleEdit(category)}
@@ -191,57 +191,57 @@ export default function PostCategoriesSection({ token }: PostCategoriesSectionPr
             {/* Modal */}
             {showModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-lg max-w-md w-full p-6">
+                    <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-lg max-w-md w-full p-6 transition-colors duration-300 ">
                         <h2 className="text-xl font-bold mb-4">
                             {editingCategory ? 'Edit Category' : 'Add New Category'}
                         </h2>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Name *</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300 ">Name *</label>
                                 <input
                                     type="text"
                                     required
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300 ">Description</label>
                                 <textarea
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                     rows={3}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                                 />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Icon</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300 ">Icon</label>
                                     <input
                                         type="text"
                                         value={formData.icon}
                                         onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                                         placeholder="category"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Color</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300 ">Color</label>
                                     <input
                                         type="color"
                                         value={formData.color}
                                         onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-                                        className="w-full h-10 border border-gray-300 rounded-lg"
+                                        className="w-full h-10 border border-gray-300 dark:border-gray-600 rounded-lg transition-colors duration-300 "
                                     />
                                 </div>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300 ">Status</label>
                                 <select
                                     value={formData.status}
                                     onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                                 >
                                     <option value="active">Active</option>
                                     <option value="inactive">Inactive</option>
@@ -257,7 +257,7 @@ export default function PostCategoriesSection({ token }: PostCategoriesSectionPr
                                 <button
                                     type="button"
                                     onClick={closeModal}
-                                    className="flex-1 px-4 py-2 bg-[#F1F3F5] text-gray-700 rounded-lg hover:bg-[#E9ECEF] transition"
+                                    className="flex-1 px-4 py-2 bg-[#F1F3F5] text-gray-700 dark:text-gray-300 rounded-lg hover:bg-[#E9ECEF] transition transition-colors duration-300 "
                                 >
                                     Cancel
                                 </button>

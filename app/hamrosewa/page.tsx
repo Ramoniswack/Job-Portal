@@ -9,7 +9,7 @@ import ServicesSection from './sections/ServicesSection';
 import AddServiceSection from './sections/AddServiceSection';
 import UsersSection from './sections/UsersSection';
 import JobsSection from './sections/JobsSection';
-import DashboardSection from './sections/DashboardSection';
+import EnhancedDashboardSection from './sections/EnhancedDashboardSection';
 import AMCPackagesSection from './sections/AMCPackagesSection';
 import ServicesHeroSection from './sections/ServicesHeroSection';
 import ServiceBookingsSection from './sections/ServiceBookingsSection';
@@ -85,10 +85,10 @@ export default function AdminDashboard() {
 
     if (!currentUser) {
         return (
-            <div className="min-h-screen bg-[#F8F9FA] flex items-center justify-center">
+            <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35] mx-auto"></div>
-                    <p className="mt-4 text-gray-600">Loading...</p>
+                    <p className="mt-4 text-gray-600 dark:text-gray-400">Loading...</p>
                 </div>
             </div>
         );
@@ -100,7 +100,7 @@ export default function AdminDashboard() {
                 onClick={() => handleSectionChange('dashboard')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'dashboard'
                     ? 'bg-gray-800 text-white'
-                    : 'text-gray-900 hover:bg-gray-100'
+                    : 'text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:bg-gray-800'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">dashboard</span>
@@ -111,7 +111,7 @@ export default function AdminDashboard() {
                 onClick={() => handleSectionChange('home-hero')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'home-hero'
                     ? 'bg-gray-800 text-white'
-                    : 'text-gray-900 hover:bg-gray-100'
+                    : 'text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:bg-gray-800'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">home</span>
@@ -122,7 +122,7 @@ export default function AdminDashboard() {
                 onClick={() => handleSectionChange('services-hero')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'services-hero'
                     ? 'bg-gray-800 text-white'
-                    : 'text-gray-900 hover:bg-gray-100'
+                    : 'text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:bg-gray-800'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">image</span>
@@ -133,7 +133,7 @@ export default function AdminDashboard() {
                 onClick={() => handleSectionChange('service-bookings')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'service-bookings'
                     ? 'bg-gray-800 text-white'
-                    : 'text-gray-900 hover:bg-gray-100'
+                    : 'text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:bg-gray-800'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">book_online</span>
@@ -144,7 +144,7 @@ export default function AdminDashboard() {
                 onClick={() => handleSectionChange('amc-bookings')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'amc-bookings'
                     ? 'bg-gray-800 text-white'
-                    : 'text-gray-900 hover:bg-gray-100'
+                    : 'text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:bg-gray-800'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">inventory_2</span>
@@ -155,7 +155,7 @@ export default function AdminDashboard() {
                 onClick={() => handleSectionChange('messages')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'messages'
                     ? 'bg-gray-800 text-white'
-                    : 'text-gray-900 hover:bg-gray-100'
+                    : 'text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:bg-gray-800'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">chat</span>
@@ -171,7 +171,7 @@ export default function AdminDashboard() {
                 onClick={() => handleSectionChange('add-service')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'add-service'
                     ? 'bg-gray-800 text-white'
-                    : 'text-gray-900 hover:bg-gray-100'
+                    : 'text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:bg-gray-800'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">add_circle</span>
@@ -182,7 +182,7 @@ export default function AdminDashboard() {
                 onClick={() => handleSectionChange('services')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'services'
                     ? 'bg-gray-800 text-white'
-                    : 'text-gray-900 hover:bg-gray-100'
+                    : 'text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:bg-gray-800'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">inventory_2</span>
@@ -193,7 +193,7 @@ export default function AdminDashboard() {
                 onClick={() => handleSectionChange('service-categories')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'service-categories'
                     ? 'bg-gray-800 text-white'
-                    : 'text-gray-900 hover:bg-gray-100'
+                    : 'text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:bg-gray-800'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">category</span>
@@ -201,13 +201,13 @@ export default function AdminDashboard() {
             </button>
 
             {/* Separator Line */}
-            <div className="my-4 border-t border-gray-200"></div>
+            <div className="my-4 border-t border-gray-200 dark:border-gray-700"></div>
 
             <button
                 onClick={() => handleSectionChange('users')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'users'
                     ? 'bg-gray-800 text-white'
-                    : 'text-gray-900 hover:bg-gray-100'
+                    : 'text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:bg-gray-800'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">group</span>
@@ -218,7 +218,7 @@ export default function AdminDashboard() {
                 onClick={() => handleSectionChange('jobs')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'jobs'
                     ? 'bg-gray-800 text-white'
-                    : 'text-gray-900 hover:bg-gray-100'
+                    : 'text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:bg-gray-800'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">work_outline</span>
@@ -229,7 +229,7 @@ export default function AdminDashboard() {
                 onClick={() => handleSectionChange('amc-packages')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'amc-packages'
                     ? 'bg-gray-800 text-white'
-                    : 'text-gray-900 hover:bg-gray-100'
+                    : 'text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:bg-gray-800'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">inventory</span>
@@ -240,7 +240,7 @@ export default function AdminDashboard() {
                 onClick={() => handleSectionChange('testimonials')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'testimonials'
                     ? 'bg-gray-800 text-white'
-                    : 'text-gray-900 hover:bg-gray-100'
+                    : 'text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:bg-gray-800'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">rate_review</span>
@@ -251,7 +251,7 @@ export default function AdminDashboard() {
                 onClick={() => handleSectionChange('settings')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'settings'
                     ? 'bg-gray-800 text-white'
-                    : 'text-gray-900 hover:bg-gray-100'
+                    : 'text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:bg-gray-800'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">settings</span>
@@ -261,9 +261,9 @@ export default function AdminDashboard() {
     );
 
     return (
-        <div className="min-h-screen bg-[#F8F9FA]">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
             {/* Top Navbar */}
-            <nav className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50 h-16">
+            <nav className="fixed top-0 left-0 right-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 z-50 h-16">
                 <div className="h-full px-4 lg:px-6 flex items-center justify-between">
                     {/* Left: Logo and Brand */}
                     <div className="flex items-center gap-4 lg:gap-8">
@@ -272,7 +272,7 @@ export default function AdminDashboard() {
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                             className="lg:hidden p-2 hover:bg-[#F1F3F5] rounded-lg transition-colors"
                         >
-                            {isMobileMenuOpen ? <X className="w-6 h-6 text-gray-600" /> : <Menu className="w-6 h-6 text-gray-600" />}
+                            {isMobileMenuOpen ? <X className="w-6 h-6 text-gray-600 dark:text-gray-400" /> : <Menu className="w-6 h-6 text-gray-600 dark:text-gray-400" />}
                         </button>
 
                         <a href="/" className="flex items-center gap-3">
@@ -281,7 +281,7 @@ export default function AdminDashboard() {
 
                         {/* Navigation Links */}
                         <div className="hidden md:flex items-center gap-6">
-                            <a href="/" className="text-sm font-medium text-gray-600 hover:text-[#FF6B35] transition-colors">
+                            <a href="/" className="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#FF6B35] transition-colors">
                                 Home
                             </a>
                             <span className="text-sm font-medium text-[#FF6B35]">
@@ -293,23 +293,23 @@ export default function AdminDashboard() {
                     {/* Right: User Info and Actions */}
                     <div className="flex items-center gap-2 lg:gap-4">
                         {/* User Role Badge */}
-                        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-[#F8F9FA] rounded-lg">
-                            <span className="material-symbols-outlined text-gray-900 text-[18px]">
+                        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                            <span className="material-symbols-outlined text-gray-900 dark:text-gray-100 text-[18px]">
                                 admin_panel_settings
                             </span>
-                            <span className="text-sm font-medium text-gray-900 capitalize">
+                            <span className="text-sm font-medium text-gray-900 dark:text-gray-100 capitalize">
                                 Admin
                             </span>
                         </div>
 
                         {/* User Menu */}
-                        <div className="flex items-center gap-2 lg:gap-3 px-2 lg:px-3 py-2 bg-[#F8F9FA] rounded-lg">
+                        <div className="flex items-center gap-2 lg:gap-3 px-2 lg:px-3 py-2 bg-gray-50 dark:bg-gray-900 rounded-lg">
                             <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold text-sm">
                                 {currentUser.name.charAt(0).toUpperCase()}
                             </div>
                             <div className="hidden md:block">
-                                <p className="text-sm font-semibold text-gray-900">{currentUser.name}</p>
-                                <p className="text-xs text-gray-500">{currentUser.email}</p>
+                                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{currentUser.name}</p>
+                                <p className="text-xs text-gray-500 dark:text-gray-500">{currentUser.email}</p>
                             </div>
                         </div>
 
@@ -317,22 +317,22 @@ export default function AdminDashboard() {
                         <div className="relative" ref={dropdownRef}>
                             <button
                                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                className="flex items-center gap-2 px-3 lg:px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors text-sm font-medium"
+                                className="flex items-center gap-2 px-3 lg:px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg transition-colors text-sm font-medium"
                             >
                                 <span className="material-symbols-outlined text-[18px]">settings</span>
                                 <span className="hidden sm:inline">Settings</span>
                             </button>
 
                             {isDropdownOpen && (
-                                <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                                <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
                                     <button
                                         onClick={() => {
                                             setIsDropdownOpen(false);
                                             setIsProfileModalOpen(true);
                                         }}
-                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-900 transition-colors"
                                     >
-                                        <span className="material-symbols-outlined text-[20px] text-gray-900">manage_accounts</span>
+                                        <span className="material-symbols-outlined text-[20px] text-gray-900 dark:text-gray-100">manage_accounts</span>
                                         <span className="font-medium">Manage Profile</span>
                                     </button>
                                     <div className="border-t border-gray-100 my-1"></div>
@@ -364,10 +364,10 @@ export default function AdminDashboard() {
                 )}
 
                 {/* Desktop Sidebar */}
-                <aside className="hidden lg:flex w-64 bg-white border-r border-gray-200 flex-col fixed h-[calc(100vh-4rem)] top-16 z-40">
-                    <div className="p-6 flex items-center gap-3 border-b border-gray-200">
-                        <span className="material-symbols-outlined text-gray-800 text-[24px]">dashboard</span>
-                        <h2 className="text-gray-800 text-lg font-bold tracking-tight">Navigation</h2>
+                <aside className="hidden lg:flex w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex-col fixed h-[calc(100vh-4rem)] top-16 z-40">
+                    <div className="p-6 flex items-center gap-3 border-b border-gray-200 dark:border-gray-700">
+                        <span className="material-symbols-outlined text-gray-800 dark:text-gray-100 text-[24px]">dashboard</span>
+                        <h2 className="text-gray-800 dark:text-gray-100 text-lg font-bold tracking-tight">Navigation</h2>
                     </div>
 
                     <div className="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
@@ -377,12 +377,12 @@ export default function AdminDashboard() {
 
                 {/* Mobile Sidebar */}
                 <aside
-                    className={`lg:hidden fixed top-16 left-0 w-64 bg-white border-r border-gray-200 flex flex-col h-[calc(100vh-4rem)] z-50 transform transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+                    className={`lg:hidden fixed top-16 left-0 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col h-[calc(100vh-4rem)] z-50 transform transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
                         }`}
                 >
-                    <div className="p-6 flex items-center gap-3 border-b border-gray-200">
-                        <span className="material-symbols-outlined text-gray-800 text-[24px]">dashboard</span>
-                        <h2 className="text-gray-800 text-lg font-bold tracking-tight">Navigation</h2>
+                    <div className="p-6 flex items-center gap-3 border-b border-gray-200 dark:border-gray-700">
+                        <span className="material-symbols-outlined text-gray-800 dark:text-gray-100 text-[24px]">dashboard</span>
+                        <h2 className="text-gray-800 dark:text-gray-100 text-lg font-bold tracking-tight">Navigation</h2>
                     </div>
 
                     <div className="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
@@ -392,25 +392,14 @@ export default function AdminDashboard() {
 
                 {/* Main Content */}
                 <main className="flex-1 lg:ml-64 min-h-screen w-full">
-                    {/* Header */}
-                    <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 h-auto lg:h-16 sticky top-0 z-40 px-4 lg:px-8 py-3 lg:py-0 flex items-center justify-between">
-                        <div className="flex-1 max-w-full lg:max-w-xl">
-                            <div className="relative group">
-                                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#FF6B35] transition-colors text-[20px]">search</span>
-                                <input
-                                    className="w-full bg-[#F8F9FA] border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-green-200 transition-all"
-                                    placeholder="Search..."
-                                    type="text"
-                                />
-                            </div>
-                        </div>
-                    </header>
-
                     {/* Content Area */}
                     <div className="p-4 lg:p-8">
                         {/* Content based on active section */}
                         {activeSection === 'dashboard' && (
-                            <DashboardSection token={token} />
+                            <EnhancedDashboardSection
+                                currentUser={currentUser}
+                                setActiveSection={setActiveSection}
+                            />
                         )}
 
                         {activeSection === 'home-hero' && (
@@ -426,7 +415,7 @@ export default function AdminDashboard() {
                         )}
 
                         {activeSection === 'amc-bookings' && (
-                            <AMCBookingsSection token={token} />
+                            <AMCBookingsSection token={token} currentUser={currentUser} />
                         )}
 
                         {activeSection === 'messages' && currentUser && (
@@ -460,9 +449,9 @@ export default function AdminDashboard() {
                         )}
 
                         {activeSection === 'settings' && (
-                            <div className="bg-white rounded-xl border border-gray-200 p-6 lg:p-8">
-                                <h2 className="text-xl font-bold text-gray-900 mb-4">Settings</h2>
-                                <p className="text-gray-600">Settings content will be added here.</p>
+                            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 lg:p-8">
+                                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Settings</h2>
+                                <p className="text-gray-600 dark:text-gray-400">Settings content will be added here.</p>
                             </div>
                         )}
 

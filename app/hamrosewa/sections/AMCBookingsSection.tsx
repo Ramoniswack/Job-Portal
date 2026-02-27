@@ -11,6 +11,11 @@ interface AMCBooking {
         _id: string;
         title: string;
         category: string;
+        createdBy?: {
+            _id: string;
+            name: string;
+            email: string;
+        };
     };
     packageTitle: string;
     tier: {
@@ -34,9 +39,15 @@ interface AMCBooking {
 
 interface AMCBookingsSectionProps {
     token: string;
+    currentUser?: {
+        _id: string;
+        name: string;
+        email: string;
+        role: string;
+    };
 }
 
-export default function AMCBookingsSection({ token }: AMCBookingsSectionProps) {
+export default function AMCBookingsSection({ token, currentUser }: AMCBookingsSectionProps) {
     const [bookings, setBookings] = useState<AMCBooking[]>([]);
     const [loading, setLoading] = useState(true);
     const [filterStatus, setFilterStatus] = useState<string>('all');
@@ -165,9 +176,9 @@ export default function AMCBookingsSection({ token }: AMCBookingsSectionProps) {
             case 'completed':
                 return 'bg-blue-100 text-blue-800 border-blue-300';
             case 'cancelled':
-                return 'bg-gray-100 text-gray-800 border-gray-300';
+                return 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 border-gray-300 dark:border-gray-600';
             default:
-                return 'bg-gray-100 text-gray-800 border-gray-300';
+                return 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 border-gray-300 dark:border-gray-600';
         }
     };
 
@@ -204,8 +215,8 @@ export default function AMCBookingsSection({ token }: AMCBookingsSectionProps) {
         <div className="p-6">
             <div className="flex items-center justify-between mb-6">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900">AMC Package Bookings</h2>
-                    <p className="text-gray-600 mt-1">Manage AMC package booking requests</p>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">AMC Package Bookings</h2>
+                    <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 mt-1">Manage AMC package booking requests</p>
                 </div>
                 <button
                     onClick={fetchBookings}
@@ -224,7 +235,7 @@ export default function AMCBookingsSection({ token }: AMCBookingsSectionProps) {
                         onClick={() => setFilterStatus(status)}
                         className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${filterStatus === status
                             ? 'bg-gray-800 text-white'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
                             }`}
                     >
                         {status.charAt(0).toUpperCase() + status.slice(1)}
@@ -237,16 +248,16 @@ export default function AMCBookingsSection({ token }: AMCBookingsSectionProps) {
 
             {/* Bookings List */}
             {filteredBookings.length === 0 ? (
-                <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
+                <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
                     <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-500">No AMC bookings found</p>
+                    <p className="text-gray-500 dark:text-gray-500">No AMC bookings found</p>
                 </div>
             ) : (
                 <div className="grid gap-4">
                     {filteredBookings.map((booking) => (
                         <div
                             key={booking._id}
-                            className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow"
+                            className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition-shadow"
                         >
                             <div className="flex flex-col lg:flex-row gap-6">
                                 {/* Package Icon */}
@@ -260,9 +271,9 @@ export default function AMCBookingsSection({ token }: AMCBookingsSectionProps) {
                                 <div className="flex-1">
                                     <div className="flex items-start justify-between mb-3">
                                         <div>
-                                            <h3 className="text-lg font-bold text-gray-900">{booking.packageTitle}</h3>
+                                            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">{booking.packageTitle}</h3>
                                             <div className="flex items-center gap-4 mt-1">
-                                                <p className="text-sm text-gray-500">
+                                                <p className="text-sm text-gray-500 dark:text-gray-500">
                                                     Booked on {new Date(booking.createdAt).toLocaleDateString('en-US', {
                                                         year: 'numeric',
                                                         month: 'long',
@@ -285,26 +296,26 @@ export default function AMCBookingsSection({ token }: AMCBookingsSectionProps) {
                                     </div>
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-                                        <div className="flex items-center gap-2 text-sm text-gray-700">
+                                        <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                                             <span className="material-symbols-outlined text-[18px] text-[#FF6B35]">person</span>
                                             <span className="font-medium">{booking.customerName}</span>
                                         </div>
-                                        <div className="flex items-center gap-2 text-sm text-gray-700">
+                                        <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                                             <Mail className="w-4 h-4 text-[#FF6B35]" />
                                             <span>{booking.customerEmail}</span>
                                         </div>
-                                        <div className="flex items-center gap-2 text-sm text-gray-700">
+                                        <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                                             <Phone className="w-4 h-4 text-[#FF6B35]" />
                                             <span>{booking.customerPhone}</span>
                                         </div>
-                                        <div className="flex items-center gap-2 text-sm text-gray-700">
+                                        <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                                             <MapPin className="w-4 h-4 text-[#FF6B35]" />
                                             <span>{booking.customerAddress}</span>
                                         </div>
                                     </div>
 
                                     {booking.notes && (
-                                        <div className="flex items-start gap-2 text-sm text-gray-700 mb-4 p-3 bg-gray-50 rounded-lg">
+                                        <div className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300 mb-4 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
                                             <FileText className="w-4 h-4 text-[#FF6B35] mt-0.5" />
                                             <div>
                                                 <span className="font-medium">Notes:</span>
@@ -315,35 +326,45 @@ export default function AMCBookingsSection({ token }: AMCBookingsSectionProps) {
 
                                     {/* Action Buttons */}
                                     <div className="flex flex-wrap gap-2">
-                                        {booking.status === 'pending' ? (
-                                            <>
-                                                <button
-                                                    onClick={() => acceptBooking(booking._id)}
-                                                    className="flex items-center gap-1 px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors font-medium"
+                                        {/* Check if current user is the package creator */}
+                                        {booking.package?.createdBy?._id === currentUser?._id ? (
+                                            // Package creator can approve/reject
+                                            booking.status === 'pending' ? (
+                                                <>
+                                                    <button
+                                                        onClick={() => acceptBooking(booking._id)}
+                                                        className="flex items-center gap-1 px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors font-medium"
+                                                    >
+                                                        <CheckCircle className="w-4 h-4" />
+                                                        Accept
+                                                    </button>
+                                                    <button
+                                                        onClick={() => rejectBooking(booking._id)}
+                                                        className="flex items-center gap-1 px-4 py-2 text-sm bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors font-medium"
+                                                    >
+                                                        <XCircle className="w-4 h-4" />
+                                                        Reject
+                                                    </button>
+                                                </>
+                                            ) : (
+                                                <select
+                                                    value={booking.status}
+                                                    onChange={(e) => updateBookingStatus(booking._id, e.target.value)}
+                                                    className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent outline-none"
                                                 >
-                                                    <CheckCircle className="w-4 h-4" />
-                                                    Accept
-                                                </button>
-                                                <button
-                                                    onClick={() => rejectBooking(booking._id)}
-                                                    className="flex items-center gap-1 px-4 py-2 text-sm bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors font-medium"
-                                                >
-                                                    <XCircle className="w-4 h-4" />
-                                                    Reject
-                                                </button>
-                                            </>
+                                                    <option value="pending">Pending</option>
+                                                    <option value="approved">Approved</option>
+                                                    <option value="rejected">Rejected</option>
+                                                    <option value="completed">Completed</option>
+                                                    <option value="cancelled">Cancelled</option>
+                                                </select>
+                                            )
                                         ) : (
-                                            <select
-                                                value={booking.status}
-                                                onChange={(e) => updateBookingStatus(booking._id, e.target.value)}
-                                                className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent outline-none"
-                                            >
-                                                <option value="pending">Pending</option>
-                                                <option value="approved">Approved</option>
-                                                <option value="rejected">Rejected</option>
-                                                <option value="completed">Completed</option>
-                                                <option value="cancelled">Cancelled</option>
-                                            </select>
+                                            // Other admins can only view the status
+                                            <span className={`flex items-center gap-1 px-4 py-2 text-sm rounded-lg font-medium ${getStatusColor(booking.status)}`}>
+                                                {getStatusIcon(booking.status)}
+                                                Status: {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                                            </span>
                                         )}
 
                                         <button

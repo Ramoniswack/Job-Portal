@@ -10,6 +10,11 @@ interface AMCBooking {
         _id: string;
         title: string;
         cardImage: string;
+        createdBy?: {
+            _id: string;
+            name: string;
+            email: string;
+        };
     };
     customer?: {
         _id: string;
@@ -183,11 +188,11 @@ export default function MyAMCBookingsSection({ token }: MyAMCBookingsSectionProp
 
     const getStatusBadge = (status: string) => {
         const styles = {
-            pending: 'bg-gray-100 text-gray-700 border border-gray-300',
+            pending: 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600',
             approved: 'bg-green-50 text-green-600 border border-green-200',
             rejected: 'bg-red-50 text-red-600 border border-red-200',
             completed: 'bg-blue-50 text-blue-600 border border-blue-200',
-            cancelled: 'bg-gray-100 text-gray-600 border border-gray-300'
+            cancelled: 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 dark:text-gray-500 border border-gray-300 dark:border-gray-600'
         };
         return styles[status as keyof typeof styles] || styles.pending;
     };
@@ -209,18 +214,18 @@ export default function MyAMCBookingsSection({ token }: MyAMCBookingsSectionProp
     return (
         <div className="p-8">
             <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">My AMC Bookings</h2>
-                <p className="text-gray-500 mt-1">View your bookings and manage package requests</p>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">My AMC Bookings</h2>
+                <p className="text-gray-500 dark:text-gray-500 mt-1">View your bookings and manage package requests</p>
             </div>
 
             {/* Tabs */}
-            <div className="mb-6 border-b border-gray-200">
+            <div className="mb-6 border-b border-gray-200 dark:border-gray-700">
                 <div className="flex gap-4">
                     <button
                         onClick={() => setActiveTab('customer')}
                         className={`pb-3 px-4 font-medium transition-colors relative ${activeTab === 'customer'
                             ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]'
-                            : 'text-gray-500 hover:text-gray-700'
+                            : 'text-gray-500 dark:text-gray-500 hover:text-gray-700 dark:text-gray-300'
                             }`}
                     >
                         My Bookings
@@ -234,7 +239,7 @@ export default function MyAMCBookingsSection({ token }: MyAMCBookingsSectionProp
                         onClick={() => setActiveTab('provider')}
                         className={`pb-3 px-4 font-medium transition-colors relative ${activeTab === 'provider'
                             ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]'
-                            : 'text-gray-500 hover:text-gray-700'
+                            : 'text-gray-500 dark:text-gray-500 hover:text-gray-700 dark:text-gray-300'
                             }`}
                     >
                         My Packages
@@ -250,15 +255,15 @@ export default function MyAMCBookingsSection({ token }: MyAMCBookingsSectionProp
             {/* Customer View - My Bookings */}
             {activeTab === 'customer' && (
                 myBookings.length === 0 ? (
-                    <div className="bg-white rounded-lg shadow-sm p-12 text-center">
+                    <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-lg shadow-sm p-12 text-center">
                         <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                        <p className="mt-4 text-gray-600">You haven't booked any AMC packages yet</p>
-                        <p className="text-sm text-gray-500 mt-2">Browse available packages and book one to get started</p>
+                        <p className="mt-4 text-gray-600 dark:text-gray-400 dark:text-gray-500">You haven't booked any AMC packages yet</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">Browse available packages and book one to get started</p>
                     </div>
                 ) : (
                     <div className="space-y-4">
                         {myBookings.map((booking) => (
-                            <div key={booking._id} className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+                            <div key={booking._id} className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
                                 <div className="flex items-start gap-4">
                                     {booking.package?.cardImage && (
                                         <img
@@ -270,8 +275,8 @@ export default function MyAMCBookingsSection({ token }: MyAMCBookingsSectionProp
                                     <div className="flex-1">
                                         <div className="flex items-start justify-between">
                                             <div>
-                                                <h3 className="font-semibold text-gray-900 text-lg">{booking.package?.title || booking.packageTitle}</h3>
-                                                <p className="text-sm text-gray-500 mt-1">
+                                                <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-lg">{booking.package?.title || booking.packageTitle}</h3>
+                                                <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
                                                     {booking.tier.name} Plan - NPR {booking.tier.price.toLocaleString()}/{booking.tier.duration}
                                                 </p>
                                             </div>
@@ -280,22 +285,41 @@ export default function MyAMCBookingsSection({ token }: MyAMCBookingsSectionProp
                                             </span>
                                         </div>
                                         <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
+                                            {booking.package?.createdBy && (
+                                                <>
+                                                    <div className="col-span-2 pb-3 border-b border-gray-200 dark:border-gray-700">
+                                                        <p className="text-gray-500 dark:text-gray-500 font-medium mb-2">Package Provider:</p>
+                                                        <div className="flex items-center gap-2 text-gray-900 dark:text-gray-100">
+                                                            <User className="w-4 h-4 text-gray-500 dark:text-gray-500" />
+                                                            <span className="font-medium">{booking.package.createdBy.name}</span>
+                                                        </div>
+                                                        {booking.package.createdBy.email && (
+                                                            <div className="flex items-center gap-2 text-gray-900 dark:text-gray-100 mt-1">
+                                                                <span className="material-symbols-outlined text-[18px] text-gray-500 dark:text-gray-500">mail</span>
+                                                                <a href={`mailto:${booking.package.createdBy.email}`} className="hover:underline">
+                                                                    {booking.package.createdBy.email}
+                                                                </a>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </>
+                                            )}
                                             <div>
-                                                <span className="text-gray-500">Booked on:</span>
-                                                <span className="ml-2 text-gray-900">{new Date(booking.createdAt).toLocaleDateString()}</span>
+                                                <span className="text-gray-500 dark:text-gray-500">Booked on:</span>
+                                                <span className="ml-2 text-gray-900 dark:text-gray-100">{new Date(booking.createdAt).toLocaleDateString()}</span>
                                             </div>
                                             <div>
-                                                <span className="text-gray-500">Phone:</span>
-                                                <span className="ml-2 text-gray-900">{booking.customerPhone}</span>
+                                                <span className="text-gray-500 dark:text-gray-500">Phone:</span>
+                                                <span className="ml-2 text-gray-900 dark:text-gray-100">{booking.customerPhone}</span>
                                             </div>
                                             <div className="col-span-2">
-                                                <span className="text-gray-500">Address:</span>
-                                                <span className="ml-2 text-gray-900">{booking.customerAddress}</span>
+                                                <span className="text-gray-500 dark:text-gray-500">Address:</span>
+                                                <span className="ml-2 text-gray-900 dark:text-gray-100">{booking.customerAddress}</span>
                                             </div>
                                             {booking.notes && (
                                                 <div className="col-span-2">
-                                                    <span className="text-gray-500">Notes:</span>
-                                                    <span className="ml-2 text-gray-900">{booking.notes}</span>
+                                                    <span className="text-gray-500 dark:text-gray-500">Notes:</span>
+                                                    <span className="ml-2 text-gray-900 dark:text-gray-100">{booking.notes}</span>
                                                 </div>
                                             )}
                                         </div>
@@ -310,17 +334,17 @@ export default function MyAMCBookingsSection({ token }: MyAMCBookingsSectionProp
             {/* Provider View - My Packages */}
             {activeTab === 'provider' && (
                 packages.length === 0 ? (
-                    <div className="bg-white rounded-lg shadow-sm p-12 text-center">
+                    <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-lg shadow-sm p-12 text-center">
                         <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                        <p className="mt-4 text-gray-600">You haven't created any AMC packages yet</p>
-                        <p className="text-sm text-gray-500 mt-2">Go to "Add AMC Package" to create your first package</p>
+                        <p className="mt-4 text-gray-600 dark:text-gray-400 dark:text-gray-500">You haven't created any AMC packages yet</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">Go to "Add AMC Package" to create your first package</p>
                     </div>
                 ) : (
                     <div className="space-y-6">
                         {packages.map((pkg) => (
-                            <div key={pkg._id} className="bg-white rounded-lg shadow-sm overflow-hidden">
+                            <div key={pkg._id} className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
                                 {/* Package Header */}
-                                <div className="p-4 border-b bg-gray-50 flex items-center justify-between">
+                                <div className="p-4 border-b bg-gray-50 dark:bg-gray-900 flex items-center justify-between">
                                     <div className="flex items-center gap-4">
                                         {pkg.cardImage && (
                                             <img
@@ -330,7 +354,7 @@ export default function MyAMCBookingsSection({ token }: MyAMCBookingsSectionProp
                                             />
                                         )}
                                         <div>
-                                            <h3 className="font-semibold text-gray-900">{pkg.title}</h3>
+                                            <h3 className="font-semibold text-gray-900 dark:text-gray-100">{pkg.title}</h3>
                                             <span className="text-xs px-2 py-1 rounded-full bg-orange-100 text-orange-600">
                                                 {pkg.category}
                                             </span>
@@ -338,7 +362,7 @@ export default function MyAMCBookingsSection({ token }: MyAMCBookingsSectionProp
                                     </div>
                                     <div className="flex items-center gap-3">
                                         {getPendingCount(pkg) > 0 && (
-                                            <span className="bg-gray-500 text-white text-xs px-2.5 py-1 rounded-full font-medium">
+                                            <span className="bg-gray-50 dark:bg-gray-900 dark:bg-gray-9000 text-white text-xs px-2.5 py-1 rounded-full font-medium">
                                                 {getPendingCount(pkg)} pending
                                             </span>
                                         )}
@@ -355,16 +379,16 @@ export default function MyAMCBookingsSection({ token }: MyAMCBookingsSectionProp
                                 {selectedPackage === pkg._id && (
                                     <div className="p-4">
                                         {!pkg.bookings || pkg.bookings.length === 0 ? (
-                                            <p className="text-center text-gray-500 py-8">No bookings yet</p>
+                                            <p className="text-center text-gray-500 dark:text-gray-500 py-8">No bookings yet</p>
                                         ) : (
                                             <div className="space-y-4">
                                                 {pkg.bookings.map((booking) => (
-                                                    <div key={booking._id} className="border rounded-lg p-4 hover:bg-gray-50 transition">
+                                                    <div key={booking._id} className="border rounded-lg p-4 hover:bg-gray-50 dark:bg-gray-900 transition">
                                                         <div className="flex items-start justify-between">
                                                             <div className="flex-1">
                                                                 <div className="flex items-center gap-2 mb-2">
-                                                                    <User className="w-4 h-4 text-gray-500" />
-                                                                    <span className="font-medium text-gray-900">
+                                                                    <User className="w-4 h-4 text-gray-500 dark:text-gray-500" />
+                                                                    <span className="font-medium text-gray-900 dark:text-gray-100">
                                                                         {booking.customer?.name || booking.customerName}
                                                                     </span>
                                                                     <span className={`text- xs px - 2 py - 1 rounded - full ${getStatusBadge(booking.status)
@@ -372,12 +396,12 @@ export default function MyAMCBookingsSection({ token }: MyAMCBookingsSectionProp
                                                                         {booking.status}
                                                                     </span>
                                                                 </div>
-                                                                <div className="text-sm text-gray-600 space-y-1">
+                                                                <div className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 space-y-1">
                                                                     <div className="flex items-center gap-2">
                                                                         <Package className="w-4 h-4" />
                                                                         <span>{booking.tier.name} - NPR {booking.tier.price}/{booking.tier.duration}</span>
                                                                     </div>
-                                                                    <div className="text-gray-600">
+                                                                    <div className="text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500">
                                                                         <span className="font-medium">Address:</span> {booking.customerAddress}
                                                                     </div>
                                                                     {booking.status === 'approved' && (
@@ -401,7 +425,7 @@ export default function MyAMCBookingsSection({ token }: MyAMCBookingsSectionProp
                                                                         </>
                                                                     )}
                                                                     {booking.notes && (
-                                                                        <p className="mt-2 text-gray-700 italic">"{booking.notes}"</p>
+                                                                        <p className="mt-2 text-gray-700 dark:text-gray-300 italic">"{booking.notes}"</p>
                                                                     )}
                                                                 </div>
                                                             </div>

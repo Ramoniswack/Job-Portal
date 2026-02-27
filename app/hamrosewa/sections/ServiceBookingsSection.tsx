@@ -169,7 +169,7 @@ export default function ServiceBookingsSection({ token }: ServiceBookingsSection
             case 'cancelled':
                 return 'bg-red-100 text-red-800 border-red-300';
             default:
-                return 'bg-gray-100 text-gray-800 border-gray-300';
+                return 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 border-gray-300 dark:border-gray-600';
         }
     };
 
@@ -210,8 +210,8 @@ export default function ServiceBookingsSection({ token }: ServiceBookingsSection
         <div className="p-6">
             <div className="flex items-center justify-between mb-6">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900">Service Bookings</h2>
-                    <p className="text-gray-600 mt-1">Manage customer service bookings</p>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Service Bookings</h2>
+                    <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 mt-1">Manage customer service bookings</p>
                 </div>
                 <button
                     onClick={fetchBookings}
@@ -230,7 +230,7 @@ export default function ServiceBookingsSection({ token }: ServiceBookingsSection
                         onClick={() => setFilterStatus(status)}
                         className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${filterStatus === status
                             ? 'bg-gray-800 text-white'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
                             }`}
                     >
                         {status.charAt(0).toUpperCase() + status.slice(1).replace('-', ' ')}
@@ -243,15 +243,15 @@ export default function ServiceBookingsSection({ token }: ServiceBookingsSection
 
             {/* Bookings List */}
             {filteredBookings.length === 0 ? (
-                <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
-                    <p className="text-gray-500">No bookings found</p>
+                <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <p className="text-gray-500 dark:text-gray-500">No bookings found</p>
                 </div>
             ) : (
                 <div className="grid gap-4">
                     {filteredBookings.map((booking) => (
                         <div
                             key={booking._id}
-                            className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow"
+                            className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition-shadow"
                         >
                             <div className="flex flex-col lg:flex-row gap-6">
                                 {/* Service Image */}
@@ -267,9 +267,9 @@ export default function ServiceBookingsSection({ token }: ServiceBookingsSection
                                 <div className="flex-1">
                                     <div className="flex items-start justify-between mb-3">
                                         <div>
-                                            <h3 className="text-lg font-bold text-gray-900">{booking.serviceTitle}</h3>
+                                            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">{booking.serviceTitle}</h3>
                                             <div className="flex items-center gap-4 mt-1">
-                                                <p className="text-sm text-gray-500">
+                                                <p className="text-sm text-gray-500 dark:text-gray-500">
                                                     Booked on {new Date(booking.createdAt).toLocaleDateString('en-US', {
                                                         year: 'numeric',
                                                         month: 'long',
@@ -295,26 +295,26 @@ export default function ServiceBookingsSection({ token }: ServiceBookingsSection
                                     </div>
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-                                        <div className="flex items-center gap-2 text-sm text-gray-700">
+                                        <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                                             <span className="material-symbols-outlined text-[18px] text-[#FF6B35]">person</span>
                                             <span className="font-medium">{booking.customerName}</span>
                                         </div>
-                                        <div className="flex items-center gap-2 text-sm text-gray-700">
+                                        <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                                             <Mail className="w-4 h-4 text-[#FF6B35]" />
                                             <span>{booking.customerEmail}</span>
                                         </div>
-                                        <div className="flex items-center gap-2 text-sm text-gray-700">
+                                        <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                                             <Phone className="w-4 h-4 text-[#FF6B35]" />
                                             <span>{booking.customerPhone}</span>
                                         </div>
-                                        <div className="flex items-center gap-2 text-sm text-gray-700">
+                                        <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                                             <MapPin className="w-4 h-4 text-[#FF6B35]" />
                                             <span>{booking.customerAddress}</span>
                                         </div>
                                     </div>
 
                                     {booking.notes && (
-                                        <div className="flex items-start gap-2 text-sm text-gray-700 mb-4 p-3 bg-gray-50 rounded-lg">
+                                        <div className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300 mb-4 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
                                             <FileText className="w-4 h-4 text-[#FF6B35] mt-0.5" />
                                             <div>
                                                 <span className="font-medium">Notes:</span>
@@ -349,7 +349,7 @@ export default function ServiceBookingsSection({ token }: ServiceBookingsSection
                                                     <select
                                                         value={booking.status}
                                                         onChange={(e) => updateBookingStatus(booking._id, e.target.value)}
-                                                        className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent outline-none"
+                                                        className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent outline-none"
                                                     >
                                                         <option value="pending">Pending</option>
                                                         <option value="approved">Approved</option>
@@ -361,8 +361,8 @@ export default function ServiceBookingsSection({ token }: ServiceBookingsSection
                                             </>
                                         ) : (
                                             // Non-owner (admin viewing other's services) can only see status
-                                            <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 rounded-lg">
-                                                <span className="text-sm text-gray-600">
+                                            <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                                                <span className="text-sm text-gray-600 dark:text-gray-400">
                                                     Service by: <span className="font-semibold">{booking.service?.createdBy?.name || 'Unknown'}</span>
                                                 </span>
                                             </div>

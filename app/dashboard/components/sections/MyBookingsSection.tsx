@@ -67,13 +67,13 @@ export default function MyBookingsSection({ token }: MyBookingsSectionProps) {
             case 'approved':
                 return 'bg-green-50 text-green-700 border border-green-200';
             case 'pending':
-                return 'bg-gray-50 text-gray-700 border border-gray-200';
+                return 'bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700';
             case 'rejected':
                 return 'bg-red-50 text-red-700 border border-red-200';
             case 'completed':
                 return 'bg-blue-50 text-blue-700 border border-blue-200';
             default:
-                return 'bg-gray-50 text-gray-700 border border-gray-200';
+                return 'bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700';
         }
     };
 
@@ -82,13 +82,13 @@ export default function MyBookingsSection({ token }: MyBookingsSectionProps) {
             case 'approved':
                 return <CheckCircle className="w-5 h-5 text-green-600" />;
             case 'pending':
-                return <AlertCircle className="w-5 h-5 text-gray-600" />;
+                return <AlertCircle className="w-5 h-5 text-gray-600 dark:text-gray-400 dark:text-gray-500 transition-colors duration-300 " />;
             case 'rejected':
                 return <XCircle className="w-5 h-5 text-red-600" />;
             case 'completed':
                 return <CheckCircle className="w-5 h-5 text-blue-600" />;
             default:
-                return <AlertCircle className="w-5 h-5 text-gray-600" />;
+                return <AlertCircle className="w-5 h-5 text-gray-600 dark:text-gray-400 dark:text-gray-500 transition-colors duration-300 " />;
         }
     };
 
@@ -105,24 +105,24 @@ export default function MyBookingsSection({ token }: MyBookingsSectionProps) {
     return (
         <div className="p-8">
             <div className="mb-6">
-                <h1 className="text-2xl font-bold text-gray-900">My Bookings</h1>
-                <p className="text-gray-500 mt-1">View all your service bookings and their status</p>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300 ">My Bookings</h1>
+                <p className="text-gray-500 dark:text-gray-500 mt-1 transition-colors duration-300 ">View all your service bookings and their status</p>
             </div>
 
             {bookings.length === 0 ? (
-                <div className="bg-white rounded-lg shadow-sm p-12 text-center">
-                    <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Calendar className="w-12 h-12 text-gray-400" />
+                <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-lg shadow-sm p-12 text-center transition-colors duration-300 ">
+                    <div className="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors duration-300 ">
+                        <Calendar className="w-12 h-12 text-gray-400 dark:text-gray-500 transition-colors duration-300 " />
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">No Bookings Yet</h3>
-                    <p className="text-gray-500">You haven't booked any services yet. Browse services to make your first booking.</p>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 transition-colors duration-300 ">No Bookings Yet</h3>
+                    <p className="text-gray-500 dark:text-gray-500 transition-colors duration-300 ">You haven't booked any services yet. Browse services to make your first booking.</p>
                 </div>
             ) : (
                 <div className="grid gap-6">
                     {bookings
                         .filter((booking) => booking.service != null) // Filter out bookings with null service
                         .map((booking) => (
-                            <div key={booking._id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+                            <div key={booking._id} className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-shadow transition-colors duration-300 ">
                                 <div className="p-6">
                                     <div className="flex gap-6">
                                         {/* Service Image */}
@@ -138,11 +138,11 @@ export default function MyBookingsSection({ token }: MyBookingsSectionProps) {
                                         <div className="flex-1">
                                             <div className="flex items-start justify-between mb-3">
                                                 <div>
-                                                    <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1 transition-colors duration-300 ">
                                                         {booking.service.title || 'Service'}
                                                     </h3>
                                                     {booking.service?.createdBy && (
-                                                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 transition-colors duration-300 ">
                                                             <User className="w-4 h-4" />
                                                             <span>Provider: {booking.service.createdBy.name}</span>
                                                         </div>
@@ -157,8 +157,8 @@ export default function MyBookingsSection({ token }: MyBookingsSectionProps) {
                                             </div>
 
                                             <div className="grid grid-cols-2 gap-4 mb-3">
-                                                <div className="flex items-center gap-2 text-sm text-gray-700">
-                                                    <Calendar className="w-4 h-4 text-gray-500" />
+                                                <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 transition-colors duration-300 ">
+                                                    <Calendar className="w-4 h-4 text-gray-500 dark:text-gray-500 transition-colors duration-300 " />
                                                     <span>{new Date(booking.bookingDate).toLocaleDateString('en-US', {
                                                         weekday: 'short',
                                                         year: 'numeric',
@@ -166,17 +166,17 @@ export default function MyBookingsSection({ token }: MyBookingsSectionProps) {
                                                         day: 'numeric'
                                                     })}</span>
                                                 </div>
-                                                <div className="flex items-center gap-2 text-sm text-gray-700">
-                                                    <Clock className="w-4 h-4 text-gray-500" />
+                                                <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 transition-colors duration-300 ">
+                                                    <Clock className="w-4 h-4 text-gray-500 dark:text-gray-500 transition-colors duration-300 " />
                                                     <span>{booking.bookingTime}</span>
                                                 </div>
                                             </div>
 
-                                            <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                                            <div className="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700 transition-colors duration-300 ">
                                                 <div className="text-lg font-bold text-[#f97316]">
                                                     NPR {booking.service.price || 0}
                                                 </div>
-                                                <div className="text-xs text-gray-500">
+                                                <div className="text-xs text-gray-500 dark:text-gray-500 transition-colors duration-300 ">
                                                     Booked on {new Date(booking.createdAt).toLocaleDateString()}
                                                 </div>
                                             </div>
@@ -190,8 +190,8 @@ export default function MyBookingsSection({ token }: MyBookingsSectionProps) {
                                             )}
 
                                             {booking.status === 'pending' && (
-                                                <div className="mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                                                    <p className="text-sm text-gray-700">
+                                                <div className="mt-3 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 transition-colors duration-300 ">
+                                                    <p className="text-sm text-gray-700 dark:text-gray-300 transition-colors duration-300 ">
                                                         ⏳ Waiting for provider approval. You'll be notified once approved.
                                                     </p>
                                                 </div>

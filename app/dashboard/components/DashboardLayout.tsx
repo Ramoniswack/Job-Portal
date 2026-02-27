@@ -6,6 +6,7 @@ import TopNavbar from './TopNavbar';
 import Sidebar from './Sidebar';
 import Header from './Header';
 import DashboardSection from './sections/DashboardSection';
+import EnhancedDashboardSection from './sections/EnhancedDashboardSection';
 import BrowseJobsSection from './sections/BrowseJobsSection';
 import MyApplicationsSection from './sections/MyApplicationsSection';
 import MessagesSection from './sections/MessagesSection';
@@ -246,128 +247,122 @@ export default function DashboardLayout() {
                     onLoadMessages={() => loadMyApplications(token)}
                 />
 
-                <main className="flex-1 lg:ml-64 min-h-screen w-full">
-                    <Header
-                        currentUser={currentUser}
-                    />
+                <main className="flex-1 lg:ml-64 min-h-screen w-full bg-white">
+                    <div className="p-4 lg:p-8">
+                        {activeSection === 'dashboard' && (
+                            <EnhancedDashboardSection
+                                currentUser={currentUser}
+                                setActiveSection={setActiveSection}
+                            />
+                        )}
 
-                    {activeSection === 'dashboard' && (
-                        <DashboardSection
-                            currentUser={currentUser}
-                            myJobs={myJobs}
-                            myApplications={myApplications}
-                            setActiveSection={setActiveSection}
-                            onLoadJobs={loadAllJobs}
-                            onLoadMyJobs={() => loadMyJobs(token)}
-                        />
-                    )}
+                        {activeSection === 'browse-jobs' && (
+                            <BrowseJobsSection
+                                allJobs={allJobs}
+                                currentUser={currentUser}
+                                token={token}
+                                loadingAllJobs={loadingAllJobs}
+                                onLoadAllJobs={loadAllJobs}
+                                myApplications={myApplications}
+                                onRefresh={refreshData}
+                            />
+                        )}
 
-                    {activeSection === 'browse-jobs' && (
-                        <BrowseJobsSection
-                            allJobs={allJobs}
-                            currentUser={currentUser}
-                            token={token}
-                            loadingAllJobs={loadingAllJobs}
-                            onLoadAllJobs={loadAllJobs}
-                            myApplications={myApplications}
-                            onRefresh={refreshData}
-                        />
-                    )}
+                        {activeSection === 'my-applications' && (
+                            <MyApplicationsSection
+                                myApplications={myApplications}
+                                currentUser={currentUser}
+                                token={token}
+                                loadingApplications={loadingApplications}
+                                onLoadApplications={() => loadMyApplications(token)}
+                                onRefresh={refreshData}
+                            />
+                        )}
 
-                    {activeSection === 'my-applications' && (
-                        <MyApplicationsSection
-                            myApplications={myApplications}
-                            currentUser={currentUser}
-                            token={token}
-                            loadingApplications={loadingApplications}
-                            onLoadApplications={() => loadMyApplications(token)}
-                            onRefresh={refreshData}
-                        />
-                    )}
+                        {activeSection === 'messages' && (
+                            <MessagesSection
+                                currentUser={currentUser}
+                                token={token}
+                                myApplications={myApplications}
+                                onLoadApplications={() => loadMyApplications(token)}
+                            />
+                        )}
 
-                    {activeSection === 'messages' && (
-                        <MessagesSection
-                            currentUser={currentUser}
-                            token={token}
-                            myApplications={myApplications}
-                            onLoadApplications={() => loadMyApplications(token)}
-                        />
-                    )}
+                        {activeSection === 'view-posts' && currentUser?.role === 'admin' && (
+                            <ViewPostsSection
+                                token={token}
+                                onEditPost={(post) => {
+                                    setEditingPost(post);
+                                    setActiveSection('add-post');
+                                }}
+                            />
+                        )}
 
-                    {activeSection === 'view-posts' && currentUser?.role === 'admin' && (
-                        <ViewPostsSection
-                            token={token}
-                            onEditPost={(post) => {
-                                setEditingPost(post);
-                                setActiveSection('add-post');
-                            }}
-                        />
-                    )}
+                        {activeSection === 'add-post' && currentUser?.role === 'admin' && (
+                            <AddPostSection
+                                token={token}
+                                editingPost={editingPost}
+                                onSuccess={() => {
+                                    setEditingPost(null);
+                                    setActiveSection('view-posts');
+                                }}
+                                onCancel={() => {
+                                    setEditingPost(null);
+                                    setActiveSection('view-posts');
+                                }}
+                            />
+                        )}
 
-                    {activeSection === 'add-post' && currentUser?.role === 'admin' && (
-                        <AddPostSection
-                            token={token}
-                            editingPost={editingPost}
-                            onSuccess={() => {
-                                setEditingPost(null);
-                                setActiveSection('view-posts');
-                            }}
-                            onCancel={() => {
-                                setEditingPost(null);
-                                setActiveSection('view-posts');
-                            }}
-                        />
-                    )}
+                        {activeSection === 'post-categories' && currentUser?.role === 'admin' && (
+                            <PostCategoriesSection token={token} />
+                        )}
 
-                    {activeSection === 'post-categories' && currentUser?.role === 'admin' && (
-                        <PostCategoriesSection token={token} />
-                    )}
+                        {activeSection === 'services' && (
+                            <ServicesSection token={token} />
+                        )}
 
-                    {activeSection === 'services' && (
-                        <ServicesSection token={token} />
-                    )}
+                        {activeSection === 'add-service' && (
+                            <AddServiceSection token={token} />
+                        )}
 
-                    {activeSection === 'add-service' && (
-                        <AddServiceSection token={token} />
-                    )}
+                        {activeSection === 'service-categories' && (
+                            <ServiceCategoriesSection token={token} />
+                        )}
 
-                    {activeSection === 'service-categories' && (
-                        <ServiceCategoriesSection token={token} />
-                    )}
+                        {activeSection === 'my-services' && (
+                            <MyServicesSection token={token} />
+                        )}
 
-                    {activeSection === 'my-services' && (
-                        <MyServicesSection token={token} />
-                    )}
+                        {activeSection === 'my-bookings' && (
+                            <MyBookingsSection token={token} />
+                        )}
 
-                    {activeSection === 'my-bookings' && (
-                        <MyBookingsSection token={token} />
-                    )}
+                        {activeSection === 'add-amc-package' && (
+                            <AddAMCPackageSection
+                                token={token}
+                                editingPackageId={editingPackageId}
+                                onBack={() => {
+                                    setEditingPackageId(null);
+                                    setActiveSection('amc-packages');
+                                }}
+                            />
+                        )}
 
-                    {activeSection === 'add-amc-package' && (
-                        <AddAMCPackageSection
-                            token={token}
-                            editingPackageId={editingPackageId}
-                            onBack={() => {
-                                setEditingPackageId(null);
-                                setActiveSection('amc-packages');
-                            }}
-                        />
-                    )}
+                        {activeSection === 'amc-packages' && (
+                            <AMCPackagesSection
+                                token={token}
+                                currentUserId={currentUser?.id || ''}
+                                onEditPackage={(packageId) => {
+                                    setEditingPackageId(packageId);
+                                    setActiveSection('add-amc-package');
+                                }}
+                            />
+                        )}
 
-                    {activeSection === 'amc-packages' && (
-                        <AMCPackagesSection
-                            token={token}
-                            currentUserId={currentUser?.id || ''}
-                            onEditPackage={(packageId) => {
-                                setEditingPackageId(packageId);
-                                setActiveSection('add-amc-package');
-                            }}
-                        />
-                    )}
-
-                    {activeSection === 'my-amc-bookings' && (
-                        <MyAMCBookingsSection token={token} />
-                    )}
+                        {activeSection === 'my-amc-bookings' && (
+                            <MyAMCBookingsSection token={token} />
+                        )}
+                    </div>
                 </main>
             </div>
         </div>

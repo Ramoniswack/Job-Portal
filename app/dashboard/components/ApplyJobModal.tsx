@@ -71,15 +71,15 @@ export default function ApplyJobModal({ jobId, jobTitle, token, currentUserEmail
             onClick={onClose}
         >
             <div
-                className="bg-white rounded-xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto"
+                className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto transition-colors duration-300 "
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex justify-between items-center mb-6">
                     <div>
-                        <h2 className="text-xl font-bold text-gray-900">Apply for Job</h2>
-                        <p className="text-sm text-gray-500 mt-1">{jobTitle}</p>
+                        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300 ">Apply for Job</h2>
+                        <p className="text-sm text-gray-500 dark:text-gray-500 mt-1 transition-colors duration-300 ">{jobTitle}</p>
                     </div>
-                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+                    <button onClick={onClose} className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:text-gray-500 transition-colors duration-300 ">
                         <span className="material-symbols-outlined">close</span>
                     </button>
                 </div>
@@ -87,7 +87,7 @@ export default function ApplyJobModal({ jobId, jobTitle, token, currentUserEmail
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-300 ">
                                 Phone Number <span className="text-red-500">*</span>
                             </label>
                             <input
@@ -95,29 +95,29 @@ export default function ApplyJobModal({ jobId, jobTitle, token, currentUserEmail
                                 value={formData.phone}
                                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                 required
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-600 transition-colors duration-300 "
                                 placeholder="+1 (555) 123-4567"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Email Address <span className="text-gray-400">(Your Account Email)</span>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-300 ">
+                                Email Address <span className="text-gray-400 dark:text-gray-500 transition-colors duration-300 ">(Your Account Email)</span>
                             </label>
                             <input
                                 type="email"
                                 value={formData.email}
                                 readOnly
                                 disabled
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-[#F1F3F5] text-gray-600 cursor-not-allowed"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-[#F1F3F5] text-gray-600 dark:text-gray-400 dark:text-gray-500 cursor-not-allowed transition-colors duration-300 "
                                 placeholder="your@email.com"
                             />
-                            <p className="text-xs text-gray-500 mt-1">This is your registered email and cannot be changed</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-500 mt-1 transition-colors duration-300 ">This is your registered email and cannot be changed</p>
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-300 ">
                             Your Location <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -125,13 +125,13 @@ export default function ApplyJobModal({ jobId, jobTitle, token, currentUserEmail
                             value={formData.workerLocation}
                             onChange={(e) => setFormData({ ...formData, workerLocation: e.target.value })}
                             required
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-600 transition-colors duration-300 "
                             placeholder="e.g., New York, NY"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-300 ">
                             Qualification / Skills <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -139,13 +139,13 @@ export default function ApplyJobModal({ jobId, jobTitle, token, currentUserEmail
                             value={formData.qualification}
                             onChange={(e) => setFormData({ ...formData, qualification: e.target.value })}
                             required
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-600 transition-colors duration-300 "
                             placeholder="e.g., 5 years experience in plumbing, Licensed electrician"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-300 ">
                             Cover Message <span className="text-red-500">*</span>
                         </label>
                         <textarea
@@ -154,10 +154,10 @@ export default function ApplyJobModal({ jobId, jobTitle, token, currentUserEmail
                             required
                             rows={4}
                             maxLength={1000}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-600 transition-colors duration-300 "
                             placeholder="Tell the client why you're the best fit for this job..."
                         />
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1 transition-colors duration-300 ">
                             {formData.message.length}/1000 characters
                         </p>
                     </div>
@@ -173,7 +173,7 @@ export default function ApplyJobModal({ jobId, jobTitle, token, currentUserEmail
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-6 py-3 border border-gray-300 rounded-lg font-bold hover:bg-[#F8F9FA] transition-all"
+                            className="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-lg font-bold hover:bg-gray-50 dark:bg-gray-900 transition-all transition-colors duration-300 "
                         >
                             Cancel
                         </button>

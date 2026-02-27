@@ -94,9 +94,66 @@ export default function MyServicesSection({ token }: MyServicesSectionProps) {
         }
     };
 
-    const handleBookingAction = async (bookingId: string, action: 'approve' | 'reject') => {
+    const handleBookingAction = async (bookingId: string, action: 'approve' | 'reject' | 'cancel-approval' | 'complete') => {
         try {
-            const response = await fetch(`http://localhost:5000/api/bookings/${bookingId}/${action}`, {
+            let endpoint = '';
+            let successMessage = '';
+
+            if (action === 'cancel-approval') {
+                // Reset to pending status using the new endpoint
+                endpoint = `http://localhost:5000/api/bookings/${bookingId}/reset-to-pending`;
+                const response = await fetch(endpoint, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    toast.success('Approval Cancelled', {
+                        description: 'The booking has been reset to pending status.',
+                        duration: 4000,
+                    });
+                    loadMyServices();
+                } else {
+                    toast.error('Action Failed', {
+                        description: data.message || 'Failed to cancel approval.',
+                        duration: 4000,
+                    });
+                }
+                return;
+            }
+
+            if (action === 'complete') {
+                endpoint = `http://localhost:5000/api/bookings/${bookingId}/complete`;
+                const response = await fetch(endpoint, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    toast.success('Booking Completed!', {
+                        description: 'The booking has been marked as completed.',
+                        duration: 4000,
+                    });
+                    loadMyServices();
+                } else {
+                    toast.error('Action Failed', {
+                        description: data.message || 'Failed to complete booking.',
+                        duration: 4000,
+                    });
+                }
+                return;
+            }
+
+            endpoint = `http://localhost:5000/api/bookings/${bookingId}/${action}`;
+            const response = await fetch(endpoint, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -166,7 +223,7 @@ export default function MyServicesSection({ token }: MyServicesSectionProps) {
 
     const getStatusBadge = (status: string) => {
         const styles = {
-            pending: 'bg-gray-100 text-gray-700 border border-gray-300',
+            pending: 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600',
             approved: 'bg-green-50 text-green-600 border border-green-200',
             rejected: 'bg-red-50 text-red-600 border border-red-200',
             completed: 'bg-blue-50 text-blue-600 border border-blue-200'
@@ -191,22 +248,22 @@ export default function MyServicesSection({ token }: MyServicesSectionProps) {
     return (
         <div className="p-8">
             <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">My Services</h2>
-                <p className="text-gray-500 mt-1">Manage your services and booking requests</p>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">My Services</h2>
+                <p className="text-gray-500 dark:text-gray-500 mt-1">Manage your services and booking requests</p>
             </div>
 
             {services.length === 0 ? (
-                <div className="bg-white rounded-lg shadow-sm p-12 text-center">
+                <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-lg shadow-sm p-12 text-center">
                     <span className="material-symbols-outlined text-gray-300 text-6xl">inventory_2</span>
-                    <p className="mt-4 text-gray-600">You haven't created any services yet</p>
-                    <p className="text-sm text-gray-500 mt-2">Go to "Add Service" to create your first service</p>
+                    <p className="mt-4 text-gray-600 dark:text-gray-400 dark:text-gray-500">You haven't created any services yet</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">Go to "Add Service" to create your first service</p>
                 </div>
             ) : (
                 <div className="space-y-6">
                     {services.map((service) => (
-                        <div key={service._id} className="bg-white rounded-lg shadow-sm overflow-hidden">
+                        <div key={service._id} className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
                             {/* Service Header */}
-                            <div className="p-4 border-b bg-gray-50 flex items-center justify-between">
+                            <div className="p-4 border-b bg-gray-50 dark:bg-gray-900 flex items-center justify-between">
                                 <div className="flex items-center gap-4">
                                     {service.images[0]?.url && (
                                         <img
@@ -216,7 +273,7 @@ export default function MyServicesSection({ token }: MyServicesSectionProps) {
                                         />
                                     )}
                                     <div>
-                                        <h3 className="font-semibold text-gray-900">{service.title}</h3>
+                                        <h3 className="font-semibold text-gray-900 dark:text-gray-100">{service.title}</h3>
                                         <span className={`text-xs px-2 py-1 rounded-full ${getStatusBadge(service.status)}`}>
                                             {service.status}
                                         </span>
@@ -224,25 +281,13 @@ export default function MyServicesSection({ token }: MyServicesSectionProps) {
                                 </div>
                                 <div className="flex items-center gap-3">
                                     {getPendingCount(service) > 0 && (
-                                        <span className="bg-gray-500 text-white text-xs px-2.5 py-1 rounded-full font-medium">
+                                        <span className="bg-gray-50 dark:bg-gray-900 dark:bg-gray-9000 text-white text-xs px-2.5 py-1 rounded-full font-medium">
                                             {getPendingCount(service)} pending
                                         </span>
                                     )}
                                     <button
-                                        onClick={() => window.location.href = `/dashboard?section=add-service&edit=${service._id}`}
-                                        className="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded-lg transition-colors"
-                                    >
-                                        Edit
-                                    </button>
-                                    <button
-                                        onClick={() => handleDeleteService(service._id)}
-                                        className="px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white text-sm rounded-lg transition-colors"
-                                    >
-                                        Delete
-                                    </button>
-                                    <button
                                         onClick={() => setSelectedService(selectedService === service._id ? null : service._id)}
-                                        className="text-sm text-[#26cf71] hover:text-[#1fb35f] font-medium"
+                                        className="px-4 py-2 bg-[#FF6B35] hover:bg-[#FF5722] text-white text-sm rounded-lg transition-colors font-medium"
                                     >
                                         {selectedService === service._id ? 'Hide' : 'View'} Bookings ({service.bookings?.length || 0})
                                     </button>
@@ -253,23 +298,23 @@ export default function MyServicesSection({ token }: MyServicesSectionProps) {
                             {selectedService === service._id && (
                                 <div className="p-4">
                                     {!service.bookings || service.bookings.length === 0 ? (
-                                        <p className="text-center text-gray-500 py-8">No bookings yet</p>
+                                        <p className="text-center text-gray-500 dark:text-gray-500 py-8">No bookings yet</p>
                                     ) : (
                                         <div className="space-y-4">
                                             {service.bookings.map((booking) => (
-                                                <div key={booking._id} className="border rounded-lg p-4 hover:bg-gray-50 transition">
+                                                <div key={booking._id} className="border rounded-lg p-4 hover:bg-gray-50 dark:bg-gray-900 transition">
                                                     <div className="flex items-start justify-between">
                                                         <div className="flex-1">
                                                             <div className="flex items-center gap-2 mb-2">
-                                                                <User className="w-4 h-4 text-gray-500" />
-                                                                <span className="font-medium text-gray-900">
+                                                                <User className="w-4 h-4 text-gray-500 dark:text-gray-500" />
+                                                                <span className="font-medium text-gray-900 dark:text-gray-100">
                                                                     {booking.customer?.name || booking.customerName || 'Unknown Customer'}
                                                                 </span>
                                                                 <span className={`text-xs px-2 py-1 rounded-full ${getStatusBadge(booking.status)}`}>
                                                                     {booking.status}
                                                                 </span>
                                                             </div>
-                                                            <div className="text-sm text-gray-600 space-y-1">
+                                                            <div className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 space-y-1">
                                                                 <div className="flex items-center gap-2">
                                                                     <Calendar className="w-4 h-4" />
                                                                     <span>{new Date(booking.bookingDate).toLocaleDateString()}</span>
@@ -299,7 +344,7 @@ export default function MyServicesSection({ token }: MyServicesSectionProps) {
                                                                     </>
                                                                 )}
                                                                 {booking.message && (
-                                                                    <p className="mt-2 text-gray-700 italic">"{booking.message}"</p>
+                                                                    <p className="mt-2 text-gray-700 dark:text-gray-300 italic">"{booking.message}"</p>
                                                                 )}
                                                             </div>
                                                         </div>
@@ -320,6 +365,24 @@ export default function MyServicesSection({ token }: MyServicesSectionProps) {
                                                                     >
                                                                         <XCircle className="w-4 h-4" />
                                                                         Reject
+                                                                    </button>
+                                                                </>
+                                                            )}
+                                                            {booking.status === 'approved' && (
+                                                                <>
+                                                                    <button
+                                                                        onClick={() => handleBookingAction(booking._id, 'cancel-approval')}
+                                                                        className="flex items-center gap-1 px-3 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition text-sm"
+                                                                    >
+                                                                        <XCircle className="w-4 h-4" />
+                                                                        Cancel Approval
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => handleBookingAction(booking._id, 'complete')}
+                                                                        className="flex items-center gap-1 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition text-sm"
+                                                                    >
+                                                                        <CheckCircle className="w-4 h-4" />
+                                                                        Mark as Completed
                                                                     </button>
                                                                 </>
                                                             )}

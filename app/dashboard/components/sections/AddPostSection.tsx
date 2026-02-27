@@ -137,26 +137,26 @@ export default function AddPostSection({ token, editingPost, onSuccess, onCancel
         <div className="p-8">
             <div className="mb-6 flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2 transition-colors duration-300 ">
                         {editingPost ? 'Edit Post' : 'Create New Post'}
                     </h1>
-                    <p className="text-gray-600">Fill in the details below</p>
+                    <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 transition-colors duration-300 ">Fill in the details below</p>
                 </div>
                 <button
                     onClick={onCancel}
-                    className="px-4 py-2 text-gray-600 hover:text-gray-900 flex items-center gap-2"
+                    className="px-4 py-2 text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:text-gray-100 flex items-center gap-2 transition-colors duration-300 "
                 >
                     <span className="material-symbols-outlined">close</span>
                     Cancel
                 </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-sm p-6">
+            <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-lg shadow-sm p-6 transition-colors duration-300 ">
                 <div className="grid gap-6">
 
                     {/* Title */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300 ">
                             Post Title *
                         </label>
                         <input
@@ -164,21 +164,21 @@ export default function AddPostSection({ token, editingPost, onSuccess, onCancel
                             required
                             value={formData.title}
                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                             placeholder="Enter post title"
                         />
                     </div>
 
                     {/* Category */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300 ">
                             Category *
                         </label>
                         <select
                             required
                             value={formData.category}
                             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                         >
                             <option value="">Select a category</option>
                             {categories.map((cat) => (
@@ -191,21 +191,21 @@ export default function AddPostSection({ token, editingPost, onSuccess, onCancel
 
                     {/* Excerpt */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300 ">
                             Excerpt
                         </label>
                         <textarea
                             value={formData.excerpt}
                             onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
                             rows={3}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                             placeholder="Short description (optional, auto-generated if empty)"
                         />
                     </div>
 
                     {/* Content */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300 ">
                             Content *
                         </label>
                         <textarea
@@ -213,7 +213,7 @@ export default function AddPostSection({ token, editingPost, onSuccess, onCancel
                             value={formData.content}
                             onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                             rows={12}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                             placeholder="Write your post content here..."
                         />
                     </div>
@@ -221,26 +221,26 @@ export default function AddPostSection({ token, editingPost, onSuccess, onCancel
                     {/* Featured Image */}
                     <div className="grid md:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300 ">
                                 Featured Image URL
                             </label>
                             <input
                                 type="url"
                                 value={imageUrl}
                                 onChange={(e) => setImageUrl(e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                                 placeholder="https://example.com/image.jpg"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300 ">
                                 Image Alt Text
                             </label>
                             <input
                                 type="text"
                                 value={imageAlt}
                                 onChange={(e) => setImageAlt(e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                                 placeholder="Describe the image"
                             />
                         </div>
@@ -254,7 +254,7 @@ export default function AddPostSection({ token, editingPost, onSuccess, onCancel
 
                     {/* Tags */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300 ">
                             Tags
                         </label>
                         <div className="flex gap-2 mb-2">
@@ -263,13 +263,13 @@ export default function AddPostSection({ token, editingPost, onSuccess, onCancel
                                 value={tagInput}
                                 onChange={(e) => setTagInput(e.target.value)}
                                 onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
-                                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                                 placeholder="Add a tag"
                             />
                             <button
                                 type="button"
                                 onClick={addTag}
-                                className="px-4 py-2 bg-[#F1F3F5] text-gray-700 rounded-lg hover:bg-[#E9ECEF]"
+                                className="px-4 py-2 bg-[#F1F3F5] text-gray-700 dark:text-gray-300 rounded-lg hover:bg-[#E9ECEF] transition-colors duration-300 "
                             >
                                 Add
                             </button>
@@ -296,13 +296,13 @@ export default function AddPostSection({ token, editingPost, onSuccess, onCancel
                     {/* Status and Featured */}
                     <div className="grid md:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300 ">
                                 Status *
                             </label>
                             <select
                                 value={formData.status}
                                 onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                             >
                                 <option value="draft">Draft</option>
                                 <option value="published">Published</option>
@@ -315,9 +315,9 @@ export default function AddPostSection({ token, editingPost, onSuccess, onCancel
                                     type="checkbox"
                                     checked={formData.featured}
                                     onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                                    className="w-5 h-5 text-[#FF6B35] border-gray-300 rounded focus:ring-[#FF6B35]"
+                                    className="w-5 h-5 text-[#FF6B35] border-gray-300 dark:border-gray-600 rounded focus:ring-[#FF6B35] transition-colors duration-300 "
                                 />
-                                <span className="text-sm font-medium text-gray-700">Mark as Featured</span>
+                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300 ">Mark as Featured</span>
                             </label>
                         </div>
                     </div>
@@ -344,7 +344,7 @@ export default function AddPostSection({ token, editingPost, onSuccess, onCancel
                         <button
                             type="button"
                             onClick={onCancel}
-                            className="px-6 py-3 bg-[#F1F3F5] text-gray-700 rounded-lg hover:bg-[#E9ECEF] transition"
+                            className="px-6 py-3 bg-[#F1F3F5] text-gray-700 dark:text-gray-300 rounded-lg hover:bg-[#E9ECEF] transition transition-colors duration-300 "
                         >
                             Cancel
                         </button>

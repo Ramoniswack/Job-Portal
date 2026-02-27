@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, X } from 'lucide-react';
 import ConfirmDialog from '../../components/ConfirmDialog';
 import Notification from '../../components/Notification';
+import SimpleImageUpload from '../../components/SimpleImageUpload';
 
 interface PricingTier {
     name: string;
@@ -44,6 +45,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [editingPackage, setEditingPackage] = useState<AMCPackage | null>(null);
+    const [categories, setCategories] = useState<any[]>([]);
     const [sectionHeading, setSectionHeading] = useState('AMC Packages');
     const [editingHeading, setEditingHeading] = useState(false);
     const [tempHeading, setTempHeading] = useState('AMC Packages');
@@ -63,7 +65,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
     });
     const [formData, setFormData] = useState({
         title: '',
-        category: 'Plumbing',
+        category: '',
         cardImage: '',
         heroImage: '',
         description: '',
@@ -80,6 +82,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
     useEffect(() => {
         fetchPackages();
         fetchHeading();
+        loadCategories();
     }, []);
 
     // Debug: Log formData changes
@@ -121,6 +124,25 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
             });
         } finally {
             setLoading(false);
+        }
+    };
+
+    const loadCategories = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/api/categories/all');
+            const data = await response.json();
+            if (data) {
+                const categoryList = Array.isArray(data) ? data : (data.data || []);
+                // Filter only parent categories (no parent field)
+                const parentCategories = categoryList.filter((cat: any) => !cat.parent || cat.parent === null);
+                setCategories(parentCategories);
+                // Set default category if available
+                if (parentCategories.length > 0 && !formData.category) {
+                    setFormData(prev => ({ ...prev, category: parentCategories[0].name }));
+                }
+            }
+        } catch (error) {
+            console.error('Error loading categories:', error);
         }
     };
 
@@ -259,7 +281,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
         setEditingPackage(null);
         setFormData({
             title: '',
-            category: 'Plumbing',
+            category: categories.length > 0 ? categories[0].name : '',
             cardImage: '',
             heroImage: '',
             description: '',
@@ -384,10 +406,10 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
     return (
         <div>
             {/* Section Heading Editor */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+            <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
                 <div className="flex items-center justify-between">
                     <div className="flex-1">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Section Heading (displayed on homepage)
                         </label>
                         {editingHeading ? (
@@ -396,7 +418,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                     type="text"
                                     value={tempHeading}
                                     onChange={(e) => setTempHeading(e.target.value)}
-                                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
+                                    className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                                     placeholder="e.g., AMC Packages"
                                 />
                                 <button
@@ -407,14 +429,14 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                 </button>
                                 <button
                                     onClick={handleCancelHeading}
-                                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-[#F8F9FA] transition-colors"
+                                    className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-900 transition-colors"
                                 >
                                     Cancel
                                 </button>
                             </div>
                         ) : (
                             <div className="flex items-center gap-3">
-                                <p className="text-lg font-semibold text-gray-900">{sectionHeading}</p>
+                                <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">{sectionHeading}</p>
                                 <button
                                     onClick={() => setEditingHeading(true)}
                                     className="text-blue-500 hover:text-blue-600 text-sm font-medium"
@@ -429,8 +451,8 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
 
             <div className="flex justify-between items-center mb-6">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900">AMC Packages</h2>
-                    <p className="text-gray-600 mt-1">Manage annual maintenance contract packages</p>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">AMC Packages</h2>
+                    <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 mt-1">Manage annual maintenance contract packages</p>
                 </div>
                 <button
                     onClick={() => setShowModal(true)}
@@ -443,19 +465,19 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {packages.map((pkg) => (
-                    <div key={pkg._id} className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+                    <div key={pkg._id} className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-shadow">
                         <div className="h-48 overflow-hidden">
                             <img src={pkg.cardImage} alt={pkg.title} className="w-full h-full object-cover" />
                         </div>
                         <div className="p-6">
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">{pkg.title}</h3>
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">{pkg.title}</h3>
                             <span className="inline-block px-3 py-1 bg-orange-100 text-orange-600 text-xs font-semibold rounded-full mb-3">
                                 {pkg.category}
                             </span>
-                            <p className="text-gray-600 text-sm mb-4">{pkg.description}</p>
+                            <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm mb-4">{pkg.description}</p>
 
                             {pkg.createdBy ? (
-                                <p className="text-sm text-gray-500 mb-4">
+                                <p className="text-sm text-gray-500 dark:text-gray-500 mb-4">
                                     <span className="font-medium">By:</span> {pkg.createdBy.name}
                                 </p>
                             ) : (
@@ -464,7 +486,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                 </p>
                             )}
 
-                            <p className="text-sm text-gray-500 mb-4">{pkg.pricingTiers.length} pricing tiers • {pkg.benefits.length} benefits</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-500 mb-4">{pkg.pricingTiers.length} pricing tiers • {pkg.benefits.length} benefits</p>
 
                             <div className="flex gap-2">
                                 <button
@@ -490,55 +512,56 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
             {/* Modal */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-                        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-                            <h3 className="text-xl font-bold text-gray-900">
+                    <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                        <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between">
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
                                 {editingPackage ? 'Edit Package' : 'Add New Package'}
                             </h3>
-                            <button onClick={handleCloseModal} className="text-gray-400 hover:text-gray-600">
+                            <button onClick={handleCloseModal} className="text-gray-400 hover:text-gray-600 dark:text-gray-400">
                                 <X className="w-6 h-6" />
                             </button>
                         </div>
 
                         <form onSubmit={handleSubmit} className="p-6 space-y-6">
                             {/* Basic Info */}
-                            <div className="bg-[#F8F9FA] p-4 rounded-lg space-y-4">
-                                <h4 className="font-semibold text-gray-900">Basic Information</h4>
+                            <div className="bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 p-4 rounded-lg space-y-4">
+                                <h4 className="font-semibold text-gray-900 dark:text-gray-100">Basic Information</h4>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Package Title</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Package Title</label>
                                     <input
                                         type="text"
                                         value={formData.title}
                                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
+                                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                                         placeholder="e.g., Plumbing AMC Packages"
                                         required
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Category</label>
                                     <select
                                         value={formData.category}
                                         onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
+                                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                                         required
                                     >
-                                        <option value="Plumbing">Plumbing</option>
-                                        <option value="Electrical">Electrical</option>
-                                        <option value="Computer">Computer</option>
-                                        <option value="AC Maintenance">AC Maintenance</option>
-                                        <option value="Home Appliance">Home Appliance</option>
+                                        <option value="">Select a category</option>
+                                        {categories.map((cat) => (
+                                            <option key={cat._id} value={cat.name}>
+                                                {cat.name}
+                                            </option>
+                                        ))}
                                     </select>
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</label>
                                     <textarea
                                         value={formData.description}
                                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
+                                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                                         rows={2}
                                         placeholder="Brief description of the package"
                                         required
@@ -546,12 +569,12 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         Card Image <span className="text-red-500">*</span>
                                     </label>
-                                    <p className="text-xs text-gray-500 mb-2">For homepage card display</p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-500 mb-2">For homepage card display</p>
 
-                                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#FF6B35] transition-colors">
+                                    <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center hover:border-[#FF6B35] transition-colors">
                                         <input
                                             type="file"
                                             id="card-image-upload"
@@ -572,6 +595,11 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                                     });
 
                                                     const data = await response.json();
+
+                                                    if (!response.ok) {
+                                                        throw new Error(data.message || `Upload failed with status: ${response.status}`);
+                                                    }
+
                                                     if (data.success && data.data?.url) {
                                                         console.log('📦 CARD IMAGE uploaded:', data.data.url);
                                                         setFormData(prev => {
@@ -585,13 +613,15 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                                             message: 'Card image uploaded successfully.',
                                                             type: 'success'
                                                         });
+                                                    } else {
+                                                        throw new Error(data.message || 'Failed to upload card image');
                                                     }
-                                                } catch (error) {
+                                                } catch (error: any) {
                                                     console.error('Card image upload error:', error);
                                                     setNotification({
                                                         isOpen: true,
                                                         title: 'Upload Failed',
-                                                        message: 'Failed to upload card image.',
+                                                        message: error.message || 'Failed to upload card image.',
                                                         type: 'error'
                                                     });
                                                 }
@@ -601,8 +631,8 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                             <svg className="h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                                             </svg>
-                                            <p className="text-gray-600 mb-2">Click to upload card image</p>
-                                            <p className="text-sm text-gray-500">PNG, JPG, GIF, WebP</p>
+                                            <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 mb-2">Click to upload card image</p>
+                                            <p className="text-sm text-gray-500 dark:text-gray-500">PNG, JPG, GIF, WebP</p>
                                         </label>
                                     </div>
 
@@ -623,12 +653,12 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         Hero Image <span className="text-red-500">*</span>
                                     </label>
-                                    <p className="text-xs text-gray-500 mb-2">For detail page banner</p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-500 mb-2">For detail page banner</p>
 
-                                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#FF6B35] transition-colors">
+                                    <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center hover:border-[#FF6B35] transition-colors">
                                         <input
                                             type="file"
                                             id="hero-image-upload"
@@ -649,6 +679,11 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                                     });
 
                                                     const data = await response.json();
+
+                                                    if (!response.ok) {
+                                                        throw new Error(data.message || `Upload failed with status: ${response.status}`);
+                                                    }
+
                                                     if (data.success && data.data?.url) {
                                                         console.log('📦 HERO IMAGE uploaded:', data.data.url);
                                                         setFormData(prev => {
@@ -662,13 +697,15 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                                             message: 'Hero image uploaded successfully.',
                                                             type: 'success'
                                                         });
+                                                    } else {
+                                                        throw new Error(data.message || 'Failed to upload hero image');
                                                     }
-                                                } catch (error) {
+                                                } catch (error: any) {
                                                     console.error('Hero image upload error:', error);
                                                     setNotification({
                                                         isOpen: true,
                                                         title: 'Upload Failed',
-                                                        message: 'Failed to upload hero image.',
+                                                        message: error.message || 'Failed to upload hero image.',
                                                         type: 'error'
                                                     });
                                                 }
@@ -678,8 +715,8 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                             <svg className="h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                                             </svg>
-                                            <p className="text-gray-600 mb-2">Click to upload hero image</p>
-                                            <p className="text-sm text-gray-500">PNG, JPG, GIF, WebP</p>
+                                            <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 mb-2">Click to upload hero image</p>
+                                            <p className="text-sm text-gray-500 dark:text-gray-500">PNG, JPG, GIF, WebP</p>
                                         </label>
                                     </div>
 
@@ -703,7 +740,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                             {/* Pricing Tiers */}
                             <div className="space-y-4">
                                 <div className="flex items-center justify-between">
-                                    <h4 className="font-semibold text-gray-900">Pricing Tiers</h4>
+                                    <h4 className="font-semibold text-gray-900 dark:text-gray-100">Pricing Tiers</h4>
                                     <button
                                         type="button"
                                         onClick={addTier}
@@ -715,9 +752,9 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                 </div>
 
                                 {formData.pricingTiers.map((tier, tierIndex) => (
-                                    <div key={tierIndex} className="bg-[#F8F9FA] p-4 rounded-lg space-y-3">
+                                    <div key={tierIndex} className="bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 p-4 rounded-lg space-y-3">
                                         <div className="flex items-center justify-between">
-                                            <h5 className="font-medium text-gray-900">Tier {tierIndex + 1}</h5>
+                                            <h5 className="font-medium text-gray-900 dark:text-gray-100">Tier {tierIndex + 1}</h5>
                                             {formData.pricingTiers.length > 1 && (
                                                 <button
                                                     type="button"
@@ -731,33 +768,33 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
 
                                         <div className="grid grid-cols-3 gap-3">
                                             <div>
-                                                <label className="block text-xs font-medium text-gray-700 mb-1">Tier Name</label>
+                                                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Tier Name</label>
                                                 <input
                                                     type="text"
                                                     value={tier.name}
                                                     onChange={(e) => updateTier(tierIndex, 'name', e.target.value)}
-                                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
+                                                    className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                                                     placeholder="Basic"
                                                     required
                                                 />
                                             </div>
                                             <div>
-                                                <label className="block text-xs font-medium text-gray-700 mb-1">Price (NPR)</label>
+                                                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Price (NPR)</label>
                                                 <input
                                                     type="number"
                                                     value={tier.price}
                                                     onChange={(e) => updateTier(tierIndex, 'price', Number(e.target.value))}
-                                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
+                                                    className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                                                     required
                                                     min="0"
                                                 />
                                             </div>
                                             <div>
-                                                <label className="block text-xs font-medium text-gray-700 mb-1">Duration</label>
+                                                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Duration</label>
                                                 <select
                                                     value={tier.duration}
                                                     onChange={(e) => updateTier(tierIndex, 'duration', e.target.value)}
-                                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
+                                                    className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                                                 >
                                                     <option value="year">Year</option>
                                                     <option value="month">Month</option>
@@ -767,7 +804,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                         </div>
 
                                         <div>
-                                            <label className="block text-xs font-medium text-gray-700 mb-2">Features</label>
+                                            <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">Features</label>
                                             <div className="space-y-2">
                                                 {tier.features.map((feature, featureIndex) => (
                                                     <div key={featureIndex} className="flex gap-2">
@@ -775,7 +812,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                                             type="text"
                                                             value={feature}
                                                             onChange={(e) => updateFeature(tierIndex, featureIndex, e.target.value)}
-                                                            className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
+                                                            className="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                                                             placeholder="Enter feature"
                                                             required
                                                         />
@@ -805,16 +842,16 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                             </div>
 
                             {/* Why Choose Section */}
-                            <div className="bg-[#F8F9FA] p-4 rounded-lg space-y-4">
-                                <h4 className="font-semibold text-gray-900">Why Choose Section</h4>
+                            <div className="bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 p-4 rounded-lg space-y-4">
+                                <h4 className="font-semibold text-gray-900 dark:text-gray-100">Why Choose Section</h4>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Section Heading</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Section Heading</label>
                                     <input
                                         type="text"
                                         value={formData.whyChooseHeading}
                                         onChange={(e) => setFormData({ ...formData, whyChooseHeading: e.target.value })}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
+                                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                                         placeholder="e.g., Why Choose Our AMC Packages?"
                                         required
                                     />
@@ -822,7 +859,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
 
                                 <div className="space-y-3">
                                     <div className="flex items-center justify-between">
-                                        <label className="block text-sm font-medium text-gray-700">Benefits</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Benefits</label>
                                         <button
                                             type="button"
                                             onClick={addBenefit}
@@ -834,9 +871,9 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                     </div>
 
                                     {formData.benefits.map((benefit, index) => (
-                                        <div key={index} className="bg-white p-3 rounded-lg border border-gray-200 space-y-2">
+                                        <div key={index} className="bg-white dark:bg-gray-800 dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700 space-y-2">
                                             <div className="flex items-center justify-between">
-                                                <span className="text-sm font-medium text-gray-700">Benefit {index + 1}</span>
+                                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Benefit {index + 1}</span>
                                                 {formData.benefits.length > 1 && (
                                                     <button
                                                         type="button"
@@ -851,14 +888,14 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                                 type="text"
                                                 value={benefit.title}
                                                 onChange={(e) => updateBenefit(index, 'title', e.target.value)}
-                                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
+                                                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                                                 placeholder="Benefit title (e.g., Professional Service)"
                                                 required
                                             />
                                             <textarea
                                                 value={benefit.description}
                                                 onChange={(e) => updateBenefit(index, 'description', e.target.value)}
-                                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
+                                                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                                                 rows={2}
                                                 placeholder="Benefit description"
                                                 required
@@ -874,18 +911,18 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                     id="isActive"
                                     checked={formData.isActive}
                                     onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                                    className="w-4 h-4 text-[#FF6B35] border-gray-300 rounded focus:ring-green-200"
+                                    className="w-4 h-4 text-[#FF6B35] border-gray-300 dark:border-gray-600 rounded focus:ring-green-200"
                                 />
-                                <label htmlFor="isActive" className="text-sm font-medium text-gray-700">
+                                <label htmlFor="isActive" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                                     Active Package
                                 </label>
                             </div>
 
-                            <div className="flex gap-3 pt-4 border-t border-gray-200 mt-4">
+                            <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700 mt-4">
                                 <button
                                     type="button"
                                     onClick={handleCloseModal}
-                                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-[#F8F9FA] transition-colors"
+                                    className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-900 transition-colors"
                                 >
                                     Cancel
                                 </button>
@@ -894,7 +931,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                     disabled={!formData.cardImage || !formData.heroImage}
                                     className={`flex-1 px-4 py-2 rounded-lg transition-colors ${formData.cardImage && formData.heroImage
                                         ? 'bg-[#FF6B35] hover:bg-green-600 text-white'
-                                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                        : 'bg-gray-300 text-gray-500 dark:text-gray-500 cursor-not-allowed'
                                         }`}
                                     title={!formData.cardImage || !formData.heroImage ? 'Please upload both card and hero images' : ''}
                                 >

@@ -108,14 +108,14 @@ export default function AMCPackagesSection({ token, currentUserId, onEditPackage
         <div>
             <div className="flex justify-between items-center mb-6">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900">AMC Packages</h2>
-                    <p className="text-gray-600 mt-1">Manage annual maintenance contract packages</p>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">AMC Packages</h2>
+                    <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 mt-1">Manage annual maintenance contract packages</p>
                 </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {packages.map((pkg) => (
-                    <div key={pkg._id} className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+                    <div key={pkg._id} className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-shadow">
                         <div className="h-48 overflow-hidden">
                             <img src={pkg.cardImage} alt={pkg.title} className="w-full h-full object-cover" />
                         </div>
@@ -124,24 +124,24 @@ export default function AMCPackagesSection({ token, currentUserId, onEditPackage
                                 href={`/amc-packages/${pkg._id}`}
                                 className="block hover:text-[#FF6B35] transition-colors"
                             >
-                                <h3 className="text-xl font-bold text-gray-900 mb-2 cursor-pointer">{pkg.title}</h3>
+                                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2 cursor-pointer">{pkg.title}</h3>
                             </a>
                             <span className="inline-block px-3 py-1 bg-orange-100 text-orange-600 text-xs font-semibold rounded-full mb-3">
                                 {pkg.category}
                             </span>
-                            <p className="text-gray-600 text-sm mb-4">{pkg.description}</p>
+                            <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 text-sm mb-4">{pkg.description}</p>
 
                             {pkg.createdBy ? (
-                                <p className="text-sm text-gray-500 mb-4">
+                                <p className="text-sm text-gray-500 dark:text-gray-500 mb-4">
                                     <span className="font-medium">By:</span> {pkg.createdBy.name}
                                 </p>
                             ) : (
-                                <p className="text-sm text-gray-400 mb-4">
+                                <p className="text-sm text-gray-400 dark:text-gray-500 mb-4">
                                     <span className="font-medium">By:</span> Unknown
                                 </p>
                             )}
 
-                            <p className="text-sm text-gray-500 mb-4">{pkg.pricingTiers.length} pricing tiers • {pkg.benefits.length} benefits</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-500 mb-4">{pkg.pricingTiers.length} pricing tiers • {pkg.benefits.length} benefits</p>
 
                             {pkg.createdBy && pkg.createdBy._id === currentUserId && (
                                 <div className="flex gap-2">

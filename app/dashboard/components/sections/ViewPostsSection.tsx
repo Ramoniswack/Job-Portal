@@ -92,7 +92,7 @@ export default function ViewPostsSection({ token, onEditPost }: ViewPostsSection
 
     const getStatusBadge = (status: string) => {
         const styles = {
-            draft: 'bg-[#F1F3F5] text-gray-700',
+            draft: 'bg-[#F1F3F5] text-gray-700 dark:text-gray-300',
             published: 'bg-[#F1F3F5] text-green-700',
             archived: 'bg-red-100 text-red-700'
         };
@@ -102,13 +102,13 @@ export default function ViewPostsSection({ token, onEditPost }: ViewPostsSection
     return (
         <div className="p-8">
             <div className="mb-6">
-                <h1 className="text-2xl font-bold text-gray-900 mb-2">All Posts</h1>
-                <p className="text-gray-600">Manage your blog posts</p>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2 transition-colors duration-300 ">All Posts</h1>
+                <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 transition-colors duration-300 ">Manage your blog posts</p>
             </div>
 
 
             {/* Filters and Search */}
-            <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
+            <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-lg shadow-sm p-4 mb-6 transition-colors duration-300 ">
                 <div className="flex flex-col md:flex-row gap-4">
                     <div className="flex-1">
                         <input
@@ -116,27 +116,27 @@ export default function ViewPostsSection({ token, onEditPost }: ViewPostsSection
                             placeholder="Search posts..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent"
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition-colors duration-300 "
                         />
                     </div>
                     <div className="flex gap-2">
                         <button
                             onClick={() => setFilter('all')}
-                            className={`px-4 py-2 rounded-lg font-medium transition ${filter === 'all' ? 'bg-[#FF6B35] text-white' : 'bg-[#F1F3F5] text-gray-700 hover:bg-[#E9ECEF]'
+                            className={`px-4 py-2 rounded-lg font-medium transition ${filter === 'all' ? 'bg-[#FF6B35] text-white' : 'bg-[#F1F3F5] text-gray-700 dark:text-gray-300 hover:bg-[#E9ECEF]'
                                 }`}
                         >
                             All
                         </button>
                         <button
                             onClick={() => setFilter('published')}
-                            className={`px-4 py-2 rounded-lg font-medium transition ${filter === 'published' ? 'bg-[#FF6B35] text-white' : 'bg-[#F1F3F5] text-gray-700 hover:bg-[#E9ECEF]'
+                            className={`px-4 py-2 rounded-lg font-medium transition ${filter === 'published' ? 'bg-[#FF6B35] text-white' : 'bg-[#F1F3F5] text-gray-700 dark:text-gray-300 hover:bg-[#E9ECEF]'
                                 }`}
                         >
                             Published
                         </button>
                         <button
                             onClick={() => setFilter('draft')}
-                            className={`px-4 py-2 rounded-lg font-medium transition ${filter === 'draft' ? 'bg-[#FF6B35] text-white' : 'bg-[#F1F3F5] text-gray-700 hover:bg-[#E9ECEF]'
+                            className={`px-4 py-2 rounded-lg font-medium transition ${filter === 'draft' ? 'bg-[#FF6B35] text-white' : 'bg-[#F1F3F5] text-gray-700 dark:text-gray-300 hover:bg-[#E9ECEF]'
                                 }`}
                         >
                             Drafts
@@ -149,17 +149,17 @@ export default function ViewPostsSection({ token, onEditPost }: ViewPostsSection
             {loading ? (
                 <div className="text-center py-12">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35] mx-auto"></div>
-                    <p className="mt-4 text-gray-600">Loading posts...</p>
+                    <p className="mt-4 text-gray-600 dark:text-gray-400 dark:text-gray-500 transition-colors duration-300 ">Loading posts...</p>
                 </div>
             ) : filteredPosts.length === 0 ? (
-                <div className="bg-white rounded-lg shadow-sm p-12 text-center">
+                <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-lg shadow-sm p-12 text-center transition-colors duration-300 ">
                     <span className="material-symbols-outlined text-gray-300 text-6xl mb-4">article</span>
-                    <p className="text-gray-600">No posts found</p>
+                    <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 transition-colors duration-300 ">No posts found</p>
                 </div>
             ) : (
                 <div className="grid gap-4">
                     {filteredPosts.map((post) => (
-                        <div key={post._id} className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition">
+                        <div key={post._id} className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-lg shadow-sm p-6 hover:shadow-md transition transition-colors duration-300 ">
                             <div className="flex gap-4">
 
                                 {post.featuredImage && (
@@ -172,8 +172,8 @@ export default function ViewPostsSection({ token, onEditPost }: ViewPostsSection
                                 <div className="flex-1">
                                     <div className="flex items-start justify-between mb-2">
                                         <div>
-                                            <h3 className="text-xl font-bold text-gray-900 mb-1">{post.title}</h3>
-                                            <div className="flex items-center gap-3 text-sm text-gray-600">
+                                            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-1 transition-colors duration-300 ">{post.title}</h3>
+                                            <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 transition-colors duration-300 ">
                                                 <span className="flex items-center gap-1">
                                                     <span className="material-symbols-outlined text-[16px]" style={{ color: post.category.color }}>
                                                         {post.category.icon}
@@ -200,7 +200,7 @@ export default function ViewPostsSection({ token, onEditPost }: ViewPostsSection
                                             )}
                                         </div>
                                     </div>
-                                    <p className="text-gray-600 mb-4 line-clamp-2">{post.excerpt}</p>
+                                    <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 mb-4 line-clamp-2 transition-colors duration-300 ">{post.excerpt}</p>
                                     <div className="flex gap-2">
                                         <button
                                             onClick={() => onEditPost(post)}

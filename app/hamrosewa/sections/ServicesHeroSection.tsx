@@ -129,15 +129,15 @@ export default function ServicesHeroSection({ token }: ServicesHeroSectionProps)
     return (
         <div>
             <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">Services Page Hero Section</h2>
-                <p className="text-gray-600 mt-1">Customize the hero banner on the services page</p>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Services Page Hero Section</h2>
+                <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 mt-1">Customize the hero banner on the services page</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Preview */}
-                <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                    <div className="p-4 border-b border-gray-200 bg-[#F8F9FA]">
-                        <h3 className="font-semibold text-gray-900">Live Preview</h3>
+                <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                        <h3 className="font-semibold text-gray-900 dark:text-gray-100">Live Preview</h3>
                     </div>
                     <div className="relative h-80 overflow-hidden">
                         <img
@@ -152,17 +152,17 @@ export default function ServicesHeroSection({ token }: ServicesHeroSectionProps)
                             <div className="text-center text-white max-w-2xl">
                                 <h1 className="text-3xl font-bold mb-2">{heroData.title}</h1>
                                 <p className="text-sm mb-4">{heroData.subtitle}</p>
-                                <div className="bg-white/20 backdrop-blur-sm rounded-lg p-2 flex gap-2">
+                                <div className="bg-white dark:bg-gray-800 dark:bg-gray-800/20 backdrop-blur-sm rounded-lg p-2 flex gap-2">
                                     <input
                                         type="text"
                                         placeholder={heroData.searchPlaceholder}
-                                        className="flex-1 px-3 py-2 text-xs bg-white/90 rounded text-gray-900"
+                                        className="flex-1 px-3 py-2 text-xs bg-white dark:bg-gray-800/90 rounded text-gray-900 dark:text-gray-100"
                                         disabled
                                     />
                                     <input
                                         type="text"
                                         placeholder={heroData.locationPlaceholder}
-                                        className="flex-1 px-3 py-2 text-xs bg-white/90 rounded text-gray-900"
+                                        className="flex-1 px-3 py-2 text-xs bg-white dark:bg-gray-800/90 rounded text-gray-900 dark:text-gray-100"
                                         disabled
                                     />
                                 </div>
@@ -172,61 +172,61 @@ export default function ServicesHeroSection({ token }: ServicesHeroSectionProps)
                 </div>
 
                 {/* Form */}
-                <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+                <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Hero Title
                         </label>
                         <input
                             type="text"
                             value={heroData.title}
                             onChange={(e) => setHeroData({ ...heroData, title: e.target.value })}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                             placeholder="e.g., Find the Perfect Service"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Subtitle
                         </label>
                         <input
                             type="text"
                             value={heroData.subtitle}
                             onChange={(e) => setHeroData({ ...heroData, subtitle: e.target.value })}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                             placeholder="e.g., Browse through professional services"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Search Box Placeholder
                         </label>
                         <input
                             type="text"
                             value={heroData.searchPlaceholder}
                             onChange={(e) => setHeroData({ ...heroData, searchPlaceholder: e.target.value })}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                             placeholder="e.g., Search for any service..."
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Location Box Placeholder
                         </label>
                         <input
                             type="text"
                             value={heroData.locationPlaceholder}
                             onChange={(e) => setHeroData({ ...heroData, locationPlaceholder: e.target.value })}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-[#FF6B35]"
                             placeholder="e.g., Location..."
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             <ImageIcon className="w-4 h-4 inline mr-1" />
                             Background Image
                         </label>
@@ -243,20 +243,20 @@ export default function ServicesHeroSection({ token }: ServicesHeroSectionProps)
                         {/* Current Image Preview */}
                         {heroData.backgroundImage && (
                             <div className="mt-3">
-                                <p className="text-xs text-gray-600 mb-2">Current Image:</p>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">Current Image:</p>
                                 <img
                                     src={heroData.backgroundImage}
                                     alt="Current hero background"
-                                    className="w-full h-32 object-cover rounded-lg border border-gray-200"
+                                    className="w-full h-32 object-cover rounded-lg border border-gray-200 dark:border-gray-700"
                                 />
                             </div>
                         )}
 
-                        <p className="text-xs text-gray-500 mt-2">Recommended size: 1920x600px</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">Recommended size: 1920x600px</p>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Overlay Darkness: {heroData.overlayOpacity.toFixed(1)}
                         </label>
                         <input
@@ -268,7 +268,7 @@ export default function ServicesHeroSection({ token }: ServicesHeroSectionProps)
                             onChange={(e) => setHeroData({ ...heroData, overlayOpacity: parseFloat(e.target.value) })}
                             className="w-full"
                         />
-                        <div className="flex justify-between text-xs text-gray-500 mt-1">
+                        <div className="flex justify-between text-xs text-gray-500 dark:text-gray-500 mt-1">
                             <span>Transparent (0.0)</span>
                             <span>Dark (1.0)</span>
                         </div>

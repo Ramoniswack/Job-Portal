@@ -107,7 +107,7 @@ export default function DashboardSection({ token }: DashboardSectionProps) {
             <div className="flex items-center justify-center py-20">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35] mx-auto"></div>
-                    <p className="mt-4 text-gray-600">Loading dashboard...</p>
+                    <p className="mt-4 text-gray-600 dark:text-gray-400 transition-colors duration-300 ">Loading dashboard...</p>
                 </div>
             </div>
         );
@@ -118,86 +118,86 @@ export default function DashboardSection({ token }: DashboardSectionProps) {
             {/* Main Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {/* Total Users */}
-                <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all">
+                <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-all transition-colors duration-300 ">
                     <div className="flex items-center justify-between mb-4">
                         <span className="material-symbols-outlined text-[48px] text-[#FF6B35]">group</span>
                         <div className="text-right">
-                            <p className="text-sm text-gray-600">Total Users</p>
-                            <p className="text-4xl font-bold text-gray-900">{stats.totalUsers}</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300 ">Total Users</p>
+                            <p className="text-4xl font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300 ">{stats.totalUsers}</p>
                         </div>
                     </div>
                     <div className="flex gap-4 text-sm">
                         <div>
-                            <p className="text-gray-500">Admins</p>
-                            <p className="font-semibold text-gray-900">{stats.usersByRole.admin}</p>
+                            <p className="text-gray-500 dark:text-gray-500 transition-colors duration-300 ">Admins</p>
+                            <p className="font-semibold text-gray-900 dark:text-gray-100 transition-colors duration-300 ">{stats.usersByRole.admin}</p>
                         </div>
                         <div>
-                            <p className="text-gray-500">Workers</p>
-                            <p className="font-semibold text-gray-900">{stats.usersByRole.worker}</p>
+                            <p className="text-gray-500 dark:text-gray-500 transition-colors duration-300 ">Workers</p>
+                            <p className="font-semibold text-gray-900 dark:text-gray-100 transition-colors duration-300 ">{stats.usersByRole.worker}</p>
                         </div>
                         <div>
-                            <p className="text-gray-500">Clients</p>
-                            <p className="font-semibold text-gray-900">{stats.usersByRole.client}</p>
+                            <p className="text-gray-500 dark:text-gray-500 transition-colors duration-300 ">Clients</p>
+                            <p className="font-semibold text-gray-900 dark:text-gray-100 transition-colors duration-300 ">{stats.usersByRole.client}</p>
                         </div>
                     </div>
                 </div>
 
                 {/* Total Jobs */}
-                <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all">
+                <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-all transition-colors duration-300 ">
                     <div className="flex items-center justify-between">
                         <span className="material-symbols-outlined text-[48px] text-[#FF6B35]">work</span>
                         <div className="text-right">
-                            <p className="text-sm text-gray-600">Total Jobs</p>
-                            <p className="text-4xl font-bold text-gray-900">{stats.totalJobs}</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300 ">Total Jobs</p>
+                            <p className="text-4xl font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300 ">{stats.totalJobs}</p>
                         </div>
                     </div>
-                    <p className="mt-4 text-sm text-gray-500">All job postings</p>
+                    <p className="mt-4 text-sm text-gray-500 dark:text-gray-500 transition-colors duration-300 ">All job postings</p>
                 </div>
 
                 {/* Total Services */}
-                <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all">
+                <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-all transition-colors duration-300 ">
                     <div className="flex items-center justify-between">
                         <span className="material-symbols-outlined text-[48px] text-[#FF6B35]">inventory_2</span>
                         <div className="text-right">
-                            <p className="text-sm text-gray-600">Total Services</p>
-                            <p className="text-4xl font-bold text-gray-900">{stats.totalServices}</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300 ">Total Services</p>
+                            <p className="text-4xl font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300 ">{stats.totalServices}</p>
                         </div>
                     </div>
-                    <p className="mt-4 text-sm text-gray-500">Active service listings</p>
+                    <p className="mt-4 text-sm text-gray-500 dark:text-gray-500 transition-colors duration-300 ">Active service listings</p>
                 </div>
 
                 {/* Total Categories */}
-                <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all">
+                <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-all transition-colors duration-300 ">
                     <div className="flex items-center justify-between">
                         <span className="material-symbols-outlined text-[48px] text-[#FF6B35]">category</span>
                         <div className="text-right">
-                            <p className="text-sm text-gray-600">Total Categories</p>
-                            <p className="text-4xl font-bold text-gray-900">{stats.totalCategories}</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300 ">Total Categories</p>
+                            <p className="text-4xl font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300 ">{stats.totalCategories}</p>
                         </div>
                     </div>
-                    <p className="mt-4 text-sm text-gray-500">Service categories</p>
+                    <p className="mt-4 text-sm text-gray-500 dark:text-gray-500 transition-colors duration-300 ">Service categories</p>
                 </div>
             </div>
 
             {/* Detailed Stats */}
             <div className="grid grid-cols-1 gap-6">
                 {/* Users Breakdown */}
-                <div className="bg-white rounded-xl border border-gray-200 p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 transition-colors duration-300 ">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2 transition-colors duration-300 ">
                         <span className="material-symbols-outlined text-blue-600">group</span>
                         Users Breakdown
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                         <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
-                            <span className="text-gray-700 font-medium">Administrators</span>
+                            <span className="text-gray-700 dark:text-gray-300 dark:text-gray-300 font-medium transition-colors duration-300 ">Administrators</span>
                             <span className="text-2xl font-bold text-purple-600">{stats.usersByRole.admin}</span>
                         </div>
                         <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                            <span className="text-gray-700 font-medium">Service Workers</span>
+                            <span className="text-gray-700 dark:text-gray-300 dark:text-gray-300 font-medium transition-colors duration-300 ">Service Workers</span>
                             <span className="text-2xl font-bold text-blue-600">{stats.usersByRole.worker}</span>
                         </div>
-                        <div className="flex items-center justify-between p-3 bg-[#F8F9FA] rounded-lg">
-                            <span className="text-gray-700 font-medium">Clients</span>
+                        <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded-lg transition-colors duration-300 ">
+                            <span className="text-gray-700 dark:text-gray-300 dark:text-gray-300 font-medium transition-colors duration-300 ">Clients</span>
                             <span className="text-2xl font-bold text-green-600">{stats.usersByRole.client}</span>
                         </div>
                     </div>

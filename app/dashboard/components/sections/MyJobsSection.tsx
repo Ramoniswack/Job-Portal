@@ -195,8 +195,8 @@ export default function MyJobsSection({
         <div className="p-8">
             <div className="flex justify-between items-center mb-6">
                 <div>
-                    <h2 className="text-xl font-bold text-gray-900">My Posted Jobs</h2>
-                    <p className="text-sm text-gray-500">Manage jobs you've posted and review applications</p>
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300 ">My Posted Jobs</h2>
+                    <p className="text-sm text-gray-500 dark:text-gray-500 transition-colors duration-300 ">Manage jobs you've posted and review applications</p>
                 </div>
                 <button
                     onClick={onLoadMyJobs}
@@ -209,15 +209,15 @@ export default function MyJobsSection({
 
             <div className="space-y-4">
                 {myJobs.map((job) => (
-                    <div key={job._id} className="bg-white border border-gray-200 rounded-xl p-6">
+                    <div key={job._id} className="bg-white dark:bg-gray-800 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 transition-colors duration-300 ">
                         {/* View Mode */}
                         {editingJobId !== job._id ? (
                             <div>
                                 <div className="flex justify-between items-start mb-4">
                                     <div className="flex-1">
-                                        <h3 className="text-lg font-bold text-gray-900">{job.title}</h3>
-                                        <p className="text-sm text-gray-600 mt-1">{job.description}</p>
-                                        <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                                        <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300 ">{job.title}</h3>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mt-1 transition-colors duration-300 ">{job.description}</p>
+                                        <div className="flex items-center gap-4 mt-2 text-sm text-gray-500 dark:text-gray-500 transition-colors duration-300 ">
                                             <span>{job.category}</span>
                                             <span>{job.location}</span>
                                             <span className="font-semibold text-[#FF6B35]">${job.budget}</span>
@@ -227,7 +227,7 @@ export default function MyJobsSection({
                                         <select
                                             value={job.status}
                                             onChange={(e) => updateJobStatus(job._id, e.target.value)}
-                                            className="px-2 py-1 text-xs font-semibold rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                            className="px-2 py-1 text-xs font-semibold rounded border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors duration-300 "
                                         >
                                             <option value="pending">Pending</option>
                                             <option value="accepted">Accepted</option>
@@ -248,7 +248,7 @@ export default function MyJobsSection({
                                         </button>
                                         <button
                                             onClick={() => loadJobApplications(job._id)}
-                                            className={`px-3 py-1 text-white text-xs rounded ${currentViewingJobId === job._id ? 'bg-[#F8F9FA]0' : 'bg-[#F8F9FA]0'
+                                            className={`px-3 py-1 text-white text-xs rounded ${currentViewingJobId === job._id ? 'bg-gray-50 dark:bg-gray-9000' : 'bg-gray-50 dark:bg-gray-9000'
                                                 }`}
                                         >
                                             {currentViewingJobId === job._id ? 'Hide' : 'View'} Applications
@@ -260,14 +260,14 @@ export default function MyJobsSection({
                                 {currentViewingJobId === job._id && (
                                     <div className="mt-4 border-t pt-4">
                                         {selectedJobApplications.length === 0 ? (
-                                            <p className="text-sm text-gray-500 text-center py-4">No applications yet</p>
+                                            <p className="text-sm text-gray-500 dark:text-gray-500 text-center py-4 transition-colors duration-300 ">No applications yet</p>
                                         ) : (
                                             <div className="space-y-3">
                                                 {selectedJobApplications.map((application) => (
-                                                    <div key={application._id} className="bg-[#F8F9FA] p-3 rounded-md flex justify-between items-start">
+                                                    <div key={application._id} className="bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 p-3 rounded-md flex justify-between items-start transition-colors duration-300 ">
                                                         <div className="flex-1">
                                                             <div className="flex items-center gap-2 mb-2">
-                                                                <span className="font-medium text-gray-900">{application.worker.name}</span>
+                                                                <span className="font-medium text-gray-900 dark:text-gray-100 transition-colors duration-300 ">{application.worker.name}</span>
                                                                 <span
                                                                     className={`text-xs px-2 py-1 rounded-full ${application.status === 'requested' ? 'bg-yellow-100 text-yellow-800' :
                                                                         application.status === 'approved' ? 'bg-[#F1F3F5] text-green-800' :
@@ -277,17 +277,17 @@ export default function MyJobsSection({
                                                                     {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
                                                                 </span>
                                                             </div>
-                                                            <p className="text-sm text-gray-600">{application.message}</p>
-                                                            <p className="text-xs text-gray-500 mt-1">Location: {application.workerLocation}</p>
-                                                            <p className="text-xs text-gray-500">Phone: {application.phone || 'N/A'}</p>
-                                                            <p className="text-xs text-gray-500">Email: {application.email || 'N/A'}</p>
-                                                            <p className="text-xs text-gray-500">Qualification: {application.qualification || 'N/A'}</p>
+                                                            <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 transition-colors duration-300 ">{application.message}</p>
+                                                            <p className="text-xs text-gray-500 dark:text-gray-500 mt-1 transition-colors duration-300 ">Location: {application.workerLocation}</p>
+                                                            <p className="text-xs text-gray-500 dark:text-gray-500 transition-colors duration-300 ">Phone: {application.phone || 'N/A'}</p>
+                                                            <p className="text-xs text-gray-500 dark:text-gray-500 transition-colors duration-300 ">Email: {application.email || 'N/A'}</p>
+                                                            <p className="text-xs text-gray-500 dark:text-gray-500 transition-colors duration-300 ">Qualification: {application.qualification || 'N/A'}</p>
                                                         </div>
                                                         {application.status === 'requested' && (
                                                             <div className="flex gap-2 ml-4">
                                                                 <button
                                                                     onClick={() => updateApplicationStatus(application._id, 'approved')}
-                                                                    className="px-3 py-1 bg-[#F8F9FA]0 text-white text-xs rounded hover:bg-green-600"
+                                                                    className="px-3 py-1 bg-gray-50 dark:bg-gray-9000 text-white text-xs rounded hover:bg-green-600 transition-colors duration-300 "
                                                                 >
                                                                     Approve
                                                                 </button>
@@ -357,13 +357,13 @@ export default function MyJobsSection({
                                 <div className="flex gap-2">
                                     <button
                                         onClick={() => updateJob(job._id)}
-                                        className="px-4 py-2 bg-[#F8F9FA]0 text-white rounded-lg hover:bg-green-600"
+                                        className="px-4 py-2 bg-gray-50 dark:bg-gray-9000 text-white rounded-lg hover:bg-green-600 transition-colors duration-300 "
                                     >
                                         Save
                                     </button>
                                     <button
                                         onClick={cancelEditJob}
-                                        className="px-4 py-2 bg-[#F8F9FA]0 text-white rounded-lg hover:bg-gray-600"
+                                        className="px-4 py-2 bg-gray-50 dark:bg-gray-9000 text-white rounded-lg hover:bg-gray-600 transition-colors duration-300 "
                                     >
                                         Cancel
                                     </button>
@@ -377,7 +377,7 @@ export default function MyJobsSection({
             {myJobs.length === 0 && !loadingJobs && (
                 <div className="text-center py-12">
                     <span className="material-symbols-outlined text-gray-300 text-[64px]">work_off</span>
-                    <p className="text-gray-500 mt-4">No jobs posted yet. Create your first job!</p>
+                    <p className="text-gray-500 dark:text-gray-500 mt-4 transition-colors duration-300 ">No jobs posted yet. Create your first job!</p>
                 </div>
             )}
         </div>

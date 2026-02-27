@@ -67,7 +67,7 @@ export default function DashboardSection({
             <div className="flex items-center justify-center py-20">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35] mx-auto"></div>
-                    <p className="mt-4 text-gray-600">Loading dashboard...</p>
+                    <p className="mt-4 text-gray-600 dark:text-gray-400 dark:text-gray-500">Loading dashboard...</p>
                 </div>
             </div>
         );
@@ -81,71 +81,71 @@ export default function DashboardSection({
                 {currentUser?.role === 'client' ? (
                     <div
                         onClick={() => setActiveSection('my-jobs')}
-                        className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all cursor-pointer"
+                        className="bg-white dark:bg-gray-800 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-all cursor-pointer"
                     >
                         <div className="flex items-center justify-between">
                             <span className="material-symbols-outlined text-[48px] text-[#FF6B35]">work</span>
                             <div className="text-right">
-                                <p className="text-sm text-gray-600">My Jobs</p>
-                                <p className="text-4xl font-bold text-gray-900">{stats.myJobsCount}</p>
+                                <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">My Jobs</p>
+                                <p className="text-4xl font-bold text-gray-900 dark:text-gray-100">{stats.myJobsCount}</p>
                             </div>
                         </div>
-                        <p className="mt-4 text-sm text-gray-500">Jobs you've posted</p>
+                        <p className="mt-4 text-sm text-gray-500 dark:text-gray-500">Jobs you've posted</p>
                     </div>
                 ) : (
                     <div
                         onClick={() => setActiveSection('my-applications')}
-                        className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all cursor-pointer"
+                        className="bg-white dark:bg-gray-800 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-all cursor-pointer"
                     >
                         <div className="flex items-center justify-between">
                             <span className="material-symbols-outlined text-[48px] text-[#FF6B35]">description</span>
                             <div className="text-right">
-                                <p className="text-sm text-gray-600">My Applications</p>
-                                <p className="text-4xl font-bold text-gray-900">{stats.myApplicationsCount}</p>
+                                <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">My Applications</p>
+                                <p className="text-4xl font-bold text-gray-900 dark:text-gray-100">{stats.myApplicationsCount}</p>
                             </div>
                         </div>
-                        <p className="mt-4 text-sm text-gray-500">Jobs you've applied to</p>
+                        <p className="mt-4 text-sm text-gray-500 dark:text-gray-500">Jobs you've applied to</p>
                     </div>
                 )}
 
                 {/* Total Jobs Available */}
                 <div
                     onClick={() => setActiveSection('browse-jobs')}
-                    className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all cursor-pointer"
+                    className="bg-white dark:bg-gray-800 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-all cursor-pointer"
                 >
                     <div className="flex items-center justify-between">
                         <span className="material-symbols-outlined text-[48px] text-[#FF6B35]">work_outline</span>
                         <div className="text-right">
-                            <p className="text-sm text-gray-600">Available Jobs</p>
-                            <p className="text-4xl font-bold text-gray-900">{stats.totalJobs}</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">Available Jobs</p>
+                            <p className="text-4xl font-bold text-gray-900 dark:text-gray-100">{stats.totalJobs}</p>
                         </div>
                     </div>
-                    <p className="mt-4 text-sm text-gray-500">Browse all job postings</p>
+                    <p className="mt-4 text-sm text-gray-500 dark:text-gray-500">Browse all job postings</p>
                 </div>
 
                 {/* Total Services */}
-                <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between">
                         <span className="material-symbols-outlined text-[48px] text-[#FF6B35]">inventory_2</span>
                         <div className="text-right">
-                            <p className="text-sm text-gray-600">Total Services</p>
-                            <p className="text-4xl font-bold text-gray-900">{stats.totalServices}</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">Total Services</p>
+                            <p className="text-4xl font-bold text-gray-900 dark:text-gray-100">{stats.totalServices}</p>
                         </div>
                     </div>
-                    <p className="mt-4 text-sm text-gray-500">Available on platform</p>
+                    <p className="mt-4 text-sm text-gray-500 dark:text-gray-500">Available on platform</p>
                 </div>
 
                 {/* Quick Action */}
                 <div
                     onClick={currentUser?.role === 'client' ? () => setActiveSection('my-jobs') : onLoadJobs}
-                    className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all cursor-pointer"
+                    className="bg-white dark:bg-gray-800 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-all cursor-pointer"
                 >
                     <div className="flex items-center justify-center h-full">
                         <div className="text-center">
                             <span className="material-symbols-outlined text-[48px] text-[#FF6B35] mb-2">
                                 {currentUser?.role === 'client' ? 'add_circle' : 'refresh'}
                             </span>
-                            <p className="text-lg font-bold text-gray-900">
+                            <p className="text-lg font-bold text-gray-900 dark:text-gray-100">
                                 {currentUser?.role === 'client' ? 'Post New Job' : 'Refresh Jobs'}
                             </p>
                         </div>
@@ -154,17 +154,17 @@ export default function DashboardSection({
             </div>
 
             {/* Quick Actions */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Actions</h3>
+            <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Quick Actions</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <button
                         onClick={() => setActiveSection('browse-jobs')}
-                        className="flex items-center gap-3 p-4 bg-[#F8F9FA] hover:bg-[#F1F3F5] rounded-lg transition-colors text-left"
+                        className="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-900 hover:bg-[#F1F3F5] rounded-lg transition-colors text-left"
                     >
                         <span className="material-symbols-outlined text-[#FF6B35] text-[32px]">search</span>
                         <div>
-                            <p className="font-semibold text-gray-900">Browse Jobs</p>
-                            <p className="text-sm text-gray-600">Find opportunities</p>
+                            <p className="font-semibold text-gray-900 dark:text-gray-100">Browse Jobs</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">Find opportunities</p>
                         </div>
                     </button>
                     <button
@@ -175,10 +175,10 @@ export default function DashboardSection({
                             {currentUser?.role === 'client' ? 'work' : 'description'}
                         </span>
                         <div>
-                            <p className="font-semibold text-gray-900">
+                            <p className="font-semibold text-gray-900 dark:text-gray-100">
                                 {currentUser?.role === 'client' ? 'My Jobs' : 'My Applications'}
                             </p>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">
                                 {currentUser?.role === 'client' ? 'Manage your postings' : 'Track your applications'}
                             </p>
                         </div>
@@ -189,8 +189,8 @@ export default function DashboardSection({
                     >
                         <span className="material-symbols-outlined text-purple-600 text-[32px]">refresh</span>
                         <div>
-                            <p className="font-semibold text-gray-900">Refresh Data</p>
-                            <p className="text-sm text-gray-600">Update your information</p>
+                            <p className="font-semibold text-gray-900 dark:text-gray-100">Refresh Data</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">Update your information</p>
                         </div>
                     </button>
                 </div>
