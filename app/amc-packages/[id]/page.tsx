@@ -4,6 +4,7 @@ import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'next/navigation';
+import { toast } from 'sonner';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -34,6 +35,11 @@ interface AMCPackage {
     pricingTiers: PricingTier[];
     whyChooseHeading: string;
     benefits: Benefit[];
+    createdBy?: {
+        _id: string;
+        name: string;
+        email: string;
+    };
 }
 
 export default function AMCPackagesPage() {
@@ -43,6 +49,7 @@ export default function AMCPackagesPage() {
     const [loading, setLoading] = useState(true);
     const [showBookingModal, setShowBookingModal] = useState(false);
     const [selectedTier, setSelectedTier] = useState<PricingTier | null>(null);
+    const [currentUser, setCurrentUser] = useState<{ id: string; name: string; email: string } | null>(null);
     const [bookingData, setBookingData] = useState({
         name: '',
         email: '',
@@ -63,8 +70,35 @@ export default function AMCPackagesPage() {
     useEffect(() => {
         if (id) {
             fetchPackage();
+            fetchCurrentUser();
         }
     }, [id]);
+
+    const fetchCurrentUser = async () => {
+        const token = localStorage.getItem('authToken');
+        if (!token) return;
+
+        try {
+            const response = await fetch('http://localhost:5000/api/users/me', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await response.json();
+            if (data.success) {
+                setCurrentUser({
+                    id: data.data._id,
+                    name: data.data.name,
+                    email: data.data.email
+                });
+                setBookingData(prev => ({
+                    ...prev,
+                    name: data.data.name,
+                    email: data.data.email
+                }));
+            }
+        } catch (error) {
+            console.error('Failed to fetch user:', error);
+        }
+    };
 
     // GSAP Animations
     useEffect(() => {
@@ -308,23 +342,78 @@ export default function AMCPackagesPage() {
     };
 
     const handleBookNow = (tier: PricingTier) => {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            toast.error('Login Required', {
+                description: 'Please login to book an AMC package.',
+                duration: 3000,
+            });
+            // Redirect to login page after 1 second
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 1000);
+            return;
+        }
+
+        // Check if current user is the package creator
+        if (currentUser && packageData?.createdBy && currentUser.id === packageData.createdBy._id) {
+            toast.error('Cannot Book Your Own Package', {
+                description: 'This is your package and cannot be booked by you.',
+                duration: 4000,
+            });
+            return;
+        }
+
         setSelectedTier(tier);
         setShowBookingModal(true);
     };
 
-    const handleBookingSubmit = (e: React.FormEvent) => {
+    const handleBookingSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Here you would typically send the booking data to your backend
-        console.log('Booking submitted:', {
-            package: packageData?.title,
-            tier: selectedTier?.name,
-            ...bookingData
-        });
+        const token = localStorage.getItem('authToken');
 
-        alert('AMC Package booking request submitted successfully! We will contact you shortly.');
-        setShowBookingModal(false);
-        setBookingData({ name: '', email: '', phone: '', address: '', notes: '' });
+        try {
+            const response = await fetch('http://localhost:5000/api/amc-bookings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    packageId: packageData?._id,
+                    packageTitle: packageData?.title,
+                    tier: selectedTier,
+                    customerName: bookingData.name,
+                    customerEmail: bookingData.email,
+                    customerPhone: bookingData.phone,
+                    customerAddress: bookingData.address,
+                    notes: bookingData.notes
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                toast.success('Booking Request Submitted!', {
+                    description: 'Your AMC package booking request has been submitted successfully. We will contact you shortly.',
+                    duration: 5000,
+                });
+                setShowBookingModal(false);
+                setBookingData({ name: '', email: '', phone: '', address: '', notes: '' });
+            } else {
+                toast.error('Booking Failed', {
+                    description: data.message || 'Failed to submit booking request.',
+                    duration: 4000,
+                });
+            }
+        } catch (error) {
+            console.error('Booking error:', error);
+            toast.error('Connection Error', {
+                description: 'Failed to submit booking. Please try again.',
+                duration: 4000,
+            });
+        }
     };
 
     if (loading) {
@@ -488,8 +577,9 @@ export default function AMCPackagesPage() {
                                         type="text"
                                         required
                                         value={bookingData.name}
-                                        onChange={(e) => setBookingData({ ...bookingData, name: e.target.value })}
-                                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent outline-none transition"
+                                        readOnly
+                                        disabled
+                                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
                                         placeholder="Enter your full name"
                                     />
                                 </div>
@@ -502,8 +592,9 @@ export default function AMCPackagesPage() {
                                         type="email"
                                         required
                                         value={bookingData.email}
-                                        onChange={(e) => setBookingData({ ...bookingData, email: e.target.value })}
-                                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent outline-none transition"
+                                        readOnly
+                                        disabled
+                                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
                                         placeholder="your.email@example.com"
                                     />
                                 </div>

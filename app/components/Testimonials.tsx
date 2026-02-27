@@ -1,48 +1,73 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+interface Testimonial {
+    _id: string;
+    text: string;
+    name: string;
+    position: string;
+    avatar: string;
+}
+
+interface SectionContent {
+    title: string;
+    description1: string;
+    description2: string;
+    videoImage: string;
+}
 
 export default function Testimonials() {
     const testimonialsRef = useRef<HTMLDivElement>(null);
+    const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+    const [sectionContent, setSectionContent] = useState<SectionContent>({
+        title: 'See what our clients say about us',
+        description1: 'Hamro Sewa is the perfect partner for your facility. With over 7 years of professional experience we offer one stop solution for all your facility requirements. Our services allows you to focus on your core business by saving your time and reducing cost.',
+        description2: 'We provide comprehensive range of facility services ranging from plumbing, electrical, computer and IT Service, air conditioning, cleaning, pest control, gardening, lift, generator, water treatment and many more.',
+        videoImage: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=800'
+    });
 
-    const testimonials = [
-        {
-            text: "There was great communication in regards to what happened to my computer and what could be done. I was informed of everything before hand in regards to the price. my computer got fixed in a reasonable price and reasonable timeframe. good services. would highly recommend for any electronic problems.",
-            name: "Anusha Khanal",
-            position: "Vayodha Hospital",
-            avatar: "https://i.pravatar.cc/150?u=anusha"
-        },
-        {
-            text: "I had our solar water heating system completely serviced by Hamro Sewa and now it's running very smoothly. can have hot water 2 floors down within minutes. it's made our winter very comfortable. highly recommended!",
-            name: "KASHYAP SHAKYA",
-            position: "Brand Manager At Nepal Life Insurance",
-            avatar: "https://i.pravatar.cc/150?u=kashyap"
-        },
-        {
-            text: "Excellent plumbing service! They fixed our leaking pipes quickly and professionally. Very satisfied with their work and pricing. Will definitely call them again for future needs.",
-            name: "Ramesh Adhikari",
-            position: "Homeowner, Lalitpur",
-            avatar: "https://i.pravatar.cc/150?u=ramesh"
-        },
-        {
-            text: "Professional AC installation service. The technicians were knowledgeable and completed the work efficiently. My office is now perfectly cooled. Highly recommend their services!",
-            name: "Maya Gurung",
-            position: "Office Manager, Kathmandu",
-            avatar: "https://i.pravatar.cc/150?u=maya"
-        },
-        {
-            text: "Outstanding electrical work! They rewired our entire house safely and efficiently. The team was professional and cleaned up after themselves. Great value for money.",
-            name: "Suresh Pradhan",
-            position: "Business Owner, Bhaktapur",
-            avatar: "https://i.pravatar.cc/150?u=suresh"
-        },
-        {
-            text: "Best cleaning service in town! They deep cleaned our entire apartment and it looks brand new. The staff was courteous and thorough. Will book them regularly now.",
-            name: "Rita Shrestha",
-            position: "Resident, Pokhara",
-            avatar: "https://i.pravatar.cc/150?u=rita"
+    useEffect(() => {
+        fetchTestimonials();
+        fetchSectionContent();
+    }, []);
+
+    const fetchSectionContent = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/api/testimonial-section');
+            const data = await response.json();
+
+            if (data.success && data.data) {
+                setSectionContent(data.data);
+            }
+        } catch (error) {
+            console.error('Error fetching section content:', error);
+            // Use default content if fetch fails
         }
-    ];
+    };
+
+    const fetchTestimonials = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/api/testimonials');
+            const data = await response.json();
+
+            if (data.success) {
+                setTestimonials(data.data);
+            }
+        } catch (error) {
+            console.error('Error fetching testimonials:', error);
+            // Use default testimonials if fetch fails
+            setTestimonials([
+                {
+                    _id: '1',
+                    text: "There was great communication in regards to what happened to my computer and what could be done. I was informed of everything before hand in regards to the price. my computer got fixed in a reasonable price and reasonable timeframe. good services. would highly recommend for any electronic problems.",
+                    name: "Anusha Khanal",
+                    position: "Vayodha Hospital",
+                    avatar: "https://i.pravatar.cc/150?u=anusha"
+                }
+            ]);
+        }
+    };
 
     // Auto-scroll effect for testimonials
     useEffect(() => {
@@ -83,20 +108,20 @@ export default function Testimonials() {
                 <div className="flex flex-col lg:flex-row gap-12">
                     <div className="flex-1">
                         <h2 className="text-3xl font-bold text-[#1A2B3C] mb-6">
-                            See what our clients say about us
+                            {sectionContent.title}
                         </h2>
                         <div className="space-y-4 text-gray-600 leading-relaxed text-sm md:text-base mb-8">
-                            <p>
-                                Hamro Sewa is the perfect partner for your facility. With over 7 years of professional experience we offer one stop solution for all your facility requirements. Our services allows you to focus on your core business by saving your time and reducing cost.
-                            </p>
-                            <p>
-                                We provide comprehensive range of facility services ranging from plumbing, electrical, computer and IT Service, air conditioning, cleaning, pest control, gardening, lift, generator, water treatment and many more.
-                            </p>
+                            {sectionContent.description1 && (
+                                <p>{sectionContent.description1}</p>
+                            )}
+                            {sectionContent.description2 && (
+                                <p>{sectionContent.description2}</p>
+                            )}
                         </div>
 
                         <div className="relative rounded-2xl overflow-hidden shadow-lg aspect-video group cursor-pointer">
                             <img
-                                src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=800"
+                                src={sectionContent.videoImage}
                                 alt="Video Placeholder"
                                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                             />
@@ -118,9 +143,9 @@ export default function Testimonials() {
                             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                         >
                             <div>
-                                {[...testimonials, ...testimonials].map((testimonial, index) => (
+                                {testimonials.map((testimonial, index) => (
                                     <div
-                                        key={index}
+                                        key={testimonial._id || index}
                                         className="bg-gradient-to-br from-slate-50 to-gray-50 rounded-2xl p-6 shadow-sm mb-6 transition-all duration-300 hover:shadow-md hover:-translate-y-1"
                                     >
                                         <div className="text-[#FF6B35] text-5xl font-serif leading-none mb-3">

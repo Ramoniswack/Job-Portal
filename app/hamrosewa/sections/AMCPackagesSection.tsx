@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, X } from 'lucide-react';
-import ImageUpload from '../../components/ImageUpload';
 import ConfirmDialog from '../../components/ConfirmDialog';
 import Notification from '../../components/Notification';
 
@@ -29,6 +28,11 @@ interface AMCPackage {
     whyChooseHeading: string;
     benefits: Benefit[];
     isActive: boolean;
+    createdBy?: {
+        _id: string;
+        name: string;
+        email: string;
+    };
 }
 
 interface AMCPackagesSectionProps {
@@ -78,6 +82,16 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
         fetchHeading();
     }, []);
 
+    // Debug: Log formData changes
+    useEffect(() => {
+        console.log('📦 FormData updated:', {
+            cardImage: formData.cardImage ? '✅ Set' : '❌ Empty',
+            heroImage: formData.heroImage ? '✅ Set' : '❌ Empty',
+            cardImageUrl: formData.cardImage,
+            heroImageUrl: formData.heroImage
+        });
+    }, [formData.cardImage, formData.heroImage]);
+
     const fetchHeading = async () => {
         try {
             const response = await fetch('http://localhost:5000/api/site-content/amc_packages_heading');
@@ -113,12 +127,35 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        // Validate that both images are uploaded
+        if (!formData.cardImage) {
+            setNotification({
+                isOpen: true,
+                title: 'Missing Card Image',
+                message: 'Please upload a card image before submitting.',
+                type: 'error'
+            });
+            return;
+        }
+
+        if (!formData.heroImage) {
+            setNotification({
+                isOpen: true,
+                title: 'Missing Hero Image',
+                message: 'Please upload a hero image before submitting.',
+                type: 'error'
+            });
+            return;
+        }
+
         try {
             const url = editingPackage
                 ? `http://localhost:5000/api/amc-packages/${editingPackage._id}`
                 : 'http://localhost:5000/api/amc-packages';
 
             const method = editingPackage ? 'PUT' : 'POST';
+
+            console.log('📦 Submitting AMC Package:', formData);
 
             const response = await fetch(url, {
                 method,
@@ -416,6 +453,17 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                 {pkg.category}
                             </span>
                             <p className="text-gray-600 text-sm mb-4">{pkg.description}</p>
+
+                            {pkg.createdBy ? (
+                                <p className="text-sm text-gray-500 mb-4">
+                                    <span className="font-medium">By:</span> {pkg.createdBy.name}
+                                </p>
+                            ) : (
+                                <p className="text-sm text-gray-400 mb-4">
+                                    <span className="font-medium">By:</span> Unknown
+                                </p>
+                            )}
+
                             <p className="text-sm text-gray-500 mb-4">{pkg.pricingTiers.length} pricing tiers • {pkg.benefits.length} benefits</p>
 
                             <div className="flex gap-2">
@@ -498,36 +546,156 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Card Image</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Card Image <span className="text-red-500">*</span>
+                                    </label>
                                     <p className="text-xs text-gray-500 mb-2">For homepage card display</p>
-                                    <ImageUpload
-                                        token={token}
-                                        multiple={false}
-                                        onUploadComplete={(imageUrl) => {
-                                            setFormData({ ...formData, cardImage: imageUrl });
-                                        }}
-                                    />
+
+                                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#FF6B35] transition-colors">
+                                        <input
+                                            type="file"
+                                            id="card-image-upload"
+                                            className="hidden"
+                                            accept="image/*"
+                                            onChange={async (e) => {
+                                                const file = e.target.files?.[0];
+                                                if (!file) return;
+
+                                                const formDataUpload = new FormData();
+                                                formDataUpload.append('image', file);
+
+                                                try {
+                                                    const response = await fetch('/api/upload/single', {
+                                                        method: 'POST',
+                                                        headers: { 'Authorization': `Bearer ${token}` },
+                                                        body: formDataUpload
+                                                    });
+
+                                                    const data = await response.json();
+                                                    if (data.success && data.data?.url) {
+                                                        console.log('📦 CARD IMAGE uploaded:', data.data.url);
+                                                        setFormData(prev => {
+                                                            const updated = { ...prev, cardImage: data.data.url };
+                                                            console.log('📦 CARD IMAGE - Updated formData:', updated);
+                                                            return updated;
+                                                        });
+                                                        setNotification({
+                                                            isOpen: true,
+                                                            title: 'Card Image Uploaded!',
+                                                            message: 'Card image uploaded successfully.',
+                                                            type: 'success'
+                                                        });
+                                                    }
+                                                } catch (error) {
+                                                    console.error('Card image upload error:', error);
+                                                    setNotification({
+                                                        isOpen: true,
+                                                        title: 'Upload Failed',
+                                                        message: 'Failed to upload card image.',
+                                                        type: 'error'
+                                                    });
+                                                }
+                                            }}
+                                        />
+                                        <label htmlFor="card-image-upload" className="cursor-pointer flex flex-col items-center justify-center">
+                                            <svg className="h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                            </svg>
+                                            <p className="text-gray-600 mb-2">Click to upload card image</p>
+                                            <p className="text-sm text-gray-500">PNG, JPG, GIF, WebP</p>
+                                        </label>
+                                    </div>
+
                                     {formData.cardImage && (
                                         <div className="mt-2">
-                                            <img src={formData.cardImage} alt="Card preview" className="w-full h-32 object-cover rounded-lg border" />
+                                            <img src={formData.cardImage} alt="Card preview" className="w-full h-32 object-cover rounded-lg border-2 border-green-500" />
+                                            <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
+                                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                                </svg>
+                                                Card image uploaded
+                                            </p>
                                         </div>
+                                    )}
+                                    {!formData.cardImage && (
+                                        <p className="text-xs text-red-500 mt-2">⚠️ Card image is required</p>
                                     )}
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Hero Image</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Hero Image <span className="text-red-500">*</span>
+                                    </label>
                                     <p className="text-xs text-gray-500 mb-2">For detail page banner</p>
-                                    <ImageUpload
-                                        token={token}
-                                        multiple={false}
-                                        onUploadComplete={(imageUrl) => {
-                                            setFormData({ ...formData, heroImage: imageUrl });
-                                        }}
-                                    />
+
+                                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#FF6B35] transition-colors">
+                                        <input
+                                            type="file"
+                                            id="hero-image-upload"
+                                            className="hidden"
+                                            accept="image/*"
+                                            onChange={async (e) => {
+                                                const file = e.target.files?.[0];
+                                                if (!file) return;
+
+                                                const formDataUpload = new FormData();
+                                                formDataUpload.append('image', file);
+
+                                                try {
+                                                    const response = await fetch('/api/upload/single', {
+                                                        method: 'POST',
+                                                        headers: { 'Authorization': `Bearer ${token}` },
+                                                        body: formDataUpload
+                                                    });
+
+                                                    const data = await response.json();
+                                                    if (data.success && data.data?.url) {
+                                                        console.log('📦 HERO IMAGE uploaded:', data.data.url);
+                                                        setFormData(prev => {
+                                                            const updated = { ...prev, heroImage: data.data.url };
+                                                            console.log('📦 HERO IMAGE - Updated formData:', updated);
+                                                            return updated;
+                                                        });
+                                                        setNotification({
+                                                            isOpen: true,
+                                                            title: 'Hero Image Uploaded!',
+                                                            message: 'Hero image uploaded successfully.',
+                                                            type: 'success'
+                                                        });
+                                                    }
+                                                } catch (error) {
+                                                    console.error('Hero image upload error:', error);
+                                                    setNotification({
+                                                        isOpen: true,
+                                                        title: 'Upload Failed',
+                                                        message: 'Failed to upload hero image.',
+                                                        type: 'error'
+                                                    });
+                                                }
+                                            }}
+                                        />
+                                        <label htmlFor="hero-image-upload" className="cursor-pointer flex flex-col items-center justify-center">
+                                            <svg className="h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                            </svg>
+                                            <p className="text-gray-600 mb-2">Click to upload hero image</p>
+                                            <p className="text-sm text-gray-500">PNG, JPG, GIF, WebP</p>
+                                        </label>
+                                    </div>
+
                                     {formData.heroImage && (
                                         <div className="mt-2">
-                                            <img src={formData.heroImage} alt="Hero preview" className="w-full h-32 object-cover rounded-lg border" />
+                                            <img src={formData.heroImage} alt="Hero preview" className="w-full h-32 object-cover rounded-lg border-2 border-green-500" />
+                                            <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
+                                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                                </svg>
+                                                Hero image uploaded
+                                            </p>
                                         </div>
+                                    )}
+                                    {!formData.heroImage && (
+                                        <p className="text-xs text-red-500 mt-2">⚠️ Hero image is required</p>
                                     )}
                                 </div>
                             </div>
@@ -713,7 +881,7 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                 </label>
                             </div>
 
-                            <div className="flex gap-3 pt-4">
+                            <div className="flex gap-3 pt-4 border-t border-gray-200 mt-4">
                                 <button
                                     type="button"
                                     onClick={handleCloseModal}
@@ -723,7 +891,12 @@ export default function AMCPackagesSection({ token }: AMCPackagesSectionProps) {
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 px-4 py-2 bg-[#FF6B35] hover:bg-green-600 text-white rounded-lg transition-colors"
+                                    disabled={!formData.cardImage || !formData.heroImage}
+                                    className={`flex-1 px-4 py-2 rounded-lg transition-colors ${formData.cardImage && formData.heroImage
+                                        ? 'bg-[#FF6B35] hover:bg-green-600 text-white'
+                                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                        }`}
+                                    title={!formData.cardImage || !formData.heroImage ? 'Please upload both card and hero images' : ''}
                                 >
                                     {editingPackage ? 'Update Package' : 'Create Package'}
                                 </button>

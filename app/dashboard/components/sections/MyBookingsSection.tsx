@@ -119,94 +119,96 @@ export default function MyBookingsSection({ token }: MyBookingsSectionProps) {
                 </div>
             ) : (
                 <div className="grid gap-6">
-                    {bookings.map((booking) => (
-                        <div key={booking._id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
-                            <div className="p-6">
-                                <div className="flex gap-6">
-                                    {/* Service Image */}
-                                    <div className="flex-shrink-0">
-                                        <img
-                                            src={booking.service.images[0]?.url || '/placeholder-service.jpg'}
-                                            alt={booking.service.title}
-                                            className="w-32 h-32 object-cover rounded-lg"
-                                        />
-                                    </div>
-
-                                    {/* Booking Details */}
-                                    <div className="flex-1">
-                                        <div className="flex items-start justify-between mb-3">
-                                            <div>
-                                                <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                                                    {booking.service.title}
-                                                </h3>
-                                                {booking.service?.createdBy && (
-                                                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                                                        <User className="w-4 h-4" />
-                                                        <span>Provider: {booking.service.createdBy.name}</span>
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                {getStatusIcon(booking.status)}
-                                                <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBadge(booking.status)}`}>
-                                                    {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
-                                                </span>
-                                            </div>
+                    {bookings
+                        .filter((booking) => booking.service != null) // Filter out bookings with null service
+                        .map((booking) => (
+                            <div key={booking._id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+                                <div className="p-6">
+                                    <div className="flex gap-6">
+                                        {/* Service Image */}
+                                        <div className="flex-shrink-0">
+                                            <img
+                                                src={booking.service.images?.[0]?.url || '/placeholder-service.jpg'}
+                                                alt={booking.service.title || 'Service'}
+                                                className="w-32 h-32 object-cover rounded-lg"
+                                            />
                                         </div>
 
-                                        <div className="grid grid-cols-2 gap-4 mb-3">
-                                            <div className="flex items-center gap-2 text-sm text-gray-700">
-                                                <Calendar className="w-4 h-4 text-gray-500" />
-                                                <span>{new Date(booking.bookingDate).toLocaleDateString('en-US', {
-                                                    weekday: 'short',
-                                                    year: 'numeric',
-                                                    month: 'short',
-                                                    day: 'numeric'
-                                                })}</span>
+                                        {/* Booking Details */}
+                                        <div className="flex-1">
+                                            <div className="flex items-start justify-between mb-3">
+                                                <div>
+                                                    <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                                                        {booking.service.title || 'Service'}
+                                                    </h3>
+                                                    {booking.service?.createdBy && (
+                                                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                            <User className="w-4 h-4" />
+                                                            <span>Provider: {booking.service.createdBy.name}</span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    {getStatusIcon(booking.status)}
+                                                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBadge(booking.status)}`}>
+                                                        {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                                                    </span>
+                                                </div>
                                             </div>
-                                            <div className="flex items-center gap-2 text-sm text-gray-700">
-                                                <Clock className="w-4 h-4 text-gray-500" />
-                                                <span>{booking.bookingTime}</span>
+
+                                            <div className="grid grid-cols-2 gap-4 mb-3">
+                                                <div className="flex items-center gap-2 text-sm text-gray-700">
+                                                    <Calendar className="w-4 h-4 text-gray-500" />
+                                                    <span>{new Date(booking.bookingDate).toLocaleDateString('en-US', {
+                                                        weekday: 'short',
+                                                        year: 'numeric',
+                                                        month: 'short',
+                                                        day: 'numeric'
+                                                    })}</span>
+                                                </div>
+                                                <div className="flex items-center gap-2 text-sm text-gray-700">
+                                                    <Clock className="w-4 h-4 text-gray-500" />
+                                                    <span>{booking.bookingTime}</span>
+                                                </div>
                                             </div>
+
+                                            <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                                                <div className="text-lg font-bold text-[#f97316]">
+                                                    NPR {booking.service.price || 0}
+                                                </div>
+                                                <div className="text-xs text-gray-500">
+                                                    Booked on {new Date(booking.createdAt).toLocaleDateString()}
+                                                </div>
+                                            </div>
+
+                                            {booking.status === 'approved' && (
+                                                <div className="mt-3 p-3 bg-green-50 rounded-lg border border-green-200">
+                                                    <p className="text-sm text-green-800">
+                                                        ✓ Your booking has been approved! You can now message the provider.
+                                                    </p>
+                                                </div>
+                                            )}
+
+                                            {booking.status === 'pending' && (
+                                                <div className="mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                                                    <p className="text-sm text-gray-700">
+                                                        ⏳ Waiting for provider approval. You'll be notified once approved.
+                                                    </p>
+                                                </div>
+                                            )}
+
+                                            {booking.status === 'rejected' && (
+                                                <div className="mt-3 p-3 bg-red-50 rounded-lg border border-red-200">
+                                                    <p className="text-sm text-red-800">
+                                                        ✗ This booking was rejected by the provider.
+                                                    </p>
+                                                </div>
+                                            )}
                                         </div>
-
-                                        <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                                            <div className="text-lg font-bold text-[#f97316]">
-                                                NPR {booking.service.price}
-                                            </div>
-                                            <div className="text-xs text-gray-500">
-                                                Booked on {new Date(booking.createdAt).toLocaleDateString()}
-                                            </div>
-                                        </div>
-
-                                        {booking.status === 'approved' && (
-                                            <div className="mt-3 p-3 bg-green-50 rounded-lg border border-green-200">
-                                                <p className="text-sm text-green-800">
-                                                    ✓ Your booking has been approved! You can now message the provider.
-                                                </p>
-                                            </div>
-                                        )}
-
-                                        {booking.status === 'pending' && (
-                                            <div className="mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                                                <p className="text-sm text-gray-700">
-                                                    ⏳ Waiting for provider approval. You'll be notified once approved.
-                                                </p>
-                                            </div>
-                                        )}
-
-                                        {booking.status === 'rejected' && (
-                                            <div className="mt-3 p-3 bg-red-50 rounded-lg border border-red-200">
-                                                <p className="text-sm text-red-800">
-                                                    ✗ This booking was rejected by the provider.
-                                                </p>
-                                            </div>
-                                        )}
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
                 </div>
             )}
         </div>

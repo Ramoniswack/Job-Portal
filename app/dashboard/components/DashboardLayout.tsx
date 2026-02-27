@@ -17,6 +17,9 @@ import AddServiceSection from './sections/AddServiceSection';
 import ServiceCategoriesSection from './sections/ServiceCategoriesSection';
 import MyServicesSection from './sections/MyServicesSection';
 import MyBookingsSection from './sections/MyBookingsSection';
+import AMCPackagesSection from './sections/AMCPackagesSection';
+import AddAMCPackageSection from './sections/AddAMCPackageSection';
+import MyAMCBookingsSection from './sections/MyAMCBookingsSection';
 import { useFCMNotifications } from '@/lib/useFCMNotifications';
 
 export interface User {
@@ -70,6 +73,7 @@ export default function DashboardLayout() {
     const [loadingAllJobs, setLoadingAllJobs] = useState(false);
     const [loadingApplications, setLoadingApplications] = useState(false);
     const [editingPost, setEditingPost] = useState<any>(null);
+    const [editingPackageId, setEditingPackageId] = useState<string | null>(null);
 
     // Initialize FCM notifications
     const { notification } = useFCMNotifications(token);
@@ -337,6 +341,32 @@ export default function DashboardLayout() {
 
                     {activeSection === 'my-bookings' && (
                         <MyBookingsSection token={token} />
+                    )}
+
+                    {activeSection === 'add-amc-package' && (
+                        <AddAMCPackageSection
+                            token={token}
+                            editingPackageId={editingPackageId}
+                            onBack={() => {
+                                setEditingPackageId(null);
+                                setActiveSection('amc-packages');
+                            }}
+                        />
+                    )}
+
+                    {activeSection === 'amc-packages' && (
+                        <AMCPackagesSection
+                            token={token}
+                            currentUserId={currentUser?.id || ''}
+                            onEditPackage={(packageId) => {
+                                setEditingPackageId(packageId);
+                                setActiveSection('add-amc-package');
+                            }}
+                        />
+                    )}
+
+                    {activeSection === 'my-amc-bookings' && (
+                        <MyAMCBookingsSection token={token} />
                     )}
                 </main>
             </div>

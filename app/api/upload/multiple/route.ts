@@ -34,7 +34,10 @@ export async function POST(request: NextRequest) {
         let data;
         try {
             data = await response.json();
-            console.log('Backend response data:', data);
+            // Only log errors, not success responses
+            if (!data.success) {
+                console.error('Backend response data:', data);
+            }
         } catch (parseError) {
             const text = await response.text();
             console.error('Failed to parse JSON. Response text:', text);

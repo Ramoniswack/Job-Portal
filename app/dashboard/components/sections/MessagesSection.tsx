@@ -14,7 +14,7 @@ interface MessagesSectionProps {
 
 interface AcceptedConnection {
     _id: string;
-    type: 'job' | 'service';  // Add type to distinguish between job and service bookings
+    type: 'job' | 'service' | 'amc';  // Add AMC type
     job?: {
         _id: string;
         title: string;
@@ -23,6 +23,11 @@ interface AcceptedConnection {
         budget: number;
     };
     service?: {
+        _id: string;
+        title: string;
+        images: Array<{ url: string }>;
+    };
+    package?: {
         _id: string;
         title: string;
         images: Array<{ url: string }>;
@@ -43,6 +48,11 @@ interface AcceptedConnection {
         email: string;
     };
     serviceProvider?: {
+        _id: string;
+        name: string;
+        email: string;
+    };
+    packageProvider?: {
         _id: string;
         name: string;
         email: string;
@@ -255,10 +265,18 @@ export default function MessagesSection({
                         console.log('Status:', booking.status);
                         console.log('Date:', booking.bookingDate);
 
+                        // Extract provider data with fallback
+                        const providerName = booking.service?.createdBy?.name || 'Service Provider';
+                        const providerId = booking.service?.createdBy?._id || '';
+                        const providerEmail = booking.service?.createdBy?.email || '';
+
+                        console.log('Extracted provider name:', providerName);
+                        console.log('Extracted provider ID:', providerId);
+
                         const providerData = {
-                            _id: booking.service?.createdBy?._id || '',
-                            name: booking.service?.createdBy?.name || 'Service Provider',
-                            email: booking.service?.createdBy?.email || ''
+                            _id: providerId,
+                            name: providerName,
+                            email: providerEmail
                         };
 
                         console.log('Provider data to add:', providerData);
@@ -279,6 +297,7 @@ export default function MessagesSection({
                         });
 
                         console.log('Connection added. Total now:', allConnections.length);
+                        console.log('Last connection serviceProvider:', allConnections[allConnections.length - 1].serviceProvider);
                     });
                     console.log('\n✅ Total connections after adding customer bookings:', allConnections.length);
                 } else {
@@ -289,6 +308,101 @@ export default function MessagesSection({
                 }
             } catch (error) {
                 console.error('❌ Error loading customer bookings:', error);
+            }
+
+            // Load approved AMC bookings (where user is the package provider)
+            try {
+                console.log('=== LOADING AMC BOOKINGS (PROVIDER) ===');
+                const amcProviderResponse = await fetch('http://localhost:5000/api/amc-bookings/my-package-approved-bookings', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const amcProviderData = await amcProviderResponse.json();
+
+                console.log('AMC provider bookings response:', amcProviderData);
+
+                if (amcProviderData.success && amcProviderData.data) {
+                    console.log('Processing', amcProviderData.data.length, 'AMC provider bookings');
+
+                    amcProviderData.data.forEach((booking: any, index: number) => {
+                        console.log(`\n--- AMC Provider Booking ${index + 1} ---`);
+                        console.log('Booking ID:', booking._id);
+                        console.log('Package:', booking.package?.title);
+                        console.log('Customer:', booking.customer);
+                        console.log('Customer name:', booking.customer?.name);
+
+                        const customerData = {
+                            _id: booking.customer?._id || '',
+                            name: booking.customer?.name || booking.customerName || 'Unknown Customer',
+                            email: booking.customer?.email || booking.customerEmail || ''
+                        };
+
+                        allConnections.push({
+                            _id: booking._id,
+                            type: 'amc' as const,
+                            package: {
+                                _id: booking.package?._id || '',
+                                title: booking.package?.title || 'AMC Package',
+                                images: booking.package?.cardImage ? [{ url: booking.package.cardImage }] : []
+                            },
+                            customer: customerData,
+                            status: booking.status,
+                            createdAt: booking.createdAt
+                        });
+
+                        console.log('AMC connection added. Total now:', allConnections.length);
+                    });
+                    console.log('\n✅ Total connections after adding AMC provider bookings:', allConnections.length);
+                }
+            } catch (error) {
+                console.error('Error loading AMC provider bookings:', error);
+            }
+
+            // Load approved AMC bookings as customer
+            try {
+                console.log('=== LOADING MY APPROVED AMC BOOKINGS (CUSTOMER) ===');
+                const amcCustomerResponse = await fetch('http://localhost:5000/api/amc-bookings/my-approved-bookings', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const amcCustomerData = await amcCustomerResponse.json();
+
+                console.log('AMC customer bookings response:', amcCustomerData);
+
+                if (amcCustomerData.success && amcCustomerData.data) {
+                    console.log('Processing', amcCustomerData.data.length, 'AMC customer bookings');
+
+                    amcCustomerData.data.forEach((booking: any, index: number) => {
+                        console.log(`\n--- AMC Customer Booking ${index + 1} ---`);
+                        console.log('Booking ID:', booking._id);
+                        console.log('Package:', booking.package);
+                        console.log('Package title:', booking.package?.title);
+                        console.log('Package createdBy:', booking.package?.createdBy);
+                        console.log('Provider name:', booking.package?.createdBy?.name);
+
+                        const providerData = {
+                            _id: booking.package?.createdBy?._id || '',
+                            name: booking.package?.createdBy?.name || 'Package Provider',
+                            email: booking.package?.createdBy?.email || ''
+                        };
+
+                        allConnections.push({
+                            _id: booking._id,
+                            type: 'amc' as const,
+                            package: {
+                                _id: booking.package?._id || '',
+                                title: booking.package?.title || 'AMC Package',
+                                images: booking.package?.cardImage ? [{ url: booking.package.cardImage }] : []
+                            },
+                            packageProvider: providerData,
+                            status: booking.status,
+                            createdAt: booking.createdAt
+                        });
+
+                        console.log('AMC connection added. Total now:', allConnections.length);
+                    });
+                    console.log('\n✅ Total connections after adding AMC customer bookings:', allConnections.length);
+                }
+            } catch (error) {
+                console.error('Error loading AMC customer bookings:', error);
             }
 
             // Sort by creation date (newest first)
@@ -305,7 +419,7 @@ export default function MessagesSection({
         }
     };
 
-    const loadMessages = async (conversationId: string, conversationType: 'job' | 'service') => {
+    const loadMessages = async (conversationId: string, conversationType: 'job' | 'service' | 'amc') => {
         try {
             console.log('=== LOADING MESSAGES ===');
             console.log('Conversation ID:', conversationId);
@@ -317,9 +431,13 @@ export default function MessagesSection({
             const data = await response.json();
 
             console.log('Messages response:', data);
+            console.log('Messages count:', data.data?.length);
 
             if (data.success) {
+                console.log('Setting messages:', data.data);
                 setMessages(data.data);
+            } else {
+                console.error('Failed to load messages:', data.message);
             }
         } catch (error) {
             console.error('Error loading messages:', error);
@@ -340,6 +458,17 @@ export default function MessagesSection({
             receiverId = currentUser.role === 'worker'
                 ? selectedConnection.client?._id || ''
                 : selectedConnection.worker?._id || '';
+        } else if (selectedConnection.type === 'amc') {
+            // For AMC bookings, determine receiver based on who the user is
+            if (selectedConnection.customer) {
+                // User is the package provider, receiver is customer
+                receiverId = selectedConnection.customer._id;
+            } else if (selectedConnection.packageProvider) {
+                // User is the customer, receiver is package provider
+                receiverId = selectedConnection.packageProvider._id;
+            } else {
+                receiverId = '';
+            }
         } else {
             // For service bookings, determine receiver based on who the user is
             if (selectedConnection.customer) {
@@ -377,7 +506,10 @@ export default function MessagesSection({
             conversationType: selectedConnection.type
         };
 
-        if (selectedConnection.type === 'service') {
+        if (selectedConnection.type === 'amc') {
+            messageData.amcBookingId = selectedConnection._id;
+            messageData.type = 'amc';
+        } else if (selectedConnection.type === 'service') {
             messageData.bookingId = selectedConnection._id;
             messageData.type = 'service';
         } else {
@@ -398,7 +530,15 @@ export default function MessagesSection({
         if (socket && socket.connected) {
             socket.emit('send_message', messageData);
             console.log('Message sent via Socket.IO');
-            // Socket.IO will handle adding the message via receive_message event
+            console.log('Waiting for receive_message event...');
+
+            // Fallback: reload messages after 1 second if Socket.IO doesn't update
+            setTimeout(() => {
+                console.log('Reloading messages as fallback...');
+                if (selectedConnection) {
+                    loadMessages(selectedConnection._id, selectedConnection.type);
+                }
+            }, 1000);
         } else {
             console.log('Socket not connected, using HTTP fallback');
 
@@ -420,6 +560,11 @@ export default function MessagesSection({
                     // Add message to local state only when using HTTP fallback
                     setMessages(prev => [...prev, data.data]);
                     console.log('Message sent via HTTP successfully');
+
+                    // Reload messages to ensure we have the latest
+                    if (selectedConnection) {
+                        loadMessages(selectedConnection._id, selectedConnection.type);
+                    }
                 } else {
                     console.error('HTTP send failed:', data.message);
                 }
@@ -461,16 +606,27 @@ export default function MessagesSection({
                 <div className="flex-1 overflow-y-auto">
                     {acceptedConnections.map((connection) => {
                         const isJobConnection = connection.type === 'job';
+                        const isAMCConnection = connection.type === 'amc';
                         let otherUser;
+                        let displayName;
+                        let subtitle;
 
                         if (isJobConnection) {
                             otherUser = currentUser?.role === 'worker' ? connection.client : connection.worker;
+                            displayName = otherUser?.name || 'Unknown';
+                            subtitle = connection.job?.title || 'Job';
+                        } else if (isAMCConnection) {
+                            // For AMC bookings
+                            otherUser = connection.customer || connection.packageProvider;
+                            displayName = otherUser?.name || 'Unknown';
+                            subtitle = connection.package?.title || 'AMC Package';
                         } else {
-                            // For service bookings, show customer if user is provider, show provider if user is customer
+                            // For service bookings
                             otherUser = connection.customer || connection.serviceProvider;
+                            displayName = otherUser?.name || 'Unknown';
+                            subtitle = connection.service?.title || 'Service';
                         }
 
-                        const title = isJobConnection ? connection.job?.title : connection.service?.title;
                         const isSelected = selectedConnection?._id === connection._id;
 
                         return (
@@ -484,19 +640,19 @@ export default function MessagesSection({
                             >
                                 <div className="relative shrink-0">
                                     <div className="size-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-lg">
-                                        {otherUser?.name?.charAt(0).toUpperCase() || '?'}
+                                        {displayName.charAt(0).toUpperCase()}
                                     </div>
                                     <span className="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full border-2 border-white"></span>
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <div className="flex justify-between items-start mb-1">
-                                        <h3 className="font-semibold text-sm truncate">{otherUser?.name || 'Unknown'}</h3>
+                                        <h3 className="font-semibold text-sm truncate">{displayName}</h3>
                                         <span className="text-[10px] font-medium text-gray-400">
                                             {new Date(connection.createdAt).toLocaleDateString()}
                                         </span>
                                     </div>
                                     <p className="text-xs text-gray-500 truncate">
-                                        {isJobConnection ? <Briefcase className="w-3 h-3 inline mr-1" /> : <Wrench className="w-3 h-3 inline mr-1" />}{title}
+                                        {isJobConnection ? <Briefcase className="w-3 h-3 inline mr-1" /> : <Wrench className="w-3 h-3 inline mr-1" />}{subtitle}
                                     </p>
                                     {!isJobConnection && connection.bookingDate && (
                                         <p className="text-xs text-gray-900 font-medium mt-1 flex items-center gap-1">
@@ -518,10 +674,12 @@ export default function MessagesSection({
                             <div className="size-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
                                 {selectedConnection.type === 'job'
                                     ? (currentUser?.role === 'worker'
-                                        ? selectedConnection.client?.name
-                                        : selectedConnection.worker?.name
-                                    )?.charAt(0).toUpperCase()
-                                    : (selectedConnection.customer?.name || selectedConnection.serviceProvider?.name)?.charAt(0).toUpperCase() || '?'}
+                                        ? selectedConnection.client?.name?.charAt(0)
+                                        : selectedConnection.worker?.name?.charAt(0)
+                                    )?.toUpperCase()
+                                    : selectedConnection.type === 'amc'
+                                        ? (selectedConnection.customer?.name || selectedConnection.packageProvider?.name)?.charAt(0).toUpperCase() || '?'
+                                        : (selectedConnection.customer?.name || selectedConnection.serviceProvider?.name)?.charAt(0).toUpperCase() || '?'}
                             </div>
                             <div>
                                 <h2 className="text-lg font-bold">
@@ -529,12 +687,17 @@ export default function MessagesSection({
                                         ? (currentUser?.role === 'worker'
                                             ? selectedConnection.client?.name
                                             : selectedConnection.worker?.name)
-                                        : (selectedConnection.customer?.name || selectedConnection.serviceProvider?.name || 'Unknown')}
+                                        : selectedConnection.type === 'amc'
+                                            ? (selectedConnection.customer?.name || selectedConnection.packageProvider?.name || 'Unknown')
+                                            : (selectedConnection.customer?.name || selectedConnection.serviceProvider?.name || 'Unknown')}
                                 </h2>
-                                <div className="flex items-center gap-2">
-                                    <span className="size-2 bg-green-500 rounded-full"></span>
-                                    <span className="text-xs text-gray-500">Active now</span>
-                                </div>
+                                <p className="text-xs text-gray-500">
+                                    {selectedConnection.type === 'job'
+                                        ? selectedConnection.job?.title
+                                        : selectedConnection.type === 'amc'
+                                            ? selectedConnection.package?.title
+                                            : selectedConnection.service?.title}
+                                </p>
                             </div>
                         </div>
                         <div className="flex gap-2">
@@ -575,6 +738,21 @@ export default function MessagesSection({
                                             </span>
                                         </div>
                                     </>
+                                ) : selectedConnection.type === 'amc' && selectedConnection.package ? (
+                                    <>
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <span className="material-symbols-outlined text-gray-900 text-[20px]">verified_user</span>
+                                            <h4 className="font-semibold text-sm">{selectedConnection.package.title}</h4>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <span className="px-2 py-1 bg-white text-gray-900 rounded-full text-xs font-medium shadow-sm border border-gray-200">
+                                                AMC Package
+                                            </span>
+                                            <span className="px-2 py-1 bg-white text-gray-900 rounded-full text-xs font-medium shadow-sm border border-gray-200">
+                                                {selectedConnection.status}
+                                            </span>
+                                        </div>
+                                    </>
                                 ) : selectedConnection.service ? (
                                     <>
                                         <div className="flex items-center gap-2 mb-2">
@@ -612,7 +790,14 @@ export default function MessagesSection({
                         </div>
 
                         {messages.map((message) => {
-                            const isSent = message.sender._id === currentUser?.id;
+                            // Handle both id and _id for currentUser
+                            const currentUserId = (currentUser as any)?._id || currentUser?.id;
+                            const isSent = message.sender._id === currentUserId;
+
+                            console.log('Message:', message._id);
+                            console.log('Sender ID:', message.sender._id);
+                            console.log('Current User ID:', currentUserId);
+                            console.log('Is Sent:', isSent);
 
                             return (
                                 <div

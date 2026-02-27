@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Upload, X, Image as ImageIcon } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface ImageUploadProps {
     onUploadComplete?: (imageUrl: string, publicId: string) => void;
@@ -46,14 +47,19 @@ export default function ImageUpload({
                 formData.append('image', files[0]);
             }
 
+            // Prioritize token from props, fallback to localStorage
             const authToken = token || localStorage.getItem('authToken');
             const endpoint = multiple ? '/api/upload/multiple' : '/api/upload/single';
 
             console.log('=== IMAGE UPLOAD DEBUG ===');
             console.log('Token from prop:', token ? 'exists' : 'missing');
             console.log('Token from localStorage:', localStorage.getItem('authToken') ? 'exists' : 'missing');
-            console.log('Using token:', authToken ? 'yes' : 'no');
+            console.log('Using token:', authToken ? 'yes (length: ' + authToken?.length + ')' : 'no');
             console.log('Endpoint:', endpoint);
+
+            if (!authToken) {
+                throw new Error('No authentication token available. Please log in again.');
+            }
 
             const response = await fetch(endpoint, {
                 method: 'POST',
@@ -66,9 +72,12 @@ export default function ImageUpload({
             // Check if response is ok
             if (!response.ok) {
                 const errorText = await response.text();
-                console.error('Upload failed with status:', response.status);
+                console.error('=== UPLOAD FAILED ===');
+                console.error('Status:', response.status);
+                console.error('Status Text:', response.statusText);
                 console.error('Error response:', errorText);
-                throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
+                console.error('===================');
+                throw new Error(`Upload failed: ${response.status} ${response.statusText}. ${errorText}`);
             }
 
             const data = await response.json();
@@ -76,21 +85,39 @@ export default function ImageUpload({
             if (data.success) {
                 if (multiple) {
                     setUploadedImages(data.data);
+                    // Show success toast
+                    toast.success('Images Uploaded!', {
+                        description: `${data.data.length} image(s) uploaded successfully.`,
+                        duration: 3000,
+                    });
                     // Call callback for each image
                     data.data.forEach((img: any) => {
                         onUploadComplete?.(img.url, img.publicId);
                     });
                 } else {
                     setUploadedImages([data.data]);
+                    // Show success toast
+                    toast.success('Image Uploaded!', {
+                        description: 'Your image has been uploaded successfully.',
+                        duration: 3000,
+                    });
                     onUploadComplete?.(data.data.url, data.data.publicId);
                 }
             } else {
                 console.error('Upload failed:', data);
                 setError(data.message || 'Upload failed');
+                toast.error('Upload Failed', {
+                    description: data.message || 'Failed to upload image. Please try again.',
+                    duration: 4000,
+                });
             }
         } catch (err: any) {
             console.error('Upload error:', err);
             setError(err.message || 'Failed to upload image');
+            toast.error('Upload Error', {
+                description: err.message || 'Failed to upload image. Please try again.',
+                duration: 4000,
+            });
         } finally {
             setUploading(false);
         }

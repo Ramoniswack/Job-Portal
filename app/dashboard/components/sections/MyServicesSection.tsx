@@ -96,15 +96,12 @@ export default function MyServicesSection({ token }: MyServicesSectionProps) {
 
     const handleBookingAction = async (bookingId: string, action: 'approve' | 'reject') => {
         try {
-            const response = await fetch(`http://localhost:5000/api/bookings/${bookingId}/status`, {
+            const response = await fetch(`http://localhost:5000/api/bookings/${bookingId}/${action}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    status: action === 'approve' ? 'approved' : 'rejected'
-                })
+                }
             });
 
             const data = await response.json();
@@ -127,6 +124,41 @@ export default function MyServicesSection({ token }: MyServicesSectionProps) {
             console.error(`Error ${action}ing booking:`, error);
             toast.error('Connection Error', {
                 description: `Failed to ${action} booking. Please try again.`,
+                duration: 4000,
+            });
+        }
+    };
+
+    const handleDeleteService = async (serviceId: string) => {
+        if (!confirm('Are you sure you want to delete this service? This action cannot be undone.')) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:5000/api/services/${serviceId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                toast.success('Service Deleted!', {
+                    description: 'The service has been deleted successfully.',
+                    duration: 4000,
+                });
+                loadMyServices();
+            } else {
+                toast.error('Delete Failed', {
+                    description: data.message || 'Failed to delete service.',
+                    duration: 4000,
+                });
+            }
+        } catch (error) {
+            console.error('Error deleting service:', error);
+            toast.error('Connection Error', {
+                description: 'Failed to delete service. Please try again.',
                 duration: 4000,
             });
         }
@@ -190,12 +222,24 @@ export default function MyServicesSection({ token }: MyServicesSectionProps) {
                                         </span>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-3">
                                     {getPendingCount(service) > 0 && (
                                         <span className="bg-gray-500 text-white text-xs px-2.5 py-1 rounded-full font-medium">
                                             {getPendingCount(service)} pending
                                         </span>
                                     )}
+                                    <button
+                                        onClick={() => window.location.href = `/dashboard?section=add-service&edit=${service._id}`}
+                                        className="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded-lg transition-colors"
+                                    >
+                                        Edit
+                                    </button>
+                                    <button
+                                        onClick={() => handleDeleteService(service._id)}
+                                        className="px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white text-sm rounded-lg transition-colors"
+                                    >
+                                        Delete
+                                    </button>
                                     <button
                                         onClick={() => setSelectedService(selectedService === service._id ? null : service._id)}
                                         className="text-sm text-[#26cf71] hover:text-[#1fb35f] font-medium"

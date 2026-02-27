@@ -33,7 +33,30 @@ export default function RootLayout({
       >
         {children}
         <WhatsAppButton />
-        <Toaster position="top-right" richColors />
+        <Toaster
+          position="top-right"
+          richColors
+          toastOptions={{
+            style: {
+              background: 'white',
+            },
+            className: 'toast-custom',
+            success: {
+              style: {
+                background: '#10b981',
+                color: 'white',
+                border: 'none',
+              },
+            },
+            error: {
+              style: {
+                background: '#ef4444',
+                color: 'white',
+                border: 'none',
+              },
+            },
+          }}
+        />
       </body>
     </html>
   );

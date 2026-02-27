@@ -13,6 +13,9 @@ import DashboardSection from './sections/DashboardSection';
 import AMCPackagesSection from './sections/AMCPackagesSection';
 import ServicesHeroSection from './sections/ServicesHeroSection';
 import ServiceBookingsSection from './sections/ServiceBookingsSection';
+import HomeHeroSection from './sections/HomeHeroSection';
+import TestimonialsSection from './sections/TestimonialsSection';
+import AMCBookingsSection from './sections/AMCBookingsSection';
 import MessagesSection from '../dashboard/components/sections/MessagesSection';
 
 interface User {
@@ -105,6 +108,17 @@ export default function AdminDashboard() {
             </button>
 
             <button
+                onClick={() => handleSectionChange('home-hero')}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'home-hero'
+                    ? 'bg-gray-800 text-white'
+                    : 'text-gray-900 hover:bg-gray-100'
+                    }`}
+            >
+                <span className="material-symbols-outlined text-[20px]">home</span>
+                <span>Home Hero</span>
+            </button>
+
+            <button
                 onClick={() => handleSectionChange('services-hero')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'services-hero'
                     ? 'bg-gray-800 text-white'
@@ -124,6 +138,17 @@ export default function AdminDashboard() {
             >
                 <span className="material-symbols-outlined text-[20px]">book_online</span>
                 <span>Service Bookings</span>
+            </button>
+
+            <button
+                onClick={() => handleSectionChange('amc-bookings')}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'amc-bookings'
+                    ? 'bg-gray-800 text-white'
+                    : 'text-gray-900 hover:bg-gray-100'
+                    }`}
+            >
+                <span className="material-symbols-outlined text-[20px]">inventory_2</span>
+                <span>AMC Bookings</span>
             </button>
 
             <button
@@ -209,6 +234,17 @@ export default function AdminDashboard() {
             >
                 <span className="material-symbols-outlined text-[20px]">inventory</span>
                 <span>AMC Packages</span>
+            </button>
+
+            <button
+                onClick={() => handleSectionChange('testimonials')}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'testimonials'
+                    ? 'bg-gray-800 text-white'
+                    : 'text-gray-900 hover:bg-gray-100'
+                    }`}
+            >
+                <span className="material-symbols-outlined text-[20px]">rate_review</span>
+                <span>Testimonials</span>
             </button>
 
             <button
@@ -377,12 +413,20 @@ export default function AdminDashboard() {
                             <DashboardSection token={token} />
                         )}
 
+                        {activeSection === 'home-hero' && (
+                            <HomeHeroSection token={token} />
+                        )}
+
                         {activeSection === 'services-hero' && (
                             <ServicesHeroSection token={token} />
                         )}
 
                         {activeSection === 'service-bookings' && (
                             <ServiceBookingsSection token={token} />
+                        )}
+
+                        {activeSection === 'amc-bookings' && (
+                            <AMCBookingsSection token={token} />
                         )}
 
                         {activeSection === 'messages' && currentUser && (
@@ -409,6 +453,10 @@ export default function AdminDashboard() {
 
                         {activeSection === 'amc-packages' && (
                             <AMCPackagesSection token={token} />
+                        )}
+
+                        {activeSection === 'testimonials' && (
+                            <TestimonialsSection token={token} />
                         )}
 
                         {activeSection === 'settings' && (
