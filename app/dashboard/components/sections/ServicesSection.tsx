@@ -35,6 +35,8 @@ interface Service {
     }>;
     features: string[];
     status: 'active' | 'inactive' | 'draft';
+    approvalStatus?: 'pending' | 'approved' | 'rejected';
+    rejectionReason?: string;
     featured: boolean;
     createdBy?: {
         _id: string;
@@ -130,7 +132,18 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
         setLoading(true);
         try {
             console.log('Loading services from:', 'http://localhost:5000/api/services');
-            const response = await fetch('http://localhost:5000/api/services');
+
+            // Get current user and token
+            const storedUser = localStorage.getItem('currentUser');
+
+            // Prepare headers with auth token if available
+            const headers: HeadersInit = {};
+            if (storedUser && token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            // Fetch services (backend will include user's pending services if authenticated)
+            const response = await fetch('http://localhost:5000/api/services', { headers });
 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -138,8 +151,18 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
 
             const data = await response.json();
             console.log('Services loaded:', data.length, 'services');
-            console.log('Sample service category structure:', data[0]?.category);
-            setServices(data);
+
+            // Filter to show only services created by the current user
+            if (storedUser) {
+                const user = JSON.parse(storedUser);
+                const userServices = data.filter((service: Service) =>
+                    service.createdBy?._id === user.id
+                );
+                console.log('User services filtered:', userServices.length, 'services');
+                setServices(userServices);
+            } else {
+                setServices(data);
+            }
         } catch (error) {
             console.error('Error loading services:', error);
             toast.error('Failed to Load Services', {
@@ -449,6 +472,37 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
             draft: 'bg-yellow-100 text-yellow-800'
         };
         return styles[status as keyof typeof styles] || styles.draft;
+    };
+
+    const getApprovalBadge = (approvalStatus?: string) => {
+        if (!approvalStatus) {
+            return 'bg-green-50 text-green-600 border border-green-200'; // Legacy data - assume approved
+        }
+        const styles = {
+            pending: 'bg-yellow-50 text-yellow-700 border border-yellow-200',
+            approved: 'bg-green-50 text-green-600 border border-green-200',
+            rejected: 'bg-red-50 text-red-600 border border-red-200'
+        };
+        return styles[approvalStatus as keyof typeof styles] || styles.pending;
+    };
+
+    const getApprovalText = (approvalStatus?: string) => {
+        if (!approvalStatus) {
+            return 'Active'; // Legacy data
+        }
+        const texts = {
+            pending: 'Inactive',
+            approved: 'Active',
+            rejected: 'Rejected'
+        };
+        return texts[approvalStatus as keyof typeof texts] || 'Inactive';
+    };
+
+    const isUserOwnService = (service: Service): boolean => {
+        const storedUser = localStorage.getItem('currentUser');
+        if (!storedUser) return false;
+        const user = JSON.parse(storedUser);
+        return service.createdBy?._id === user.id;
     };
 
     if (showForm) {
@@ -809,8 +863,8 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
             {/* Header */}
             <div className="mb-6 flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300 ">Services</h2>
-                    <p className="text-gray-500 dark:text-gray-500 mt-1 transition-colors duration-300 ">Manage all services offered on the platform</p>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300 ">Service Status</h2>
+                    <p className="text-gray-500 dark:text-gray-500 mt-1 transition-colors duration-300 ">View and manage your posted services</p>
                 </div>
                 <button
                     onClick={() => setShowForm(true)}
@@ -876,7 +930,7 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
             ) : filteredServices.length === 0 ? (
                 <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-lg shadow-sm p-12 text-center transition-colors duration-300 ">
                     <span className="material-symbols-outlined text-gray-300 text-6xl">inventory_2</span>
-                    <p className="mt-4 text-gray-600 dark:text-gray-400 dark:text-gray-500 transition-colors duration-300 ">No services found</p>
+                    <p className="mt-4 text-gray-600 dark:text-gray-400 dark:text-gray-500 transition-colors duration-300 ">You haven't posted any services yet</p>
                     <button
                         onClick={() => setShowForm(true)}
                         className="mt-4 text-[#26cf71] hover:text-[#1fb35f] font-medium"
@@ -903,9 +957,15 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                             Featured
                                         </span>
                                     )}
-                                    <span className={`px-2 py-1 text-xs font-medium rounded ${getStatusBadge(service.status)}`}>
-                                        {service.status}
-                                    </span>
+                                    {isUserOwnService(service) ? (
+                                        <span className={`px-2 py-1 text-xs font-medium rounded ${getApprovalBadge(service.approvalStatus)}`}>
+                                            {getApprovalText(service.approvalStatus)}
+                                        </span>
+                                    ) : (
+                                        <span className={`px-2 py-1 text-xs font-medium rounded ${getStatusBadge(service.status)}`}>
+                                            {service.status}
+                                        </span>
+                                    )}
                                 </div>
                             </div>
 
@@ -923,6 +983,12 @@ export default function ServicesSection({ token }: ServicesSectionProps) {
                                     <p className="text-xs text-gray-500 dark:text-gray-500 mb-2 transition-colors duration-300 ">
                                         Posted by <span className="font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300 ">{service.createdBy.name}</span>
                                     </p>
+                                )}
+                                {isUserOwnService(service) && service.approvalStatus === 'rejected' && service.rejectionReason && (
+                                    <div className="mb-2 p-2 bg-red-50 border border-red-200 rounded">
+                                        <p className="text-xs text-red-600 font-medium mb-1">Rejection Reason:</p>
+                                        <p className="text-xs text-red-700">{service.rejectionReason}</p>
+                                    </div>
                                 )}
                                 <p className="text-sm text-gray-500 dark:text-gray-500 mb-2 transition-colors duration-300 ">
                                     {service.category && typeof service.category === 'object'

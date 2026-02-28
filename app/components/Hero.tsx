@@ -75,7 +75,6 @@ export default function Hero() {
             </>
         );
     };
-
     return (
         <section className="relative w-full h-[500px] flex items-center justify-center text-white px-5 overflow-hidden">
             <div
@@ -108,7 +107,6 @@ export default function Hero() {
                             className="border-none outline-none w-full py-2.5 text-[0.95rem] text-gray-600 bg-transparent focus:ring-2 focus:ring-[#f65e19] focus:ring-opacity-20 rounded transition-all duration-300"
                         />
                     </div>
-
                     <div className="flex-1 flex items-center px-4 max-md:w-full max-md:mb-4 max-md:px-0 max-md:py-2 transition-all duration-300">
                         <MapPin className="text-[#f65e19] text-lg mr-2.5" />
                         <input

@@ -1,798 +1,360 @@
-# Hamro Sewa - Frontend Application
+# Hamro Sewa - Frontend
 
-Next.js frontend application for the Hamro Sewa service marketplace platform.
+A modern, responsive Next.js 15 application for the Hamro Sewa service booking platform with real-time messaging, admin dashboard, and comprehensive service management.
 
-## 📋 Table of Contents
+## 🚀 Features
 
-- [Overview](#overview)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Installation & Setup](#installation--setup)
-- [Environment Variables](#environment-variables)
-- [Pages & Routes](#pages--routes)
-- [Components](#components)
-- [State Management](#state-management)
-- [API Integration](#api-integration)
-- [Authentication Flow](#authentication-flow)
-- [Frontend Workflow](#frontend-workflow)
-- [Styling](#styling)
-- [Deployment](#deployment)
+### Public Features
+- **Service Browsing** - Browse and search services by category
+- **Service Details** - Detailed service pages with booking functionality
+- **AMC Packages** - Annual Maintenance Contract packages with pricing tiers
+- **Category Navigation** - Organized service categories
+- **Responsive Design** - Mobile-first, fully responsive UI
+- **Dark Mode Support** - System-aware dark/light theme
 
----
+### User Features
+- **Authentication** - Secure login/registration
+- **Service Booking** - Book services with custom details
+- **Booking Management** - Track booking status
+- **Real-time Messaging** - Chat with service providers
+- **Profile Management** - Update user information
+- **Booking History** - View past and current bookings
 
-## 🎯 Overview
+### Admin Dashboard
+- **Service Approval** - Review and approve pending services with transaction amounts
+- **AMC Package Approval** - Approve packages with pricing
+- **Gateway Approval** - First-level booking approval with transaction tracking
+- **Transaction Management** - View all transactions with analytics
+- **User Management** - Manage platform users
+- **Statistics Dashboard** - Visual analytics with pie charts
+- **Category Management** - CRUD operations for categories
+- **Job Postings** - Manage job listings
 
-The frontend application provides a modern, responsive user interface for the Hamro Sewa platform. Built with Next.js 14 using the App Router, it offers server-side rendering, optimized performance, and excellent SEO.
+## 📋 Prerequisites
 
----
-
-## 🛠 Tech Stack
-
-- **Framework**: Next.js 14 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **Icons**: Lucide React, Material Symbols
-- **HTTP Client**: Fetch API
-- **Real-time**: Socket.IO Client
-- **State Management**: React Hooks (useState, useEffect)
-- **Routing**: Next.js App Router
-- **Forms**: Native HTML5 with React
-
----
-
-## 📁 Project Structure
-
-```
-frontend/
-├── app/
-│   ├── about/                     # About page
-│   │   ├── components/
-│   │   │   ├── AboutHero.tsx
-│   │   │   ├── AboutMission.tsx
-│   │   │   ├── HowItWorks.tsx
-│   │   │   ├── WhyChooseUs.tsx
-│   │   │   ├── JoinPlatform.tsx
-│   │   │   └── Statistics.tsx
-│   │   └── page.tsx
-│   ├── amc-packages/              # AMC packages
-│   │   ├── [id]/
-│   │   │   └── page.tsx           # Package detail page
-│   │   └── page.tsx               # Packages listing
-│   ├── category/                  # Category pages
-│   │   └── [name]/
-│   │       └── page.tsx           # Services by category
-│   ├── components/                # Shared components
-│   │   ├── Navbar.tsx             # Main navigation
-│   │   ├── Footer.tsx             # Footer
-│   │   ├── Hero.tsx               # Homepage hero
-│   │   ├── Category.tsx           # Category grid
-│   │   ├── FeaturedServices.tsx   # Featured services
-│   │   ├── PopularServices.tsx    # Popular services
-│   │   ├── AMCPackages.tsx        # AMC packages section
-│   │   ├── Testimonials.tsx       # Customer reviews
-│   │   ├── FAQ.tsx                # FAQ section
-│   │   ├── WelcomePopup.tsx       # Welcome modal
-│   │   ├── WhatsAppButton.tsx     # WhatsApp floating button
-│   │   └── ConfirmDialog.tsx      # Confirmation dialog
-│   ├── contact/                   # Contact page
-│   │   └── page.tsx
-│   ├── dashboard/                 # User dashboard
-│   │   ├── components/
-│   │   │   ├── DashboardLayout.tsx
-│   │   │   ├── Sidebar.tsx
-│   │   │   ├── TopNavbar.tsx
-│   │   │   ├── Header.tsx
-│   │   │   ├── CreateJobModal.tsx
-│   │   │   ├── ApplyJobModal.tsx
-│   │   │   └── sections/
-│   │   │       ├── DashboardSection.tsx
-│   │   │       ├── BrowseJobsSection.tsx
-│   │   │       ├── MyJobsSection.tsx
-│   │   │       ├── MyApplicationsSection.tsx
-│   │   │       ├── MessagesSection.tsx
-│   │   │       ├── ViewPostsSection.tsx
-│   │   │       ├── AddPostSection.tsx
-│   │   │       └── PostCategoriesSection.tsx
-│   │   └── page.tsx
-│   ├── hamrosewa/                 # Admin dashboard
-│   │   ├── sections/
-│   │   │   ├── DashboardSection.tsx
-│   │   │   ├── UsersSection.tsx
-│   │   │   ├── JobsSection.tsx
-│   │   │   ├── ServicesSection.tsx
-│   │   │   ├── AddServiceSection.tsx
-│   │   │   ├── ServiceCategoriesSection.tsx
-│   │   │   ├── AMCPackagesSection.tsx
-│   │   │   └── ServicesHeroSection.tsx
-│   │   └── page.tsx
-│   ├── login/                     # Login page
-│   │   └── page.tsx
-│   ├── register/                  # Registration page
-│   │   └── page.tsx
-│   ├── service/                   # Service pages
-│   │   └── [id]/
-│   │       └── page.tsx           # Service detail page
-│   ├── services/                  # Services listing
-│   │   └── page.tsx
-│   ├── layout.tsx                 # Root layout
-│   ├── page.tsx                   # Homepage
-│   └── globals.css                # Global styles
-├── lib/
-│   ├── api.ts                     # API utility functions
-│   └── utils.ts                   # Helper functions
-├── public/
-│   └── logo.png                   # Logo and assets
-├── .env.local                     # Environment variables
-├── next.config.ts                 # Next.js configuration
-├── tailwind.config.ts             # Tailwind configuration
-├── tsconfig.json                  # TypeScript configuration
-├── package.json                   # Dependencies
-└── README.md                      # This file
-```
-
----
-
-## 🚀 Installation & Setup
-
-### Prerequisites
 - Node.js (v18 or higher)
 - npm or yarn
-- Backend API running on port 5000
+- Backend API running (see backend README)
 
-### Steps
+## 🛠️ Installation
 
-1. **Install dependencies:**
+1. **Clone the repository**
+```bash
+git clone <repository-url>
+cd frontend
+```
+
+2. **Install dependencies**
 ```bash
 npm install
 ```
 
-2. **Create `.env.local` file:**
-```env
-NEXT_PUBLIC_API_URL=http://localhost:5000
-```
+3. **Environment Setup**
 
-3. **Run development server:**
-```bash
-npm run dev
-```
-
-Application will run on `http://localhost:3000`
-
-4. **Build for production:**
-```bash
-npm run build
-npm start
-```
----
-## 🔐 Environment Variables
 Create a `.env.local` file in the frontend root:
+
 ```env
 # API Configuration
 NEXT_PUBLIC_API_URL=http://localhost:5000
 
-# Socket.IO (if different from API)
-NEXT_PUBLIC_SOCKET_URL=http://localhost:5000
-```
----
-## 🌐 Pages & Routes
-### Public Routes
-| Route | Page | Description |
-|-------|------|-------------|
-| `/` | Homepage | Hero, categories, featured services, AMC packages |
-| `/about` | About | Company information, mission, team |
-| `/services` | Services Listing | Browse all services with filters |
-| `/service/[id]` | Service Detail | Individual service information |
-| `/category/[name]` | Category Services | Services filtered by category |
-| `/amc-packages` | AMC Packages | Annual maintenance packages |
-| `/amc-packages/[id]` | Package Detail | Individual package information |
-| `/contact` | Contact | Contact form and information |
-| `/login` | Login | User authentication |
-| `/register` | Registration | New user signup |
-
-### Protected Routes (Requires Authentication)
-
-| Route | Page | Access | Description |
-|-------|------|--------|-------------|
-| `/dashboard` | User Dashboard | Client/Worker | Role-based dashboard |
-| `/hamrosewa` | Admin Dashboard | Admin only | Platform management |
-
----
-
-## 🧩 Components
-
-### Shared Components
-
-#### Navbar.tsx
-- Main navigation bar
-- Location selector with geolocation
-- User authentication status
-- Responsive mobile menu
-- Links to all main pages
-
-#### Footer.tsx
-- Company information
-- Quick links
-- Social media links
-- Copyright information
-
-#### Hero.tsx
-- Homepage hero section
-- Search functionality
-- Location-based search
-- Call-to-action buttons
-
-#### Category.tsx
-- Service category grid
-- Dynamic category loading
-- Category icons and images
-- Links to category pages
-
-### Dashboard Components
-
-#### DashboardLayout.tsx
-- Main dashboard wrapper
-- Sidebar navigation
-- Top navbar
-- Content area
-- Role-based rendering
-
-#### Sidebar.tsx
-- Navigation menu
-- Active section highlighting
-- Role-based menu items
-- Mobile responsive
-
-#### MessagesSection.tsx
-- Real-time chat interface
-- Socket.IO integration
-- Message history
-- Typing indicators
-
----
-
-## 📊 State Management
-
-### Local State (useState)
-Used for component-level state:
-- Form inputs
-- Modal visibility
-- Loading states
-- UI toggles
-
-### localStorage
-Used for persistent data:
-- Authentication token
-- User information
-- Location preference
-
-### Example State Management
-
-```typescript
-// Authentication state
-const [currentUser, setCurrentUser] = useState<User | null>(null);
-const [token, setToken] = useState('');
-
-// Load from localStorage
-useEffect(() => {
-  const storedToken = localStorage.getItem('authToken');
-  const storedUser = localStorage.getItem('currentUser');
-  
-  if (storedUser) {
-    setCurrentUser(JSON.parse(storedUser));
-  }
-  setToken(storedToken || '');
-}, []);
+# Firebase Configuration (Optional - for push notifications)
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
 ```
 
----
-
-## 🔌 API Integration
-
-### API Utility (lib/api.ts)
-
-```typescript
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
-// GET request
-export const fetchData = async (endpoint: string) => {
-  const response = await fetch(`${API_URL}${endpoint}`);
-  return response.json();
-};
-
-// POST request with auth
-export const postData = async (endpoint: string, data: any, token: string) => {
-  const response = await fetch(`${API_URL}${endpoint}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
-    body: JSON.stringify(data)
-  });
-  return response.json();
-};
-```
-
-### API Calls Example
-
-```typescript
-// Fetch services
-const fetchServices = async () => {
-  try {
-    const response = await fetch('http://localhost:5000/api/services');
-    const data = await response.json();
-    setServices(data);
-  } catch (error) {
-    console.error('Error:', error);
-  }
-};
-
-// Create job (protected)
-const createJob = async (jobData: any) => {
-  try {
-    const response = await fetch('http://localhost:5000/api/jobs', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(jobData)
-    });
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error:', error);
-  }
-};
-```
-
----
-
-## 🔐 Authentication Flow
-
-### 1. User Registration
-
-```
-User fills registration form
-    ↓
-Submit to /api/users/register
-    ↓
-Receive token + user data
-    ↓
-Store in localStorage:
-  - authToken
-  - currentUser
-    ↓
-Redirect to dashboard
-```
-
-### 2. User Login
-
-```
-User enters credentials
-    ↓
-Submit to /api/users/login
-    ↓
-Receive token + user data
-    ↓
-Store in localStorage
-    ↓
-Redirect based on role:
-  - Admin → /hamrosewa
-  - Client/Worker → /dashboard
-```
-
-### 3. Protected Route Access
-
-```
-User navigates to protected route
-    ↓
-useEffect checks localStorage
-    ↓
-If no token:
-  → Redirect to /login
-    ↓
-If token exists:
-  → Load user data
-  → Render page
-```
-
-### 4. Logout
-
-```
-User clicks logout
-    ↓
-Clear localStorage:
-  - Remove authToken
-  - Remove currentUser
-    ↓
-Redirect to /login
-```
-
----
-
-## 🔄 Frontend Workflow
-
-### 1. Homepage Load Workflow
-
-```
-User visits /
-    ↓
-page.tsx renders
-    ↓
-Components mount:
-  - Navbar
-  - Hero
-  - Category
-  - FeaturedServices
-  - PopularServices
-  - AMCPackages
-  - Testimonials
-  - FAQ
-  - Footer
-    ↓
-Each component fetches data:
-  - Categories from /api/categories
-  - Services from /api/services
-  - AMC packages from /api/amc-packages
-    ↓
-Data displayed to user
-```
-
-### 2. Service Browse Workflow
-
-```
-User clicks "Services"
-    ↓
-Navigate to /services
-    ↓
-page.tsx loads
-    ↓
-Fetch services from API
-    ↓
-Fetch categories for filters
-    ↓
-Fetch hero section data
-    ↓
-Display services grid
-    ↓
-User applies filters:
-  - Search query
-  - Location
-  - Category
-  - Sort by
-    ↓
-Filter services client-side
-    ↓
-Update display
-```
-### 3. Job Posting Workflow (Client)
-
-```
-Client logs in
-    ↓
-Navigate to /dashboard
-    ↓
-Click "Post a Job"
-    ↓
-CreateJobModal opens
-    ↓
-Fill job form:
-  - Title
-  - Description
-  - Category
-  - Location
-  - Budget
-    ↓
-Submit form
-    ↓
-POST to /api/jobs with token
-    ↓
-Receive response
-    ↓
-Close modal
-    ↓
-Refresh jobs list
-    ↓
-Job appears in "My Jobs"
-```
-
-### 4. Job Application Workflow (Worker)
-
-```
-Worker logs in
-    ↓
-Navigate to /dashboard
-    ↓
-Click "Browse Jobs"
-    ↓
-Fetch all jobs from API
-    ↓
-Display jobs list
-    ↓
-Worker clicks "Apply"
-    ↓
-ApplyJobModal opens
-    ↓
-Fill application form:
-  - Message
-  - Location
-    ↓
-Submit application
-    ↓
-POST to /api/applications with token
-    ↓
-Receive response
-    ↓
-Close modal
-    ↓
-Application appears in "My Applications"
-```
-### 5. Real-time Messaging Workflow
-
-```
-Application accepted
-    ↓
-User opens Messages section
-    ↓
-Socket.IO connection established
-    ↓
-Join conversation room:
-  socket.emit('join_conversation', applicationId)
-    ↓
-Fetch message history from API
-    ↓
-Display messages
-    ↓
-User types message
-    ↓
-Click send
-    ↓
-Emit message:
-  socket.emit('send_message', data)
-    ↓
-Server broadcasts to room
-    ↓
-Receive message:
-  socket.on('receive_message', message)
-    ↓
-Update UI with new message
-```
-
-### 6. Admin Dashboard Workflow
-
-```
-Admin logs in
-    ↓
-Redirect to /hamrosewa
-    ↓
-Dashboard loads
-    ↓
-Fetch statistics:
-  - Total users
-  - Total services
-  - Total jobs
-    ↓
-Display dashboard
-    ↓
-Admin selects section:
-  - Services
-  - Users
-  - Jobs
-  - AMC Packages
-  - Categories
-    ↓
-Fetch section data
-    ↓
-Display in table/grid
-    ↓
-Admin performs action:
-  - Create
-  - Edit
-  - Delete
-    ↓
-Send request to API with token
-    ↓
-Receive response
-    ↓
-Update UI
-    ↓
-Show success message
-```
-
-### 7. Service Detail Page Workflow
-
-```
-User clicks on service
-    ↓
-Navigate to /service/[slug]
-    ↓
-page.tsx loads
-    ↓
-Extract slug from URL
-    ↓
-Fetch service data:
-  GET /api/services/:slug
-    ↓
-Display service details:
-  - Images
-  - Title & description
-  - Price
-  - Location
-  - Features
-  - Provider info
-    ↓
-User can:
-  - View images
-  - Read description
-  - Contact provider
-  - Book service
-```
-
-### 8. Category Filter Workflow
-
-```
-User on /services page
-    ↓
-Clicks category filter
-    ↓
-Update selectedCategory state
-    ↓
-Filter services array:
-  - Match category ID
-  - Include subcategories
-    ↓
-Update displayed services
-    ↓
-User can combine filters:
-  - Category + Search
-  - Category + Location
-  - Category + Sort
-    ↓
-All filters applied client-side
-    ↓
-Display filtered results
-```
-
----
-
-## 🎨 Styling
-
-### Tailwind CSS
-
-The application uses Tailwind CSS for styling with custom configuration:
-
-```javascript
-// tailwind.config.ts
-module.exports = {
-  theme: {
-    extend: {
-      colors: {
-        primary: '#26cf71',
-        'primary-dark': '#1eb863'
-      }
-    }
-  }
-}
-```
-
-### Theme Colors
-
-- **Primary Green**: `#26cf71`
-- **Primary Dark**: `#1eb863`
-- **Text**: Gray scale (gray-600, gray-700, gray-900)
-- **Background**: White, gray-50, gray-100
-
-### Responsive Design
-
-- **Mobile**: Default (< 640px)
-- **Tablet**: `sm:` (≥ 640px)
-- **Desktop**: `md:` (≥ 768px), `lg:` (≥ 1024px)
-- **Large Desktop**: `xl:` (≥ 1280px)
-
----
-
-## 🚀 Deployment
-
-### Vercel Deployment (Recommended)
-
-1. **Push to GitHub**
+4. **Start development server**
 ```bash
-git push origin main
+npm run dev
 ```
 
-2. **Connect to Vercel**
-- Import repository
-- Configure environment variables
-- Deploy
+The application will start on `http://localhost:3000`
 
-3. **Environment Variables**
-```
-NEXT_PUBLIC_API_URL=https://your-api-domain.com
-```
-
-### Manual Deployment
-
-1. **Build the application:**
+5. **Build for production**
 ```bash
 npm run build
-```
-
-2. **Start production server:**
-```bash
 npm start
 ```
 
-3. **Use PM2 for process management:**
-```bash
-pm2 start npm --name "hamro-sewa-frontend" -- start
+## 🏗️ Project Structure
+
+```
+frontend/
+├── app/
+│   ├── (routes)/
+│   │   ├── page.tsx              # Home page
+│   │   ├── services/             # Services listing
+│   │   ├── service/[id]/         # Service detail
+│   │   ├── amc-packages/         # AMC packages
+│   │   ├── about/                # About page
+│   │   ├── contact/              # Contact page
+│   │   └── category/[name]/      # Category pages
+│   ├── components/               # Reusable components
+│   │   ├── Navbar.tsx
+│   │   ├── Footer.tsx
+│   │   ├── Hero.tsx
+│   │   ├── Category.tsx
+│   │   └── ...
+│   ├── dashboard/                # User dashboard
+│   │   └── components/
+│   │       └── sections/
+│   ├── hamrosewa/                # Admin dashboard
+│   │   ├── page.tsx
+│   │   ├── components/
+│   │   └── sections/
+│   │       ├── DashboardSection.tsx
+│   │       ├── ServicesSection.tsx
+│   │       ├── PendingServicesSection.tsx
+│   │       ├── PendingAMCPackagesSection.tsx
+│   │       ├── GatewayBookingsSection.tsx
+│   │       ├── TransactionsSection.tsx
+│   │       └── ...
+│   ├── api/                      # API routes
+│   │   └── upload/
+│   ├── layout.tsx                # Root layout
+│   └── globals.css               # Global styles
+├── public/                       # Static assets
+└── package.json
 ```
 
----
+## 🎨 Tech Stack
 
-## 📱 Progressive Web App (PWA)
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **UI Components**: Custom components with Lucide icons
+- **Charts**: Recharts for analytics
+- **Real-time**: Socket.io client
+- **Notifications**: Sonner (toast notifications)
+- **HTTP Client**: Fetch API
+- **State Management**: React hooks
 
-The application can be enhanced with PWA features:
-- Offline support
-- Install to home screen
-- Push notifications
-- Background sync
+## 🔐 Authentication
 
----
+### Login Flow
+1. User enters credentials
+2. Backend validates and returns JWT token
+3. Token stored in localStorage
+4. Token sent with protected API requests
+
+### Protected Routes
+- `/dashboard` - User dashboard
+- `/hamrosewa` - Admin dashboard (admin role required)
+
+### Role-Based Access
+- **Admin**: Full dashboard access, approval workflows
+- **Worker**: Service management, booking management
+- **Client**: Booking services, viewing bookings
+
+## 📱 Key Pages
+
+### Public Pages
+- `/` - Home page with featured services
+- `/services` - All services listing with filters
+- `/service/[id]` - Service detail and booking
+- `/amc-packages` - AMC packages listing
+- `/amc-packages/[id]` - Package detail
+- `/category/[name]` - Category-specific services
+- `/about` - About page
+- `/contact` - Contact page
+
+### User Dashboard (`/dashboard`)
+- My Services
+- My Bookings
+- Service Bookings (for service providers)
+- Messages
+- Profile Management
+
+### Admin Dashboard (`/hamrosewa`)
+- **Dashboard** - Statistics and overview with pie charts
+- **Services** - All services management
+- **Pending Services** - Approve/reject with amount input
+- **Pending Packages** - Approve/reject AMC packages with amount
+- **Gateway Approval** - First-level booking approval with amount
+- **Transactions** - View all transactions with filters and export
+- **Service Bookings** - Manage all bookings
+- **AMC Bookings** - Manage AMC bookings
+- **Categories** - Category management
+- **Users** - User management
+- **Jobs** - Job postings
+- **Messages** - Admin messaging
+
+## 🎯 Key Features Implementation
+
+### Approval Workflows
+
+#### Service Approval
+```typescript
+// Admin clicks Approve → Modal with amount input
+// Amount entered → API call with amount
+// Backend creates transaction automatically
+// Service becomes visible to public
+```
+
+#### AMC Package Approval
+```typescript
+// Same flow as service approval
+// Modal with amount input
+// Transaction created on approval
+```
+
+#### Gateway Booking Approval
+```typescript
+// Admin reviews booking
+// Enters transaction amount
+// Creates transaction record
+// Booking moves to service owner
+```
+
+### Transaction Tracking
+- Automatic creation on all approvals
+- Real-time statistics dashboard
+- Pie chart visualization
+- Filter by type (service/package/booking)
+- Export to CSV functionality
+
+### Real-time Messaging
+- Socket.io integration
+- Conversation-based chat
+- Message notifications
+- Support for job applications, service bookings, and AMC bookings
+
+### Image Upload
+- Cloudinary integration via backend API
+- Multiple image support for services
+- Single image for packages
+- Drag-and-drop interface
+
+## 🎨 UI/UX Features
+
+- **Responsive Design** - Mobile, tablet, desktop optimized
+- **Dark Mode** - System-aware theme switching
+- **Loading States** - Skeleton loaders and spinners
+- **Toast Notifications** - User feedback for actions
+- **Modal Dialogs** - Confirmation and input modals
+- **Form Validation** - Client-side validation
+- **Breadcrumbs** - Navigation context
+- **Pagination** - For large data sets
+- **Search & Filters** - Service and category filtering
+
+## 📊 Admin Dashboard Features
+
+### Statistics Cards
+- Total services, bookings, packages
+- Revenue tracking
+- Transaction counts by type
+- Visual pie charts
+
+### Approval Modals
+- Consistent design across all approval types
+- Amount input with NPR prefix
+- Validation (amount > 0)
+- Loading states
+- Success/error feedback
+
+### Transaction Management
+- Filter by type and status
+- Export to CSV
+- Real-time refresh
+- Detailed transaction view
+
+## 🔔 Notifications
+
+- Toast notifications for user actions
+- Real-time message notifications
+- Booking status updates
+- Approval confirmations
+
+## 🎨 Styling
+
+### Color Scheme
+- Primary: `#FF6B35` (Orange)
+- Success: Green
+- Warning: Yellow
+- Error: Red
+- Info: Blue
+
+### Tailwind Configuration
+Custom colors and utilities configured in `tailwind.config.ts`
+
+## 🚀 Performance Optimizations
+
+- Next.js Image optimization
+- Code splitting
+- Lazy loading
+- Server-side rendering where appropriate
+- Static generation for public pages
 
 ## 🧪 Testing
 
-### Manual Testing Checklist
+### Test Accounts
+```
+Admin:
+Email: admin@hamrosewa.com
+Password: admin123
 
-- [ ] Homepage loads correctly
-- [ ] Navigation works
-- [ ] User registration
-- [ ] User login
-- [ ] Browse services
-- [ ] Search functionality
-- [ ] Filter services
-- [ ] View service details
-- [ ] Post a job (client)
-- [ ] Apply to job (worker)
-- [ ] Real-time messaging
-- [ ] Admin dashboard access
-- [ ] CRUD operations (admin)
-- [ ] Responsive design
-- [ ] Mobile menu
+Worker:
+Email: shyam@gmail.com
+Password: password123
 
----
-
-## 🔧 Development Tips
-
-### Hot Reload
-Next.js provides automatic hot reload during development.
-
-### TypeScript
-Use TypeScript interfaces for type safety:
-
-```typescript
-interface User {
-  _id: string;
-  name: string;
-  email: string;
-  role: 'client' | 'worker' | 'admin';
-}
+Client:
+Email: client@example.com
+Password: password123
 ```
 
-### Component Organization
-- Keep components small and focused
-- Use TypeScript for props
-- Extract reusable logic to custom hooks
-- Use proper file naming conventions
+## 📦 Build & Deploy
 
----
+### Development
+```bash
+npm run dev
+```
 
-## 📞 Support
+### Production Build
+```bash
+npm run build
+npm start
+```
 
-For frontend issues or questions:
-- Email: dev@hamrosewa.com
+### Environment Variables
+Ensure all required environment variables are set in production:
+- `NEXT_PUBLIC_API_URL` - Backend API URL
+- Firebase credentials (if using push notifications)
 
----
+## 🔧 Configuration
 
-**Version**: 1.0.0  
-**Last Updated**: 2024
+### API Integration
+All API calls use the base URL from `NEXT_PUBLIC_API_URL` environment variable.
+
+### Socket.io
+Real-time features connect to the backend WebSocket server automatically.
+
+## 📱 Responsive Breakpoints
+
+- Mobile: < 640px
+- Tablet: 640px - 1024px
+- Desktop: > 1024px
+
+## 🎯 Future Enhancements
+
+- Payment gateway integration
+- Advanced analytics
+- Email notifications
+- SMS notifications
+- Multi-language support
+- Progressive Web App (PWA)
+
+## 📝 License
+
+MIT
+
+## 👥 Support
+
+For issues and questions, please contact the development team.
+
+## 🙏 Acknowledgments
+
+Built with Next.js 15, React 19, and Tailwind CSS.

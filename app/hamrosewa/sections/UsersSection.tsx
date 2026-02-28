@@ -268,7 +268,7 @@ export default function UsersSection({ token }: UsersSectionProps) {
                                 <tr key={user._id} className="hover:bg-gray-50 dark:bg-gray-900 transition-colors">
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-full bg-[#FF6B35] flex items-center justify-center text-white font-semibold">
+                                            <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
                                                 {user.name.charAt(0).toUpperCase()}
                                             </div>
                                             <div>

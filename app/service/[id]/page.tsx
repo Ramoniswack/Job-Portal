@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight, Check, MapPin, User } from 'lucide-react';
 import Link from 'next/link';
@@ -13,17 +13,10 @@ export default function ServiceDetails() {
     const router = useRouter();
     const serviceSlug = params.id as string;
 
-    const [selectedDate, setSelectedDate] = useState(0);
-    const [selectedTime, setSelectedTime] = useState(0);
     const [selectedImage, setSelectedImage] = useState(0);
     const [service, setService] = useState<any>(null);
     const [loading, setLoading] = useState(true);
-    const [categories, setCategories] = useState<any[]>([]);
-    const [bookedSlots, setBookedSlots] = useState<string[]>([]);
-    const scrollContainerRef = useRef<HTMLDivElement>(null);
-    const [isDragging, setIsDragging] = useState(false);
-    const [startX, setStartX] = useState(0);
-    const [scrollLeftPos, setScrollLeftPos] = useState(0);
+    const [relatedServices, setRelatedServices] = useState<any[]>([]);
 
     // Booking modal state
     const [showBookingModal, setShowBookingModal] = useState(false);
@@ -35,33 +28,22 @@ export default function ServiceDetails() {
         notes: ''
     });
 
+    const images = service?.images?.map((img: any) => img.url) || [
+        'https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=800',
+        'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=800',
+        'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800',
+    ];
+
     useEffect(() => {
         fetchService();
-        fetchCategories();
     }, [serviceSlug]);
 
-    // Fetch booked slots when date changes
+    // Fetch related services when service is loaded
     useEffect(() => {
-        if (service?._id && dates[selectedDate]) {
-            fetchBookedSlots();
+        if (service?.category?._id) {
+            fetchRelatedServices();
         }
-    }, [selectedDate, service]);
-
-    const fetchBookedSlots = async () => {
-        if (!service?._id || !dates[selectedDate]) return;
-
-        try {
-            const dateStr = dates[selectedDate].fullDate;
-            const response = await fetch(`http://localhost:5000/api/bookings/booked-slots?serviceId=${service._id}&date=${dateStr}`);
-            const data = await response.json();
-
-            if (data.success) {
-                setBookedSlots(data.data);
-            }
-        } catch (error) {
-            console.error('Error fetching booked slots:', error);
-        }
-    };
+    }, [service]);
 
     const fetchService = async () => {
         try {
@@ -79,39 +61,27 @@ export default function ServiceDetails() {
         }
     };
 
-    const fetchCategories = async () => {
+    const fetchRelatedServices = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/categories/parent');
+            const categoryId = typeof service.category === 'object' ? service.category._id : service.category;
+            const response = await fetch(`http://localhost:5000/api/services`);
             if (response.ok) {
                 const data = await response.json();
-                setCategories(data);
+                // Filter services from same category, exclude current service, limit to 4
+                const related = data
+                    .filter((s: any) => {
+                        // Skip services without a category
+                        if (!s.category) return false;
+
+                        const sCategoryId = typeof s.category === 'object' ? s.category._id : s.category;
+                        return sCategoryId === categoryId && s._id !== service._id && s.status === 'active';
+                    })
+                    .slice(0, 4);
+                setRelatedServices(related);
             }
         } catch (error) {
-            console.error('Error fetching categories:', error);
+            console.error('Error fetching related services:', error);
         }
-    };
-
-    const handleMouseDown = (e: React.MouseEvent) => {
-        if (!scrollContainerRef.current) return;
-        setIsDragging(true);
-        setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
-        setScrollLeftPos(scrollContainerRef.current.scrollLeft);
-    };
-
-    const handleMouseMove = (e: React.MouseEvent) => {
-        if (!isDragging || !scrollContainerRef.current) return;
-        e.preventDefault();
-        const x = e.pageX - scrollContainerRef.current.offsetLeft;
-        const walk = (x - startX) * 2;
-        scrollContainerRef.current.scrollLeft = scrollLeftPos - walk;
-    };
-
-    const handleMouseUp = () => {
-        setIsDragging(false);
-    };
-
-    const handleMouseLeave = () => {
-        setIsDragging(false);
     };
 
     const handleBookNow = () => {
@@ -151,16 +121,6 @@ export default function ServiceDetails() {
             }
         }
 
-        // Check if selected time slot is booked
-        const selectedTimeSlot = timeSlots[selectedTime];
-        if (bookedSlots.includes(selectedTimeSlot)) {
-            toast.error('This time slot is already booked', {
-                description: 'Please choose another time slot.',
-                duration: 4000,
-            });
-            return;
-        }
-
         // Prefill user data from localStorage
         if (currentUserStr) {
             try {
@@ -183,8 +143,6 @@ export default function ServiceDetails() {
     const handleBookingSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const selectedTimeSlot = timeSlots[selectedTime];
-        const selectedDateStr = dates[selectedDate].fullDate;
         const token = localStorage.getItem('authToken');
 
         if (!token) {
@@ -214,8 +172,6 @@ export default function ServiceDetails() {
                     customerEmail: bookingData.email,
                     customerPhone: bookingData.phone,
                     customerAddress: bookingData.address,
-                    bookingDate: selectedDateStr,
-                    bookingTime: selectedTimeSlot,
                     notes: bookingData.notes
                 })
             });
@@ -223,13 +179,17 @@ export default function ServiceDetails() {
             const data = await response.json();
 
             if (data.success) {
-                toast.success('Booking Confirmed!', {
-                    description: `Your booking for ${selectedTimeSlot} on ${new Date(selectedDateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} has been confirmed. We will contact you soon.`,
-                    duration: 5000,
+                // Open WhatsApp if URL is provided
+                if (data.whatsappUrl) {
+                    window.open(data.whatsappUrl, '_blank');
+                }
+
+                toast.success('Booking Submitted!', {
+                    description: 'Your booking request has been submitted and is pending admin approval. WhatsApp message sent to service provider.',
+                    duration: 6000,
                 });
                 setShowBookingModal(false);
                 setBookingData({ name: '', email: '', phone: '', address: '', notes: '' });
-                fetchBookedSlots(); // Refresh booked slots
             } else if (response.status === 401 || data.requiresAuth) {
                 // Token is invalid or expired
                 localStorage.removeItem('authToken');
@@ -242,13 +202,6 @@ export default function ServiceDetails() {
                 setTimeout(() => {
                     router.push('/login');
                 }, 1000);
-            } else if (data.isBooked) {
-                toast.error('Time Slot Already Booked', {
-                    description: 'This time slot has just been booked by someone else. Please choose another time.',
-                    duration: 4000,
-                });
-                setShowBookingModal(false);
-                fetchBookedSlots(); // Refresh to show updated slots
             } else {
                 toast.error('Booking Failed', {
                     description: data.message || 'Failed to submit booking. Please try again.',
@@ -262,54 +215,6 @@ export default function ServiceDetails() {
                 duration: 4000,
             });
         }
-    };
-
-    // Generate next 7 days
-    const generateDates = () => {
-        const dates = [];
-        const today = new Date();
-
-        for (let i = 0; i < 7; i++) {
-            const date = new Date(today);
-            date.setDate(today.getDate() + i);
-
-            const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-            dates.push({
-                day: dayNames[date.getDay()],
-                date: date.getDate(),
-                month: monthNames[date.getMonth()],
-                fullDate: date.toISOString().split('T')[0] // YYYY-MM-DD format
-            });
-        }
-
-        return dates;
-    };
-
-    const dates = generateDates();
-
-    const images = service?.images?.map((img: any) => img.url) || [
-        'https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=800',
-        'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=800',
-        'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800',
-    ];
-
-    const timeSlots = [
-        '8AM - 9AM',
-        '9AM - 10AM',
-        '10AM - 11AM',
-        '11AM - 12PM',
-        '12PM - 1PM',
-        '1PM - 2PM',
-        '2PM - 3PM',
-        '3PM - 4PM',
-        '4PM - 5PM',
-        '5PM - 6PM'
-    ];
-
-    const isTimeSlotBooked = (timeSlot: string) => {
-        return bookedSlots.includes(timeSlot);
     };
 
     if (loading) {
@@ -369,7 +274,7 @@ export default function ServiceDetails() {
                 <div className="max-w-6xl mx-auto">
                     {/* Breadcrumbs */}
                     <div className="text-sm text-gray-500 mb-5">
-                        Home / {service.category?.name} / {service.subCategory} / {service.title}
+                        Home / {service.category?.name}{service.subCategory ? ` / ${service.subCategory}` : ''} / {service.title}
                     </div>
 
                     {/* Main Container */}
@@ -430,20 +335,7 @@ export default function ServiceDetails() {
                                 ))}
                             </div>
 
-                            {/* Description */}
-                            <div className="my-8 leading-relaxed">
-                                <p className="mb-4">{service.description}</p>
-                                {service.features && service.features.length > 0 && (
-                                    <ul className="space-y-2">
-                                        {service.features.map((feature: string, index: number) => (
-                                            <li key={index} className="flex items-start gap-3">
-                                                <span className="text-green-500 text-lg">✓</span>
-                                                <span>{feature}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                )}
-                            </div>
+
 
                             {/* Reviews */}
                             <div className="bg-[#F8F9FA] p-6 rounded-xl mt-10">
@@ -479,46 +371,21 @@ export default function ServiceDetails() {
                                     </p>
                                 </div>
 
-                                {/* Select Date */}
-                                <label className="font-bold block mb-3">Select Date</label>
-                                <div className="grid grid-cols-5 gap-2 mb-5">
-                                    {dates.map((date, index) => (
-                                        <div
-                                            key={index}
-                                            onClick={() => setSelectedDate(index)}
-                                            className={`border rounded-xl p-2 text-center cursor-pointer transition ${selectedDate === index
-                                                ? 'border-2 border-[#FF6B35] text-[#FF6B35] font-bold'
-                                                : 'border-gray-300'
-                                                }`}
-                                        >
-                                            <div className="text-xs">{date.day}</div>
-                                            <div className="text-base font-semibold">{date.date}</div>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                {/* Choose Time */}
-                                <label className="font-bold block mb-3">Choose a time period</label>
-                                <div className="grid grid-cols-3 gap-2 mb-5">
-                                    {timeSlots.map((time, index) => {
-                                        const isBooked = isTimeSlotBooked(time);
-                                        return (
-                                            <div
-                                                key={index}
-                                                onClick={() => !isBooked && setSelectedTime(index)}
-                                                className={`border rounded-full py-2 px-2 text-xs text-center transition ${isBooked
-                                                    ? 'bg-red-50 border-red-300 text-red-500 cursor-not-allowed opacity-60'
-                                                    : selectedTime === index
-                                                        ? 'bg-[#F8F9FA] border-[#FF6B35] text-[#FF6B35] font-semibold cursor-pointer'
-                                                        : 'border-gray-300 cursor-pointer hover:border-[#FF6B35]'
-                                                    }`}
-                                            >
-                                                {isBooked ? '🔒 ' : selectedTime === index ? '✓ ' : ''}
-                                                {time}
-                                                {isBooked && <div className="text-[10px] mt-0.5">Booked</div>}
-                                            </div>
-                                        );
-                                    })}
+                                {/* Full Description */}
+                                <div className="mb-5">
+                                    <p className="text-sm text-gray-700 mb-3 leading-relaxed">
+                                        {service.description}
+                                    </p>
+                                    {service.features && service.features.length > 0 && (
+                                        <ul className="space-y-2">
+                                            {service.features.map((feature: string, index: number) => (
+                                                <li key={index} className="flex items-start gap-2 text-sm">
+                                                    <span className="text-green-500 mt-0.5">✓</span>
+                                                    <span className="text-gray-700">{feature}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
                                 </div>
 
                                 {/* Book Now Button */}
@@ -532,54 +399,69 @@ export default function ServiceDetails() {
                         </div>
                     </div>
 
-                    {/* Browse by Category Section */}
-                    {categories.length > 0 && (
+                    {/* Related Services Section */}
+                    {relatedServices.length > 0 && (
                         <div className="mt-16">
                             <h2 className="text-3xl font-bold text-[#1A2B3C] mb-8">
-                                Browse by Category
+                                Related Services
                             </h2>
-                            <div
-                                ref={scrollContainerRef}
-                                onMouseDown={handleMouseDown}
-                                onMouseMove={handleMouseMove}
-                                onMouseUp={handleMouseUp}
-                                onMouseLeave={handleMouseLeave}
-                                className={`overflow-x-auto scrollbar-hide select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
-                                    }`}
-                                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-                            >
-                                <div className="flex gap-8 pb-4">
-                                    {categories.map((category: any) => (
-                                        <Link
-                                            key={category._id}
-                                            href={`/category/${category.slug}`}
-                                            className="flex flex-col items-center text-center min-w-[140px] hover:scale-105 transition-transform duration-200"
-                                        >
-                                            <div className="h-32 w-32 mb-4 flex items-center justify-center">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                                {relatedServices.map((relatedService: any) => (
+                                    <Link
+                                        key={relatedService._id}
+                                        href={`/service/${relatedService.slug}`}
+                                        className="group bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                                    >
+                                        {/* Service Image */}
+                                        <div className="relative h-48 bg-gray-100 overflow-hidden">
+                                            {relatedService.images && relatedService.images[0] && (
                                                 <img
-                                                    src={category.image}
-                                                    alt={category.name}
-                                                    className="w-full h-full object-cover rounded-lg"
-                                                    draggable="false"
+                                                    src={relatedService.images[0].url}
+                                                    alt={relatedService.title}
+                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                                                 />
+                                            )}
+                                            {/* Badges */}
+                                            <div className="absolute top-2 left-2 flex gap-2">
+                                                {relatedService.featured && (
+                                                    <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                                                        HOT
+                                                    </span>
+                                                )}
                                             </div>
-                                            <span className="text-base font-semibold text-gray-800 leading-tight cursor-pointer">
-                                                {category.name}
-                                            </span>
-                                        </Link>
-                                    ))}
-                                </div>
+                                        </div>
+
+                                        {/* Service Info */}
+                                        <div className="p-4">
+                                            <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-[#FF6B35] transition-colors">
+                                                {relatedService.title}
+                                            </h3>
+                                            <p className="text-sm text-gray-500 mb-3">
+                                                {relatedService.category && typeof relatedService.category === 'object'
+                                                    ? relatedService.category.name
+                                                    : 'Service'}
+                                            </p>
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-lg font-bold text-[#FF6B35]">
+                                                    {relatedService.priceLabel}
+                                                </span>
+                                                {relatedService.rating > 0 && (
+                                                    <div className="flex items-center gap-1">
+                                                        <span className="text-yellow-500">⭐</span>
+                                                        <span className="text-sm font-medium text-gray-700">
+                                                            {relatedService.rating.toFixed(1)}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </Link>
+                                ))}
                             </div>
                         </div>
                     )}
                 </div>
             </div>
-
-            <style jsx>{`
-                .scrollbar-hide::-webkit-scrollbar {
-                    display: none;
-                }
-            `}</style>
 
             {/* Booking Modal */}
             {showBookingModal && (
@@ -611,9 +493,7 @@ export default function ServiceDetails() {
                             {/* Service Info */}
                             <div className="bg-[#FFF5F0] border-l-4 border-[#FF6B35] rounded-lg p-3 sm:p-4 mb-4 sm:mb-6">
                                 <h3 className="font-bold text-gray-900 mb-2 text-sm sm:text-base">{service.title}</h3>
-                                <div className="text-xs sm:text-sm text-gray-700 flex flex-wrap gap-x-6 gap-y-1">
-                                    <p><span className="font-semibold">Date:</span> {dates[selectedDate].day}, {dates[selectedDate].date}</p>
-                                    <p><span className="font-semibold">Time:</span> {timeSlots[selectedTime]}</p>
+                                <div className="text-xs sm:text-sm text-gray-700">
                                     <p><span className="font-semibold">Price:</span> {service.priceLabel}</p>
                                 </div>
                             </div>

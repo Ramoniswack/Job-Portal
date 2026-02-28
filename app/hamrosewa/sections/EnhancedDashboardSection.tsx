@@ -10,7 +10,9 @@ import {
     CheckCircle,
     Clock,
     XCircle,
-    BarChart3
+    BarChart3,
+    DollarSign,
+    Wrench
 } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, Sector } from 'recharts';
 import { type PieSectorDataItem } from 'recharts/types/polar/Pie';
@@ -28,6 +30,11 @@ interface DashboardStats {
     pendingAMCBookings: number;
     approvedAMCBookings: number;
     completedAMCBookings: number;
+    totalRevenue: number;
+    totalTransactions: number;
+    serviceTransactions: number;
+    packageTransactions: number;
+    bookingTransactions: number;
     recentServices: any[];
     recentBookings: any[];
 }
@@ -55,6 +62,11 @@ export default function EnhancedDashboardSection({
         pendingAMCBookings: 0,
         approvedAMCBookings: 0,
         completedAMCBookings: 0,
+        totalRevenue: 0,
+        totalTransactions: 0,
+        serviceTransactions: 0,
+        packageTransactions: 0,
+        bookingTransactions: 0,
         recentServices: [],
         recentBookings: []
     });
@@ -69,7 +81,7 @@ export default function EnhancedDashboardSection({
             const token = localStorage.getItem('authToken');
 
             // For admin: Fetch ALL bookings (not just personal bookings)
-            const [servicesRes, categoriesRes, myServicesRes, bookingsRes, amcBookingsRes] = await Promise.all([
+            const [servicesRes, categoriesRes, myServicesRes, bookingsRes, amcBookingsRes, transactionsRes] = await Promise.all([
                 fetch('http://localhost:5000/api/services'),
                 fetch('http://localhost:5000/api/categories/all'),
                 token ? fetch('http://localhost:5000/api/services/my-services', {
@@ -79,6 +91,9 @@ export default function EnhancedDashboardSection({
                     headers: { 'Authorization': `Bearer ${token}` }
                 }) : Promise.resolve({ ok: false }),
                 token ? fetch('http://localhost:5000/api/amc-bookings/all', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }) : Promise.resolve({ ok: false }),
+                token ? fetch('http://localhost:5000/api/transactions', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 }) : Promise.resolve({ ok: false })
             ]);
@@ -125,6 +140,19 @@ export default function EnhancedDashboardSection({
             const approvedAMCBookings = amcBookings.filter((b: any) => b.status === 'approved').length;
             const completedAMCBookings = amcBookings.filter((b: any) => b.status === 'completed').length;
 
+            // Process transactions
+            let transactions = [];
+            let totalRevenue = 0;
+            if (transactionsRes.ok) {
+                const transactionsData = await transactionsRes.json();
+                transactions = transactionsData.success ? transactionsData.data : [];
+                totalRevenue = transactionsData.totalAmount || 0;
+            }
+
+            const serviceTransactions = transactions.filter((t: any) => t.itemType === 'service').length;
+            const packageTransactions = transactions.filter((t: any) => t.itemType === 'package').length;
+            const bookingTransactions = transactions.filter((t: any) => t.itemType === 'booking').length;
+
             setStats({
                 totalServices: services.length,
                 myServices: myServices.length,
@@ -138,6 +166,11 @@ export default function EnhancedDashboardSection({
                 pendingAMCBookings,
                 approvedAMCBookings,
                 completedAMCBookings,
+                totalRevenue,
+                totalTransactions: transactions.length,
+                serviceTransactions,
+                packageTransactions,
+                bookingTransactions,
                 recentServices: services.slice(0, 5),
                 recentBookings: bookings.slice(0, 5)
             });
@@ -413,6 +446,117 @@ export default function EnhancedDashboardSection({
                                 <div className="text-center">
                                     <Calendar className="w-12 h-12 mx-auto mb-2 opacity-50" />
                                     <p className="text-sm">No AMC bookings yet</p>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            {/* Transaction Overview */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+                <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Transaction Overview</h3>
+                    <button
+                        onClick={() => setActiveSection('transactions')}
+                        className="text-sm text-[#FF6B35] hover:text-[#FF5722] font-medium"
+                    >
+                        View All →
+                    </button>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Stats Grid - Changed to 3 columns to fit 5 boxes better */}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+                            <div className="flex items-center gap-2 mb-3">
+                                <DollarSign className="w-5 h-5 text-green-600 dark:text-green-400" />
+                                <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Total Revenue</p>
+                            </div>
+                            <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                                NPR {stats.totalRevenue?.toLocaleString() || '0'}
+                            </p>
+                        </div>
+                        <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+                            <div className="flex items-center gap-2 mb-3">
+                                <TrendingUp className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                                <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Transactions</p>
+                            </div>
+                            <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                                {stats.totalTransactions || 0}
+                            </p>
+                        </div>
+                        <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+                            <div className="flex items-center gap-2 mb-3">
+                                <Wrench className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                                <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Services</p>
+                            </div>
+                            <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                                {stats.serviceTransactions || 0}
+                            </p>
+                        </div>
+                        <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+                            <div className="flex items-center gap-2 mb-3">
+                                <Package className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                                <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Packages</p>
+                            </div>
+                            <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                                {stats.packageTransactions || 0}
+                            </p>
+                        </div>
+                        <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+                            <div className="flex items-center gap-2 mb-3">
+                                <Calendar className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+                                <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Bookings</p>
+                            </div>
+                            <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                                {stats.bookingTransactions || 0}
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Pie Chart */}
+                    <div className="flex items-center justify-center">
+                        {(stats.totalTransactions || 0) > 0 ? (
+                            <ResponsiveContainer width="100%" height={250}>
+                                <PieChart>
+                                    <Tooltip cursor={false} />
+                                    <Pie
+                                        data={[
+                                            { name: 'Services', value: stats.serviceTransactions || 0, fill: '#3B82F6' },
+                                            { name: 'Packages', value: stats.packageTransactions || 0, fill: '#A855F7' },
+                                            { name: 'Bookings', value: stats.bookingTransactions || 0, fill: '#F97316' }
+                                        ]}
+                                        cx="50%"
+                                        cy="50%"
+                                        innerRadius={60}
+                                        outerRadius={80}
+                                        strokeWidth={5}
+                                        dataKey="value"
+                                        activeIndex={0}
+                                        activeShape={({
+                                            outerRadius = 0,
+                                            ...props
+                                        }: PieSectorDataItem) => (
+                                            <Sector {...props} outerRadius={outerRadius + 10} />
+                                        )}
+                                    >
+                                        {[
+                                            { name: 'Services', value: stats.serviceTransactions || 0, fill: '#3B82F6' },
+                                            { name: 'Packages', value: stats.packageTransactions || 0, fill: '#A855F7' },
+                                            { name: 'Bookings', value: stats.bookingTransactions || 0, fill: '#F97316' }
+                                        ].map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={entry.fill} />
+                                        ))}
+                                    </Pie>
+                                    <Legend />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        ) : (
+                            <div className="flex items-center justify-center h-[250px] text-gray-400">
+                                <div className="text-center">
+                                    <DollarSign className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                                    <p className="text-sm">No transactions yet</p>
                                 </div>
                             </div>
                         )}

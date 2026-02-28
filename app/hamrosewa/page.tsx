@@ -13,10 +13,14 @@ import EnhancedDashboardSection from './sections/EnhancedDashboardSection';
 import AMCPackagesSection from './sections/AMCPackagesSection';
 import ServicesHeroSection from './sections/ServicesHeroSection';
 import ServiceBookingsSection from './sections/ServiceBookingsSection';
+import GatewayBookingsSection from './sections/GatewayBookingsSection';
 import HomeHeroSection from './sections/HomeHeroSection';
 import TestimonialsSection from './sections/TestimonialsSection';
 import AMCBookingsSection from './sections/AMCBookingsSection';
 import MessagesSection from '../dashboard/components/sections/MessagesSection';
+import PendingServicesSection from './sections/PendingServicesSection';
+import PendingAMCPackagesSection from './sections/PendingAMCPackagesSection';
+import TransactionsSection from './sections/TransactionsSection';
 
 interface User {
     _id: string;
@@ -127,6 +131,50 @@ export default function AdminDashboard() {
             >
                 <span className="material-symbols-outlined text-[20px]">image</span>
                 <span>Services Hero</span>
+            </button>
+
+            <button
+                onClick={() => handleSectionChange('gateway-bookings')}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'gateway-bookings'
+                    ? 'bg-gray-800 text-white'
+                    : 'text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:bg-gray-800'
+                    }`}
+            >
+                <span className="material-symbols-outlined text-[20px]">verified</span>
+                <span>Gateway Approval</span>
+            </button>
+
+            <button
+                onClick={() => handleSectionChange('pending-services')}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'pending-services'
+                    ? 'bg-gray-800 text-white'
+                    : 'text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:bg-gray-800'
+                    }`}
+            >
+                <span className="material-symbols-outlined text-[20px]">pending_actions</span>
+                <span>Pending Services</span>
+            </button>
+
+            <button
+                onClick={() => handleSectionChange('pending-amc-packages')}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'pending-amc-packages'
+                    ? 'bg-gray-800 text-white'
+                    : 'text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:bg-gray-800'
+                    }`}
+            >
+                <span className="material-symbols-outlined text-[20px]">pending_actions</span>
+                <span>Pending Packages</span>
+            </button>
+
+            <button
+                onClick={() => handleSectionChange('transactions')}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'transactions'
+                    ? 'bg-gray-800 text-white'
+                    : 'text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:bg-gray-800'
+                    }`}
+            >
+                <span className="material-symbols-outlined text-[20px]">payments</span>
+                <span>Transactions</span>
             </button>
 
             <button
@@ -402,6 +450,10 @@ export default function AdminDashboard() {
                             />
                         )}
 
+                        {activeSection === 'gateway-bookings' && (
+                            <GatewayBookingsSection />
+                        )}
+
                         {activeSection === 'home-hero' && (
                             <HomeHeroSection token={token} />
                         )}
@@ -465,6 +517,18 @@ export default function AdminDashboard() {
 
                         {activeSection === 'services' && (
                             <ServicesSection token={token} />
+                        )}
+
+                        {activeSection === 'pending-services' && (
+                            <PendingServicesSection token={token} />
+                        )}
+
+                        {activeSection === 'pending-amc-packages' && (
+                            <PendingAMCPackagesSection token={token} />
+                        )}
+
+                        {activeSection === 'transactions' && (
+                            <TransactionsSection token={token} />
                         )}
                     </div>
                 </main>

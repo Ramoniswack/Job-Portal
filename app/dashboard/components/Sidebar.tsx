@@ -94,7 +94,7 @@ export default function Sidebar({
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">home_repair_service</span>
-                <span>All Services</span>
+                <span>Service Status</span>
             </button>
             <button
                 onClick={() => handleSectionChange('add-service')}
@@ -134,20 +134,20 @@ export default function Sidebar({
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">AMC Packages</p>
             </div>
             <button
+                onClick={() => handleSectionChange('amc-packages')}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'amc-packages' ? 'bg-gray-800 text-white' : 'text-gray-900 hover:bg-gray-100'
+                    }`}
+            >
+                <span className="material-symbols-outlined text-[20px]">inventory_2</span>
+                <span>Package Status</span>
+            </button>
+            <button
                 onClick={() => handleSectionChange('add-amc-package')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'add-amc-package' ? 'bg-gray-800 text-white' : 'text-gray-900 hover:bg-gray-100'
                     }`}
             >
                 <span className="material-symbols-outlined text-[20px]">add_circle</span>
                 <span>Add AMC Package</span>
-            </button>
-            <button
-                onClick={() => handleSectionChange('amc-packages')}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium ${activeSection === 'amc-packages' ? 'bg-gray-800 text-white' : 'text-gray-900 hover:bg-gray-100'
-                    }`}
-            >
-                <span className="material-symbols-outlined text-[20px]">inventory_2</span>
-                <span>AMC Packages</span>
             </button>
             <button
                 onClick={() => handleSectionChange('my-amc-bookings')}

@@ -273,6 +273,12 @@ export default function MessagesSection({
                         console.log('Extracted provider name:', providerName);
                         console.log('Extracted provider ID:', providerId);
 
+                        // Skip this connection if provider ID is missing
+                        if (!providerId) {
+                            console.log('⚠️  Skipping connection - no provider ID found');
+                            return;
+                        }
+
                         const providerData = {
                             _id: providerId,
                             name: providerName,
@@ -634,7 +640,7 @@ export default function MessagesSection({
                                 key={connection._id}
                                 onClick={() => setSelectedConnection(connection)}
                                 className={`p-4 flex gap-4 cursor-pointer transition-colors ${isSelected
-                                    ? 'bg-white dark:bg-gray-800 border-l-4 border-[#26cf71]'
+                                    ? 'bg-white dark:bg-gray-800 border-l-4 border-blue-500'
                                     : 'hover:bg-white dark:bg-gray-800 border-l-4 border-transparent'
                                     }`}
                             >
@@ -810,7 +816,7 @@ export default function MessagesSection({
                                     </div>
                                     <div className={`flex flex-col ${isSent ? 'items-end' : ''}`}>
                                         <div className={`p-4 rounded-xl ${isSent
-                                            ? 'bg-[#FF6B35] text-white rounded-tr-none'
+                                            ? 'bg-[#0084FF] text-white rounded-tr-none'
                                             : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-tl-none'
                                             }`}>
                                             <p className="text-sm">{message.content}</p>
@@ -844,7 +850,7 @@ export default function MessagesSection({
                                 </button>
                                 <button
                                     onClick={handleSendMessage}
-                                    className="bg-[#FF6B35] text-white p-2.5 rounded-lg flex items-center justify-center hover:bg-[#1fb862] transition-colors shadow-lg shadow-green-200"
+                                    className="bg-[#0084FF] text-white p-2.5 rounded-lg flex items-center justify-center hover:bg-[#006FD6] transition-colors shadow-lg shadow-blue-200"
                                 >
                                     <span className="material-symbols-outlined text-xl">send</span>
                                 </button>

@@ -31,6 +31,8 @@ interface MyService {
     title: string;
     images: Array<{ url: string }>;
     status: string;
+    approvalStatus?: 'pending' | 'approved' | 'rejected';
+    rejectionReason?: string;
     bookings: ServiceBooking[];
 }
 
@@ -231,6 +233,30 @@ export default function MyServicesSection({ token }: MyServicesSectionProps) {
         return styles[status as keyof typeof styles] || styles.pending;
     };
 
+    const getApprovalBadge = (approvalStatus?: string) => {
+        if (!approvalStatus) {
+            return 'bg-green-50 text-green-600 border border-green-200'; // Legacy data - assume approved
+        }
+        const styles = {
+            pending: 'bg-yellow-50 text-yellow-700 border border-yellow-200',
+            approved: 'bg-green-50 text-green-600 border border-green-200',
+            rejected: 'bg-red-50 text-red-600 border border-red-200'
+        };
+        return styles[approvalStatus as keyof typeof styles] || styles.pending;
+    };
+
+    const getApprovalText = (approvalStatus?: string) => {
+        if (!approvalStatus) {
+            return 'Active'; // Legacy data
+        }
+        const texts = {
+            pending: 'Inactive',
+            approved: 'Active',
+            rejected: 'Rejected'
+        };
+        return texts[approvalStatus as keyof typeof texts] || 'Inactive';
+    };
+
     const getPendingCount = (service: MyService) => {
         return service.bookings?.filter(b => b.status === 'pending').length || 0;
     };
@@ -274,9 +300,16 @@ export default function MyServicesSection({ token }: MyServicesSectionProps) {
                                     )}
                                     <div>
                                         <h3 className="font-semibold text-gray-900 dark:text-gray-100">{service.title}</h3>
-                                        <span className={`text-xs px-2 py-1 rounded-full ${getStatusBadge(service.status)}`}>
-                                            {service.status}
-                                        </span>
+                                        <div className="flex items-center gap-2 mt-1">
+                                            <span className={`text-xs px-2 py-1 rounded-full font-medium ${getApprovalBadge(service.approvalStatus)}`}>
+                                                {getApprovalText(service.approvalStatus)}
+                                            </span>
+                                        </div>
+                                        {service.approvalStatus === 'rejected' && service.rejectionReason && (
+                                            <p className="text-xs text-red-600 mt-1">
+                                                Reason: {service.rejectionReason}
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-3">
